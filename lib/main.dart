@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'about_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -92,7 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.info_outline, color: Colors.white,),
             onPressed: () {
-              // Navigate to the settings page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AboutScreen(),
+                )
+              );
             },
           ),
         ],
