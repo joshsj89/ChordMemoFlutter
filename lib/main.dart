@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'ChordMemo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, this.isDarkMode = false});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -51,6 +52,8 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final bool isDarkMode;
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -58,6 +61,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  bool get isDarkMode => widget.isDarkMode;
 
   void _incrementCounter() {
     setState(() {
@@ -72,6 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    // final textColor = isDarkMode ? Colors.white : Colors.black;
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -79,30 +88,36 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Color(0xff009788),
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, style: TextStyle(color: Colors.white)),
+        title: Text(widget.title, style: TextStyle(color: backgroundColor)),
+        iconTheme: IconThemeData(color: backgroundColor), // Change the color of the hamburger menu button
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white,),
+            icon: Icon(Icons.search),
             onPressed: () {
 
             },
           ),
           IconButton(
-            icon: Icon(Icons.info_outline, color: Colors.white,),
+            icon: Icon(Icons.info_outline),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => AboutScreen(),
+                  builder: (_) => AboutScreen(isDarkMode: isDarkMode),
                 )
               );
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        backgroundColor: backgroundColor,
+        child: ListView()
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -137,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Add Song',
         backgroundColor: Color(0xff009788),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: backgroundColor),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
-  AboutScreen({super.key});
+  final bool isDarkMode;
+
+  AboutScreen({super.key, this.isDarkMode = false});
 
   final List<String> keyFeatures = [
     'Chord Progression Storage: Easily create and store chord progressions for songs. Organize them by title, artist, genre, and more.',
@@ -16,8 +18,8 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final backgroundColor = Colors.white;
-    final textColor = Colors.black;
+    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     final boldTextStyle = TextStyle(fontWeight: FontWeight.bold, color: textColor);
     final defaultTextStyle = TextStyle(fontSize: 16, color: textColor);
@@ -25,7 +27,9 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff009788),
-        title: Text('About', style: TextStyle(color: Colors.white)),
+        title: Text('About', style: TextStyle(color: backgroundColor)),
+        iconTheme: IconThemeData(color: backgroundColor), // Change the color of the back button
+
       ),
       backgroundColor: backgroundColor,
       body: SingleChildScrollView(
