@@ -230,13 +230,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               title: Text('Export/Import Songs', style: TextStyle(color: textColor)),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ExportImportScreen(isDarkMode: isDarkMode),
                   )
                 );
+
+                // If the user imported songs, reload the list
+                if (result == true) {
+                  _loadSongs();
+                }
               },
             ),
             ListTile(
