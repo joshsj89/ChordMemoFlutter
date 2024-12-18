@@ -144,6 +144,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
+              title: Text('Export/Import Songs', style: TextStyle(color: textColor)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ExportImportScreen(isDarkMode: isDarkMode),
+                  )
+                );
+              },
+            ),
+            ListTile(
               title: Text('Dark Mode: ${isDarkMode ? 'On' : 'Off'}', style: TextStyle(color: textColor)),
               onTap: _toggleDarkMode,
             ),
