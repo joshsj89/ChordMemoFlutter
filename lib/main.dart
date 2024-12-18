@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'about_screen.dart';
 import 'export_import_screen.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: '.env');
+
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding); // keep showing splash screen until .remove() is called
 
@@ -153,6 +156,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (_) => AboutScreen(isDarkMode: isDarkMode),
                   )
                 );
+              },
+            ),
+            ListTile(
+              title: Text('My Website', style: TextStyle(color: textColor)),
+              onTap: () {
+                // _openLink('https://joshsj89.github.io/ChordMemo');
+              },
+            ),
+            ListTile(
+              title: Text('GitHub', style: TextStyle(color: textColor)),
+              onTap: () {
+                // _openLink('https://www.github.com/joshsj89');
+              },
+            ),
+            ListTile(
+              title: Text('Contact Me', style: TextStyle(color: textColor)),
+              onTap: () {
+                // _openLink('https://joshsj89.github.io/#contact');
+              },
+            ),
+            ListTile(
+              title: Text('Donate', style: TextStyle(color: textColor)),
+              onTap: () {
+                // _openLink(dotenv.env['DONATE_LINK'] ?? '');
               },
             ),
           ],
