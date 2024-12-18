@@ -75,6 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // void _openLink(String url) async {
+  //   Uri uri = Uri.parse(url);
+  //   if (await canLaunchUrl(uri)) {
+  //     await launchUrl(uri);
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();

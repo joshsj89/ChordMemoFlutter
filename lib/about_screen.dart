@@ -102,9 +102,7 @@ class AboutScreen extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: Text(
                 '- Josh Kindarara',
-                style: defaultTextStyle.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
+                style: defaultTextStyle.copyWith(fontStyle: FontStyle.italic),
               ),
             ),
           ],
