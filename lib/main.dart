@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'about_screen.dart';
 import 'export_import_screen.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding); // keep showing splash screen until .remove() is called
+
   runApp(const MyApp());
 }
 
@@ -66,6 +70,17 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isDarkMode = !isDarkMode;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  void initialization() async {
+    await Future.delayed(const Duration(seconds: 3));
+    FlutterNativeSplash.remove();
   }
 
   @override
