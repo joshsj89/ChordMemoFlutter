@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xff009788),
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, style: TextStyle(color: backgroundColor)),
+        title: Text(widget.title, style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500)),
         iconTheme: IconThemeData(color: backgroundColor), // Change the color of the hamburger menu button
         actions: [
           IconButton(

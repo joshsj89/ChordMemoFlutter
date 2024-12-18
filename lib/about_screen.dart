@@ -27,9 +27,8 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff009788),
-        title: Text('About', style: TextStyle(color: backgroundColor)),
+        title: Text('About', style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500)),
         iconTheme: IconThemeData(color: backgroundColor), // Change the color of the back button
-
       ),
       backgroundColor: backgroundColor,
       body: SingleChildScrollView(
