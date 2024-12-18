@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'about_screen.dart';
+import 'export_import_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, this.isDarkMode = false});
+  const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -52,7 +53,6 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  final bool isDarkMode;
 
 
   @override
@@ -60,18 +60,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool isDarkMode = false;
 
-  bool get isDarkMode => widget.isDarkMode;
-
-  void _incrementCounter() {
+  void _toggleDarkMode() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      isDarkMode = !isDarkMode;
     });
   }
 
@@ -79,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
 
     final backgroundColor = isDarkMode ? Colors.black : Colors.white;
-    // final textColor = isDarkMode ? Colors.white : Colors.black;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -117,7 +110,38 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       drawer: Drawer(
         backgroundColor: backgroundColor,
-        child: ListView()
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xff009788),
+              ),
+              child: Text(
+                'ChordMemo',
+                style: TextStyle(
+                  color: backgroundColor,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Dark Mode: ${isDarkMode ? 'On' : 'Off'}', style: TextStyle(color: textColor)),
+              onTap: _toggleDarkMode,
+            ),
+            ListTile(
+              title: Text('About', style: TextStyle(color: textColor)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AboutScreen(isDarkMode: isDarkMode),
+                  )
+                );
+              },
+            ),
+          ],
+        )
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -142,14 +166,14 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '0',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {},
         tooltip: 'Add Song',
         backgroundColor: Color(0xff009788),
         child: Icon(Icons.add, color: backgroundColor),
