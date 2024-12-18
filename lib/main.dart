@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'about_screen.dart';
-import 'export_import_screen.dart';
+import 'home_screen.dart';
 
 Future main() async {
   await dotenv.load(fileName: '.env');
@@ -42,46 +41,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff009788)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'ChordMemo'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isDarkMode = false;
-
-  void _toggleDarkMode() {
-    setState(() {
-      isDarkMode = !isDarkMode;
-    });
-  }
-
-  // void _openLink(String url) async {
-  //   Uri uri = Uri.parse(url);
-  //   if (await canLaunchUrl(uri)) {
-  //     await launchUrl(uri);
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -95,149 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
-
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Color(0xff009788),
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500)),
-        iconTheme: IconThemeData(color: backgroundColor), // Change the color of the hamburger menu button
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.info_outline),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => AboutScreen(isDarkMode: isDarkMode),
-                )
-              );
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        backgroundColor: backgroundColor,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xff009788),
-              ),
-              child: Text(
-                'ChordMemo',
-                style: TextStyle(
-                  color: backgroundColor,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Export/Import Songs', style: TextStyle(color: textColor)),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ExportImportScreen(isDarkMode: isDarkMode),
-                  )
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Dark Mode: ${isDarkMode ? 'On' : 'Off'}', style: TextStyle(color: textColor)),
-              onTap: _toggleDarkMode,
-            ),
-            ListTile(
-              title: Text('About', style: TextStyle(color: textColor)),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AboutScreen(isDarkMode: isDarkMode),
-                  )
-                );
-              },
-            ),
-            ListTile(
-              title: Text('My Website', style: TextStyle(color: textColor)),
-              onTap: () {
-                // _openLink('https://joshsj89.github.io/ChordMemo');
-              },
-            ),
-            ListTile(
-              title: Text('GitHub', style: TextStyle(color: textColor)),
-              onTap: () {
-                // _openLink('https://www.github.com/joshsj89');
-              },
-            ),
-            ListTile(
-              title: Text('Contact Me', style: TextStyle(color: textColor)),
-              onTap: () {
-                // _openLink('https://joshsj89.github.io/#contact');
-              },
-            ),
-            ListTile(
-              title: Text('Donate', style: TextStyle(color: textColor)),
-              onTap: () {
-                // _openLink(dotenv.env['DONATE_LINK'] ?? '');
-              },
-            ),
-          ],
-        )
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '0',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Add Song',
-        backgroundColor: Color(0xff009788),
-        child: Icon(Icons.add, color: backgroundColor),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    return HomeScreen();
   }
 }
