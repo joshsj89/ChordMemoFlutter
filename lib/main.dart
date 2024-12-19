@@ -3,8 +3,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-import 'dark_mode_provider.dart';
-import 'home_screen.dart';
+import 'widgets/dark_mode_provider.dart';
+import 'screens/home_screen.dart';
 
 Future main() async {
   await dotenv.load(fileName: '.env');

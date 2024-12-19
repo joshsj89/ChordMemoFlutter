@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'about_screen.dart';
-import 'dark_mode_provider.dart';
+import '../widgets/dark_mode_provider.dart';
 import 'export_import_screen.dart';
 
 class Key {
