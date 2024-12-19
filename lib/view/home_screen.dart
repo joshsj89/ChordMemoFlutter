@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:convert';
 
@@ -24,6 +26,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadSongs();
+  }
+
+  void _openLink(String url) async {
+    Uri uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      print('Could not launch $url');
+    }
   }
 
   Future<void> _loadSongs() async {
@@ -161,25 +173,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: Text('My Website', style: TextStyle(color: textColor)),
               onTap: () {
-                // _openLink('https://joshsj89.github.io/ChordMemo');
+                _openLink('https://joshsj89.github.io/ChordMemo');
               },
             ),
             ListTile(
               title: Text('GitHub', style: TextStyle(color: textColor)),
               onTap: () {
-                // _openLink('https://www.github.com/joshsj89');
+                _openLink('https://www.github.com/joshsj89');
               },
             ),
             ListTile(
               title: Text('Contact Me', style: TextStyle(color: textColor)),
               onTap: () {
-                // _openLink('https://joshsj89.github.io/#contact');
+                _openLink('https://joshsj89.github.io/#contact');
               },
             ),
             ListTile(
               title: Text('Donate', style: TextStyle(color: textColor)),
               onTap: () {
-                // _openLink(dotenv.env['DONATE_LINK'] ?? '');
+                _openLink(dotenv.env['DONATE_LINK'] ?? '');
               },
             ),
           ],
