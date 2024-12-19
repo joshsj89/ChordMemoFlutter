@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dart:convert';
 
 import '../view_model/dark_mode_provider.dart';
 import '../model/types.dart' as custom_types;
@@ -20,6 +23,51 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
     setState(() {
       _showSections = !_showSections;
     });
+  }
+
+  Future<void> _deleteSong() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedSongsString = prefs.getString('songs');
+
+      if (savedSongsString != null) {
+        final List<custom_types.Song> savedSongs = savedSongsString.isNotEmpty
+            ? (jsonDecode(savedSongsString) as List)
+                .map((song) => custom_types.Song.fromJson(song))
+                .toList()
+            : [];
+        savedSongs.removeWhere((song) => song.id == widget.song.id);
+        await prefs.setString('songs', jsonEncode(savedSongs));
+
+        Navigator.pop(context, true); // Refresh the list of songs
+      }
+    } catch (error) {
+      print('Error deleting song: $error');
+    }
+  }
+
+  void _confirmDelete() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confrim Deletion'),
+        content: Text('Are you sure you want to delete ${widget.song.title}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _deleteSong();
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -169,6 +217,29 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                   ),
                 ),
               ),
+          ],
+        ),
+
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 'edit',
+              tooltip: 'Edit',
+              backgroundColor: const Color(0xff009788),
+              onPressed: () {
+
+              },
+              child: Icon(Icons.edit, color: backgroundColor),
+            ),
+            const SizedBox(width: 10),
+            FloatingActionButton(
+              heroTag: 'delete',
+              tooltip: 'Delete',
+              backgroundColor: const Color(0xff009788),
+              onPressed: _confirmDelete,
+              child: Icon(Icons.delete, color: backgroundColor),
+            ),
           ],
         ),
       ),

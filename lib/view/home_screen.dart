@@ -191,12 +191,18 @@ class _HomeScreenState extends State<HomeScreen> {
           final song = songs[index];
 
           return InkWell(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => SongDetailsScreen(song: song),
-              )
-            ),
+            onTap: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SongDetailsScreen(song: song),
+                )
+              );
+
+              if (result == true) {
+                _loadSongs();
+              }
+            },
             onLongPress: () => _confirmDelete(song),
             child: Container(
               padding: const EdgeInsets.all(10),
