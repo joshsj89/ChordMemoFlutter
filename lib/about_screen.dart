@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'dark_mode_provider.dart';
 
 class AboutScreen extends StatelessWidget {
-  final bool isDarkMode;
-
-  AboutScreen({super.key, this.isDarkMode = false});
+  AboutScreen({super.key});
 
   final List<String> keyFeatures = [
     'Chord Progression Storage: Easily create and store chord progressions for songs. Organize them by title, artist, genre, and more.',
@@ -17,6 +18,7 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
 
     final backgroundColor = isDarkMode ? Colors.black : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;

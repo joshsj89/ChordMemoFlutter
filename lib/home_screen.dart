@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
 import 'dart:convert';
 
 import 'about_screen.dart';
+import 'dark_mode_provider.dart';
 import 'export_import_screen.dart';
 
 class Key {
@@ -113,14 +115,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isDarkMode = false;
   List<Song> songs = [];
-
-  void _toggleDarkMode() {
-    setState(() {
-      isDarkMode = !isDarkMode;
-    });
-  }
 
   @override
   void initState() {
@@ -177,8 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final darkModeProvider = Provider.of<DarkModeProvider>(context);
+    final backgroundColor = darkModeProvider.isDarkMode ? Colors.black : Colors.white;
+    final textColor = darkModeProvider.isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -204,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => AboutScreen(isDarkMode: isDarkMode),
+                  builder: (_) => AboutScreen(),
                 )
               );
             },
@@ -234,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ExportImportScreen(isDarkMode: isDarkMode),
+                    builder: (_) => ExportImportScreen(),
                   )
                 );
 
@@ -245,8 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-              title: Text('Dark Mode: ${isDarkMode ? 'On' : 'Off'}', style: TextStyle(color: textColor)),
-              onTap: _toggleDarkMode,
+              title: Text('Dark Mode: ${darkModeProvider.isDarkMode ? 'On' : 'Off'}', style: TextStyle(color: textColor)),
+              onTap: darkModeProvider.toggleDarkMode,
             ),
             ListTile(
               title: Text('About', style: TextStyle(color: textColor)),
@@ -254,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => AboutScreen(isDarkMode: isDarkMode),
+                    builder: (_) => AboutScreen(),
                   )
                 );
               },
@@ -316,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     song.artist,
                     style: TextStyle(
-                      color: isDarkMode ? Color(0xff99999e) : Colors.black,
+                      color: darkModeProvider.isDarkMode ? Color(0xff99999e) : Colors.black,
                     ),
                   ),
                 ],

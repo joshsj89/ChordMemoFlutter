@@ -3,17 +3,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:convert';
 import 'dart:io';
 
-class ExportImportScreen extends StatefulWidget {
-  final bool isDarkMode;
+import 'dark_mode_provider.dart';
 
-  const ExportImportScreen({
-    super.key,
-    this.isDarkMode = false,
-  });
+class ExportImportScreen extends StatefulWidget {
+  const ExportImportScreen({super.key});
 
   @override
   State<ExportImportScreen> createState() => _ExportImportScreenState();
@@ -120,8 +118,10 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = widget.isDarkMode ? Colors.black : Colors.white;
-    final textColor = widget.isDarkMode ? Colors.white : Colors.black;
+    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+
+    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     return PopScope(
       canPop: false, // Prevent default behavior of back button
