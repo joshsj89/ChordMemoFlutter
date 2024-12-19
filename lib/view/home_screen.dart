@@ -28,16 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadSongs();
   }
 
-  void _openLink(String url) async {
-    Uri uri = Uri.parse(url);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      print('Could not launch $url');
-    }
-  }
-
   Future<void> _loadSongs() async {
     final prefs = await SharedPreferences.getInstance();
     final savedSongs = prefs.getString('songs');
@@ -98,16 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(
-          'ChordMemo', 
+          'ChordMemo',
           style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500),
         ),
         iconTheme: IconThemeData(color: backgroundColor), // Change the color of the hamburger menu button
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {
-
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: Icon(Icons.info_outline),
@@ -116,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (_) => AboutScreen(),
-                )
+                ),
               );
             },
           ),
@@ -140,13 +128,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              title: Text('Export/Import Songs', style: TextStyle(color: textColor)),
+              title: Text(
+                'Export/Import Songs',
+                style: TextStyle(color: textColor),
+              ),
               onTap: () async {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ExportImportScreen(),
-                  )
+                  ),
                 );
 
                 // If the user imported songs, reload the list
@@ -156,7 +147,10 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-              title: Text('Dark Mode: ${darkModeProvider.isDarkMode ? 'On' : 'Off'}', style: TextStyle(color: textColor)),
+              title: Text(
+                'Dark Mode: ${darkModeProvider.isDarkMode ? 'On' : 'Off'}',
+                style: TextStyle(color: textColor),
+              ),
               onTap: darkModeProvider.toggleDarkMode,
             ),
             ListTile(
@@ -166,37 +160,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => AboutScreen(),
-                  )
+                  ),
                 );
               },
             ),
-            ListTile(
-              title: Text('My Website', style: TextStyle(color: textColor)),
-              onTap: () {
-                _openLink('https://joshsj89.github.io/ChordMemo');
-              },
+            LinkButton(
+              text: 'My Website',
+              url: 'https://joshsj89.github.io/ChordMemo',
             ),
-            ListTile(
-              title: Text('GitHub', style: TextStyle(color: textColor)),
-              onTap: () {
-                _openLink('https://www.github.com/joshsj89');
-              },
+            LinkButton(
+              text: 'GitHub',
+              url: 'https://www.github.com/joshsj89',
             ),
-            ListTile(
-              title: Text('Contact Me', style: TextStyle(color: textColor)),
-              onTap: () {
-                _openLink('https://joshsj89.github.io/#contact');
-              },
+            LinkButton(
+              text: 'Contact Me',
+              url: 'https://joshsj89.github.io/#contact',
             ),
-            ListTile(
-              title: Text('Donate', style: TextStyle(color: textColor)),
-              onTap: () {
-                _openLink(dotenv.env['DONATE_LINK'] ?? '');
-              },
+            LinkButton(
+              text: 'Donate',
+              url: dotenv.env['DONATE_LINK'] ?? '',
             ),
           ],
-        )
-      ),
+        )),
       body: ListView.builder(
         itemCount: songs.length,
         itemBuilder: (context, index) {
@@ -208,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (_) => SongDetailsScreen(song: song),
-                )
+                ),
               );
 
               if (result == true) {
@@ -235,14 +220,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     song.artist,
                     style: TextStyle(
-                      color: darkModeProvider.isDarkMode ? Color(0xff99999e) : Colors.black,
+                      color: darkModeProvider.isDarkMode
+                        ? Color(0xff99999e)
+                        : Colors.black,
                     ),
                   ),
                 ],
               ),
             ),
           );
-        }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addArbitrarySong,
@@ -250,6 +237,38 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Color(0xff009788),
         child: Icon(Icons.add, color: backgroundColor),
       ),
+    );
+  }
+}
+
+class LinkButton extends StatelessWidget {
+  final String text;
+  final String url;
+
+  const LinkButton({
+    super.key,
+    required this.text,
+    required this.url,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
+    void openLink() async {
+      Uri uri = Uri.parse(url);
+
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        print('Could not launch $url');
+      }
+    }
+
+    return ListTile(
+      title: Text(text, style: TextStyle(color: textColor)),
+      onTap: openLink,
     );
   }
 }
