@@ -191,10 +191,12 @@ class _HomeScreenState extends State<HomeScreen> {
           final song = songs[index];
 
           return InkWell(
-            onTap: () {
-              // TODO: Navigate to SongDetails screen
-              // Example: Navigator.push(context, MaterialPageRoute(builder: (_) => SongDetailsScreen(song: song)));
-            },
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SongDetailsScreen(song: song),
+              )
+            ),
             onLongPress: () => _confirmDelete(song),
             child: Container(
               padding: const EdgeInsets.all(10),
