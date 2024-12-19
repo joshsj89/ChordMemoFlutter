@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/dark_mode_provider.dart';
-import '../constants/types.dart' as custom_types;
+import '../view_model/dark_mode_provider.dart';
+import '../model/types.dart' as custom_types;
 
 class SongDetailsScreen extends StatefulWidget {
   final custom_types.Song song;

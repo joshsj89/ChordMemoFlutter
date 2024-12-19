@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 
-import '../widgets/dark_mode_provider.dart';
+import '../view_model/dark_mode_provider.dart';
 
 class ExportImportScreen extends StatefulWidget {
   const ExportImportScreen({super.key});

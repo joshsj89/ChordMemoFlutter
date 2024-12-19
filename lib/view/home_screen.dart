@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'about_screen.dart';
-import '../widgets/dark_mode_provider.dart';
+import '../view_model/dark_mode_provider.dart';
 import 'export_import_screen.dart';
 import 'song_details_screen.dart';
-import '../constants/types.dart' as custom_types;
+import '../model/types.dart' as custom_types;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
