@@ -63,6 +63,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -74,6 +77,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                   hintText: 'Artist',
                   hintStyle: TextStyle(color: Colors.grey[500]),
                   enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
                   ),
                 ),
