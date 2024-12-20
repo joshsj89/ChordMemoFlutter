@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 
+import 'custom_button.dart';
 import '../view_model/dark_mode_provider.dart';
 
 class ExportImportScreen extends StatefulWidget {
@@ -219,36 +220,6 @@ class FeatureDescription extends StatelessWidget {
           )
         ]
       )
-    );
-  }
-}
-
-class CustomButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  const CustomButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: TextButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll<Color>(Color(0xff009788)),
-          shape: WidgetStatePropertyAll<OutlinedBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))
-          ),
-        ),
-        child: Text(
-          label, 
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
     );
   }
 }
