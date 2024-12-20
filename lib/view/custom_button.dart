@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: TextButton(
-        onPressed: onPressed,
+        onPressed: !disabled ? onPressed : null,
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll<Color>(!disabled ? Color(0xff009788) : Color(0xffdfdfdf)),
           shape: WidgetStatePropertyAll<OutlinedBorder>(
