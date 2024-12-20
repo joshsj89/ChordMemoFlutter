@@ -79,8 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final darkModeProvider = Provider.of<DarkModeProvider>(context);
-    final backgroundColor = darkModeProvider.isDarkMode ? Colors.black : Colors.white;
+    final backgroundColor = darkModeProvider.isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = darkModeProvider.isDarkMode ? Colors.white : Colors.black;
+    final altTextColor = darkModeProvider.isDarkMode ? Colors.black : Colors.white;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -90,9 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
         // the App.build method, and use it to set our appbar title.
         title: Text(
           'ChordMemo',
-          style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500),
+          style: TextStyle(color: altTextColor, fontWeight: FontWeight.w500),
         ),
-        iconTheme: IconThemeData(color: backgroundColor), // Change the color of the hamburger menu button
+        iconTheme: IconThemeData(color: altTextColor), // Change the color of the hamburger menu button
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -123,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 'ChordMemo',
                 style: TextStyle(
-                  color: backgroundColor,
+                  color: altTextColor,
                   fontSize: 24,
                 ),
               ),
@@ -247,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         tooltip: 'Add Song',
         backgroundColor: Color(0xff009788),
-        child: Icon(Icons.add, color: backgroundColor),
+        child: Icon(Icons.add, color: altTextColor),
       ),
     );
   }

@@ -21,17 +21,21 @@ class _AddSongScreenState extends State<AddSongScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
 
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
+    final altTextColor = isDarkMode ? Colors.black : Colors.white;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff009788),
         title: Text(
           'Add Song',
-          style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: altTextColor,
+              fontWeight: FontWeight.w500,
+            ),
         ),
-        iconTheme: IconThemeData(color: backgroundColor), // Change the color of the back button
+        iconTheme: IconThemeData(color: altTextColor), // Change the color of the back button
       ),
       backgroundColor: backgroundColor,
       body: SingleChildScrollView(

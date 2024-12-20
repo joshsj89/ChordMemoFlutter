@@ -121,8 +121,9 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
 
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
+    final altTextColor = isDarkMode ? Colors.black : Colors.white;
 
     return PopScope(
       canPop: false, // Prevent default behavior of back button
@@ -134,8 +135,14 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xff009788),
-          title: Text('Export/Import', style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500)),
-          iconTheme: IconThemeData(color: backgroundColor), // Change the color of the back button
+            title: Text(
+              'Export/Import',
+              style: TextStyle(
+                color: altTextColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          iconTheme: IconThemeData(color: altTextColor), // Change the color of the back button
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context, didImport),

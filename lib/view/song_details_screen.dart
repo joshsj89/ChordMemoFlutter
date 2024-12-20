@@ -73,8 +73,9 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+    final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
+    final altTextColor = isDarkMode ? Colors.black : Colors.white;
     final borderColor = isDarkMode ? Color(0xff2a2a2a) : Colors.black;
 
     return PopScope(
@@ -96,10 +97,13 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
           backgroundColor: Color(0xff009788),
           title: Text(
             widget.song.title,
-            style: TextStyle(color: backgroundColor, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: altTextColor,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           iconTheme: IconThemeData(
-              color: backgroundColor), // Change the color of the back button
+              color: altTextColor), // Change the color of the back button
         ),
         backgroundColor: backgroundColor,
         body: Column(
@@ -230,7 +234,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
               onPressed: () {
 
               },
-              child: Icon(Icons.edit, color: backgroundColor),
+              child: Icon(Icons.edit, color: altTextColor),
             ),
             const SizedBox(width: 10),
             FloatingActionButton(
@@ -238,7 +242,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
               tooltip: 'Delete',
               backgroundColor: const Color(0xff009788),
               onPressed: _confirmDelete,
-              child: Icon(Icons.delete, color: backgroundColor),
+              child: Icon(Icons.delete, color: altTextColor),
             ),
           ],
         ),
