@@ -237,7 +237,6 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         onDeleted: () {
                           setState(() {
                             genres.remove(genre);
-                            // availableGenres.insert(genre.id, genre);
 
                             // Sort the genres by id
                             availableGenres.add(genre);
@@ -293,6 +292,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
 
                   return ExpansionTile(
                     title: Text(section.sectionTitle),
+                    initiallyExpanded: true,
                     children: [
                       Row(
                         children: [
@@ -368,6 +368,16 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                     keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
                                   }
                                 }
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              setState(() {
+                                sections.removeAt(index);
+                                keysInputs.remove(index);
+                                chordsInputs.remove(index);
                               });
                             },
                           ),
