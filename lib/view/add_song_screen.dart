@@ -28,6 +28,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   List<ListTileOption> availableSectionTitles = List.from(sectionTypeOptions);
   Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
   Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
+  bool isSameKeyForAllSections = false;
 
   void _onAddSong() async {
     setState(() {
@@ -257,6 +258,28 @@ class _AddSongScreenState extends State<AddSongScreen> {
                 onPressed: onAddSectionPress,
               ),
 
+              if (sections.isNotEmpty)
+                CheckboxListTile(
+                  title: Text('Same Key For All Sections'),
+                  value: isSameKeyForAllSections,      
+                  onChanged: (value) {
+                    setState(() {
+                      isSameKeyForAllSections = value!;
+
+                      if (value) {
+                        for (int i = 1; i < sections.length; i++) {
+                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                        }
+                      }
+                    });
+                  },
+                  activeColor: const Color(0xff009788),
+                  side: const BorderSide(color: 
+                    Color(0xff009788),
+                    width: 2,
+                  ),
+                ),
+
               // Section Chooser List (Accordion)
               Column(
                 children: sections.asMap().entries.map((entry) {
@@ -274,56 +297,77 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       Row(
                         children: [
                           DropdownButton<String>(
-                            value: currentKey.tonic,
+                            value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
+                            disabledHint: Text(keysInputs[0]?.tonic ?? 'C'), // Show the first key when all keys are the same
                             items: keyTonicOptions.map((tonic) {
                               return DropdownMenuItem<String>(
                                 value: tonic,
                                 child: Text(tonic),
                               );
                             }).toList(),
-                            onChanged: (value) {
+                            onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
                               setState(() {
                                 keysInputs[index] = custom_types.Key(
                                   tonic: value!,
                                   symbol: currentKey.symbol,
                                   mode: currentKey.mode,
                                 );
+
+                                if (isSameKeyForAllSections) {
+                                  for (int i = 1; i < sections.length; i++) {
+                                    keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                  }
+                                }
                               });
                             },
                           ),
                           DropdownButton<String>(
-                            value: currentKey.symbol,
+                            value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
+                            disabledHint: Text(keysInputs[0]?.symbol ?? ''),
                             items: keySymbolOptions.map((symbol) {
                               return DropdownMenuItem<String>(
                                 value: symbol,
                                 child: Text(symbol),
                               );
                             }).toList(),
-                            onChanged: (value) {
+                            onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
                               setState(() {
                                 keysInputs[index] = custom_types.Key(
                                   tonic: currentKey.tonic,
                                   symbol: value!,
                                   mode: currentKey.mode,
                                 );
+
+                                if (isSameKeyForAllSections) {
+                                  for (int i = 1; i < sections.length; i++) {
+                                    keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                  }
+                                }
                               });
                             },
                           ),
                           DropdownButton<String>(
-                            value: currentKey.mode,
+                            value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
+                            disabledHint: Text(keysInputs[0]?.mode ?? 'Major'),
                             items: keyModeOptions.map((mode) {
                               return DropdownMenuItem<String>(
                                 value: mode,
                                 child: Text(mode),
                               );
                             }).toList(),
-                            onChanged: (value) {
+                            onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
                               setState(() {
                                 keysInputs[index] = custom_types.Key(
                                   tonic: currentKey.tonic,
                                   symbol: currentKey.symbol,
                                   mode: value!,
                                 );
+
+                                if (isSameKeyForAllSections) {
+                                  for (int i = 1; i < sections.length; i++) {
+                                    keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                  }
+                                }
                               });
                             },
                           ),
