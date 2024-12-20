@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 
 import 'about_screen.dart';
+import 'add_song_screen.dart';
 import '../view_model/dark_mode_provider.dart';
 import 'export_import_screen.dart';
 import 'song_details_screen.dart';
@@ -232,7 +233,18 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addArbitrarySong,
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AddSongScreen(),
+            ),
+          );
+
+          if (result == true) {
+            _loadSongs();
+          }
+        },
         tooltip: 'Add Song',
         backgroundColor: Color(0xff009788),
         child: Icon(Icons.add, color: backgroundColor),
