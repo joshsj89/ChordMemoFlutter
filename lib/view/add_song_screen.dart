@@ -122,7 +122,13 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         onDeleted: () {
                           setState(() {
                             genres.remove(genre);
-                            availableGenres.insert(genre.id, genre);
+                            // availableGenres.insert(genre.id, genre);
+
+                            // Sort the genres by id
+                            availableGenres.add(genre);
+                            availableGenres.sort((a, b) {
+                              return a.id.compareTo(b.id);
+                            });
                           });
                         },
                       ),
