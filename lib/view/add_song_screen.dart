@@ -253,6 +253,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       margin: const EdgeInsets.only(right: 10),
                       child: Chip(
                         label: Text(genre.label),
+                        backgroundColor: isDarkMode ? Colors.grey[900]: const Color(0xfff4faf8),
+                        labelStyle: TextStyle(color: textColor),
+                        deleteIcon: Icon(Icons.cancel, color: Colors.red),
                         onDeleted: () {
                           setState(() {
                             genres.remove(genre);
@@ -278,7 +281,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
 
               if (sections.isNotEmpty)
                 CheckboxListTile(
-                  title: Text('Same Key For All Sections'),
+                  title: Text('Same Key For All Sections', style: TextStyle(color: textColor)),
                   value: isSameKeyForAllSections,      
                   onChanged: (value) {
                     setState(() {
@@ -310,18 +313,21 @@ class _AddSongScreenState extends State<AddSongScreen> {
                   );
 
                   return ExpansionTile(
-                    title: Text(section.sectionTitle),
+                    title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
                     initiallyExpanded: true,
                     children: [
                       Row(
                         children: [
                           DropdownButton<String>(
                             value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
-                            disabledHint: Text(keysInputs[0]?.tonic ?? 'C'), // Show the first key when all keys are the same
+                            disabledHint: Text(
+                              keysInputs[0]?.tonic ?? 'C', // Show the first key when all keys are the same
+                              style: TextStyle(color: Colors.grey[500]),
+                            ),
                             items: keyTonicOptions.map((tonic) {
                               return DropdownMenuItem<String>(
                                 value: tonic,
-                                child: Text(tonic),
+                                child: Text(tonic, style: TextStyle(color: textColor)),
                               );
                             }).toList(),
                             onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
@@ -342,11 +348,14 @@ class _AddSongScreenState extends State<AddSongScreen> {
                           ),
                           DropdownButton<String>(
                             value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
-                            disabledHint: Text(keysInputs[0]?.symbol ?? ''),
+                            disabledHint: Text(
+                              keysInputs[0]?.symbol ?? '',
+                              style: TextStyle(color: Colors.grey[500]),
+                            ),
                             items: keySymbolOptions.map((symbol) {
                               return DropdownMenuItem<String>(
                                 value: symbol,
-                                child: Text(symbol),
+                                child: Text(symbol, style: TextStyle(color: textColor)),
                               );
                             }).toList(),
                             onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
@@ -367,11 +376,14 @@ class _AddSongScreenState extends State<AddSongScreen> {
                           ),
                           DropdownButton<String>(
                             value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
-                            disabledHint: Text(keysInputs[0]?.mode ?? 'Major'),
+                            disabledHint: Text(
+                              keysInputs[0]?.mode ?? 'Major',
+                              style: TextStyle(color: Colors.grey[500]),
+                            ),
                             items: keyModeOptions.map((mode) {
                               return DropdownMenuItem<String>(
                                 value: mode,
-                                child: Text(mode),
+                                child: Text(mode, style: TextStyle(color: textColor)),
                               );
                             }).toList(),
                             onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {

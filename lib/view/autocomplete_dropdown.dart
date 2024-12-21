@@ -80,7 +80,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
               children: [
                 if (_controller.text.isNotEmpty)
                   IconButton(
-                    icon: Icon(Icons.clear),
+                    icon: Icon(Icons.cancel),
                     onPressed: () {
                       setState(() {
                         _controller.clear();
