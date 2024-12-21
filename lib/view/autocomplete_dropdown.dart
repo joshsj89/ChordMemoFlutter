@@ -42,7 +42,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   void _onTextChanged() {
     final input = _controller.text.toLowerCase();
 
-    setState((){
+    setState(() {
     _filteredSuggestions = widget.suggestions
       .where((suggestion) => suggestion.toLowerCase().contains(input))
       .toList();
@@ -80,7 +80,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
               children: [
                 if (_controller.text.isNotEmpty)
                   IconButton(
-                    icon: Icon(Icons.cancel),
+                    icon: const Icon(Icons.cancel),
                     onPressed: () {
                       setState(() {
                         _controller.clear();
@@ -88,16 +88,19 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                       });
                     },
                   ),
-
-                IconButton(
-                  icon: Icon(Icons.expand_more),
-                  onPressed: () {
-                    setState(() {
-                      _showDropdown = !_showDropdown;
-                    });
-                  }
-                )
-              ]
+                AnimatedRotation(
+                  turns: _showDropdown ? 0.5 : 0, // 0.5*2*π = 1π = 180°
+                  duration: const Duration(milliseconds: 300),
+                  child: IconButton(
+                    icon: const Icon(Icons.expand_more),
+                    onPressed: () {
+                      setState(() {
+                        _showDropdown = !_showDropdown;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: widget.borderSide,
@@ -126,7 +129,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(
-                    _filteredSuggestions[index], 
+                    _filteredSuggestions[index],
                     style: widget.style,
                   ),
                   onTap: () {
@@ -136,11 +139,11 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                     });
 
                     widget.onChanged(_filteredSuggestions[index]);
-                  }
+                  },
                 );
-              }
-            )
-          )
+              },
+            ),
+          ),
       ],
     );
   }
