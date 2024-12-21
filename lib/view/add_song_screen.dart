@@ -308,9 +308,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                   final custom_types.Section section = entry.value;
 
                   final custom_types.Key currentKey = keysInputs[index] ?? section.key;
-                  final TextEditingController chordsController = TextEditingController(
-                    text: chordsInputs[index] ?? section.chords,
-                  );
+                  // final TextEditingController chordsController = TextEditingController(
+                  //   text: chordsInputs[index] ?? section.chords,
+                  // );
 
                   return ExpansionTile(
                     title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
@@ -415,7 +415,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         ],
                       ),
                       TextField(
-                        controller: chordsController,
+                        // controller: chordsController,
                         style: TextStyle(color: textColor),
                         decoration: InputDecoration(
                           hintText: 'Chords',
