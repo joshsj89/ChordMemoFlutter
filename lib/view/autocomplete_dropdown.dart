@@ -136,9 +136,11 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                     setState(() {
                       _controller.text = _filteredSuggestions[index];
                       _showDropdown = false;
+
+                      widget.onChanged(_controller.text);
                     });
 
-                    widget.onChanged(_filteredSuggestions[index]);
+                    _focusNode.unfocus();
                   },
                 );
               },
