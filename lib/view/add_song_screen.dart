@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
 
+import 'autocomplete_dropdown.dart';
 import 'custom_button.dart';
 import '../view_model/dark_mode_provider.dart';
 import '../view_model/song_persistence.dart';
@@ -26,9 +27,32 @@ class _AddSongScreenState extends State<AddSongScreen> {
   List<custom_types.Section> sections = [];
   List<ListTileOption> sectionTitles = [];
   List<ListTileOption> availableSectionTitles = List.from(sectionTypeOptions);
+  List<String> songArtists = [];
   Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
   Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
   bool isSameKeyForAllSections = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadArtists();
+  }
+
+  Future<void> _loadArtists() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedSongs = prefs.getString('songs');
+
+    if (savedSongs != null) {
+      setState(() {
+        final List<custom_types.Song> songs = (jsonDecode(savedSongs) as List)
+          .map((song) => custom_types.Song.fromJson(song))
+          .toList();
+
+        songArtists = songs.map((song) => song.artist).toSet().toList(); // Remove duplicates
+      });
+    }
+  }
 
   void _onAddSong() async {
     setState(() {
@@ -201,18 +225,13 @@ class _AddSongScreenState extends State<AddSongScreen> {
               SizedBox(height: 20),
         
               // Artist
-              TextField(
+              AutocompleteDropdown(
+                suggestions: songArtists,
+                hintText: 'Artist',
+                hintStyle: TextStyle(color: Colors.grey[500]),
                 style: TextStyle(color: textColor),
-                decoration: InputDecoration(
-                  hintText: 'Artist',
-                  hintStyle: TextStyle(color: Colors.grey[500]),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                  ),
-                ),
+                borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                suggestionListBackgroundColor: backgroundColor,
                 onChanged: (value) {
                   setState(() {
                     artist = value;
