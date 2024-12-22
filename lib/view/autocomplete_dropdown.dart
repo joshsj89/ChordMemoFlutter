@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../view_model/highlight_matching_text.dart';
+
 class AutocompleteDropdown extends StatefulWidget {
   final List<String> dataset;
   final String hintText;
@@ -123,9 +125,10 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(
-                        _suggestionList[index],
-                        style: widget.style,
+                      title: RichText(
+                        text: TextSpan(
+                          children: highlightMatchingText(_suggestionList[index], _controller.text, widget.style),
+                        ),
                       ),
                       onTap: () {
                         setState(() {
