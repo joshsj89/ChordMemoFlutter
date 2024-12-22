@@ -58,11 +58,12 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   }
 
   void _onTextChanged() {
-    final input = widget.controller?.text.toLowerCase() ?? '';
+    final input = widget.controller?.text ?? '';
+    final inputLower = input.toLowerCase();
 
     setState(() {
     _suggestionList = widget.dataset
-      .where((suggestion) => suggestion.toLowerCase().contains(input))
+      .where((suggestion) => suggestion.toLowerCase().contains(inputLower))
       .toList();
 
       _showDropdown = input.isNotEmpty && _suggestionList.isNotEmpty;
