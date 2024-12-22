@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../view_model/dark_mode_provider.dart';
+import 'edit_song_screen.dart';
 import '../model/types.dart' as custom_types;
 
 class SongDetailsScreen extends StatefulWidget {
@@ -18,11 +19,54 @@ class SongDetailsScreen extends StatefulWidget {
 
 class _SongDetailsScreenState extends State<SongDetailsScreen> {
   bool _showSections = false;
+  bool _didEdit = false;
+  late custom_types.Song _song;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _song = widget.song;
+  }
+
+  @override
+  void didUpdateWidget(covariant SongDetailsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.song != widget.song) {
+      setState(() { 
+        _song = widget.song;
+        _showSections = false;
+      });
+    }
+  }
 
   void _toggleSections() {
     setState(() {
       _showSections = !_showSections;
     });
+  }
+
+  void _editSong() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditSongScreen(song: widget.song),
+      ),
+    );
+
+    if (result == null) return;
+
+    _didEdit = result[0] as bool;
+    final updatedSong = result[1] as custom_types.Song;
+
+    if (_didEdit) {
+      // Refresh the song details
+      setState(() {
+        _song = updatedSong;
+        _showSections = false;
+      });
+    }
   }
 
   Future<void> _deleteSong() async {
@@ -36,7 +80,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                 .map((song) => custom_types.Song.fromJson(song))
                 .toList()
             : [];
-        savedSongs.removeWhere((song) => song.id == widget.song.id);
+        savedSongs.removeWhere((song) => song.id == _song.id);
         await prefs.setString('songs', jsonEncode(savedSongs));
 
         Navigator.pop(context, true); // Refresh the list of songs
@@ -51,7 +95,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Confrim Deletion'),
-        content: Text('Are you sure you want to delete ${widget.song.title}?'),
+        content: Text('Are you sure you want to delete ${_song.title}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
@@ -83,20 +127,19 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           if (!_showSections) {
-            Navigator.pop(context, _showSections);
+            Navigator.pop(context, _didEdit);
           } else {
             setState(() {
               _showSections = false;
             });
           }
-
         }
       },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xff009788),
           title: Text(
-            widget.song.title,
+            _song.title,
             style: TextStyle(
               color: altTextColor,
               fontWeight: FontWeight.w500,
@@ -115,7 +158,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                   children: [
                     Center(
                       child: Text(
-                        widget.song.title,
+                        _song.title,
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -124,9 +167,9 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    if (widget.song.artist.isNotEmpty)
+                    if (_song.artist.isNotEmpty)
                       Text(
-                        widget.song.artist,
+                        _song.artist,
                         style: TextStyle(
                           fontSize: 15,
                           color: textColor,
@@ -153,7 +196,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        widget.song.title,
+                        _song.title,
                         style: TextStyle(
                           fontSize: 50,
                           fontWeight: FontWeight.bold,
@@ -165,18 +208,18 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                   ),
                 ),
               ),
-              if (widget.song.artist.isNotEmpty || widget.song.genres.isNotEmpty)
+              if (_song.artist.isNotEmpty || _song.genres.isNotEmpty)
                 Column(
                   children: [
-                    if (widget.song.artist.isNotEmpty)
+                    if (_song.artist.isNotEmpty)
                       Text(
-                        widget.song.artist,
+                        _song.artist,
                         style: TextStyle(fontSize: 20, color: textColor),
                         textAlign: TextAlign.center,
                       ),
-                    if (widget.song.genres.isNotEmpty)
+                    if (_song.genres.isNotEmpty)
                       Text(
-                        widget.song.genres.join(', '),
+                        _song.genres.join(', '),
                         style: const TextStyle(fontSize: 16, color: Colors.grey),
                         textAlign: TextAlign.center,
                       ),
@@ -192,7 +235,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                     alignment: Alignment.topLeft,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget.song.sections.map((section) {
+                      children: _song.sections.map((section) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: Column(
@@ -231,9 +274,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
               heroTag: 'edit',
               tooltip: 'Edit',
               backgroundColor: const Color(0xff009788),
-              onPressed: () {
-
-              },
+              onPressed: _editSong,
               child: Icon(Icons.edit, color: altTextColor),
             ),
             const SizedBox(width: 10),
