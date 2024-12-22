@@ -32,7 +32,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   final LayerLink _layerLink = LayerLink(); // for positioning the suggestion list
   OverlayEntry? _overlayEntry; // The overlay entry for the suggestion list
 
-  List<String> _filteredSuggestions = []; // Suggestions that match the current input
+  List<String> _suggestionList = []; // Suggestions that match the current input
   bool _showDropdown = false;
 
   @override
@@ -42,15 +42,22 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
     _focusNode.addListener(_onFocusChanged);
   }
 
+  // Initialize the filtered suggestions when the dataset changes
+  @override
+  void didUpdateWidget(covariant AutocompleteDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _suggestionList = widget.dataset;
+  }
+
   void _onTextChanged() {
     final input = _controller.text.toLowerCase();
 
     setState(() {
-    _filteredSuggestions = widget.dataset
+    _suggestionList = widget.dataset
       .where((suggestion) => suggestion.toLowerCase().contains(input))
       .toList();
 
-      _showDropdown = input.isNotEmpty && _filteredSuggestions.isNotEmpty;
+      _showDropdown = input.isNotEmpty && _suggestionList.isNotEmpty;
       _updateOverlay();
     });
 
@@ -112,16 +119,16 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: _filteredSuggestions.length,
+                  itemCount: _suggestionList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
-                        _filteredSuggestions[index],
+                        _suggestionList[index],
                         style: widget.style,
                       ),
                       onTap: () {
                         setState(() {
-                          _controller.text = _filteredSuggestions[index];
+                          _controller.text = _suggestionList[index];
                           _hideOverlay();
 
                           widget.onChanged(_controller.text);
