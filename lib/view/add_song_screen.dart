@@ -226,7 +226,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
         
               // Artist
               AutocompleteDropdown(
-                suggestions: songArtists,
+                dataset: songArtists,
                 hintText: 'Artist',
                 hintStyle: TextStyle(color: Colors.grey[500]),
                 style: TextStyle(color: textColor),

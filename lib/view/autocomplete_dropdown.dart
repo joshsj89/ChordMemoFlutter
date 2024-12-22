@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AutocompleteDropdown extends StatefulWidget {
-  final List<String> suggestions;
+  final List<String> dataset;
   final String hintText;
   final TextStyle hintStyle;
   final ValueChanged<String> onChanged;
@@ -12,7 +12,7 @@ class AutocompleteDropdown extends StatefulWidget {
 
   const AutocompleteDropdown({
     super.key,
-    required this.suggestions,
+    required this.dataset,
     required this.hintText,
     this.hintStyle = const TextStyle(color: Colors.grey),
     required this.onChanged,
@@ -46,7 +46,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
     final input = _controller.text.toLowerCase();
 
     setState(() {
-    _filteredSuggestions = widget.suggestions
+    _filteredSuggestions = widget.dataset
       .where((suggestion) => suggestion.toLowerCase().contains(input))
       .toList();
 
