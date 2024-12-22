@@ -7,6 +7,7 @@ class AutocompleteDropdown extends StatefulWidget {
   final String hintText;
   final TextStyle hintStyle;
   final TextEditingController? controller;
+  final bool shouldDisposeController;
   final ValueChanged<String> onChanged;
   final TextStyle style;
   final BorderSide borderSide;
@@ -19,6 +20,7 @@ class AutocompleteDropdown extends StatefulWidget {
     required this.hintText,
     this.hintStyle = const TextStyle(color: Colors.grey),
     this.controller,
+    this.shouldDisposeController = false,
     required this.onChanged,
     this.style = const TextStyle(),
     this.borderSide = const BorderSide(),
@@ -38,10 +40,14 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   List<String> _suggestionList = []; // Suggestions that match the current input
   bool _showDropdown = false;
 
+  late TextEditingController _controller;
+
   @override
   void initState() {
     super.initState();
-    widget.controller?.addListener(_onTextChanged);
+
+    _controller = widget.controller ?? TextEditingController();
+    _controller.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
 
@@ -52,13 +58,13 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
 
     if (oldWidget.dataset != widget.dataset) { // If the dataset has changed
       _suggestionList = widget.dataset
-        .where((suggestion) => suggestion.toLowerCase().contains(widget.controller?.text.toLowerCase() ?? ''))
+        .where((suggestion) => suggestion.toLowerCase().contains(_controller.text.toLowerCase()))
         .toList();
     }
   }
 
   void _onTextChanged() {
-    final input = widget.controller?.text ?? '';
+    final input = _controller.text;
     final inputLower = input.toLowerCase();
 
     setState(() {
@@ -134,15 +140,15 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                     return ListTile(
                       title: RichText(
                         text: TextSpan(
-                          children: highlightMatchingText(_suggestionList[index], widget.controller?.text ?? '', widget.style),
+                          children: highlightMatchingText(_suggestionList[index], _controller.text, widget.style),
                         ),
                       ),
                       onTap: () {
                         setState(() {
-                          widget.controller?.text = _suggestionList[index];
+                          _controller.text = _suggestionList[index];
                           _hideOverlay();
 
-                          widget.onChanged(widget.controller?.text ?? '');
+                          widget.onChanged(_controller.text);
                         });
 
                         _focusNode.unfocus();
@@ -163,7 +169,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextField(
-        controller: widget.controller,
+        controller: _controller,
         focusNode: _focusNode,
         style: widget.style,
         decoration: InputDecoration(
@@ -172,11 +178,11 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.controller?.text.isNotEmpty ?? false)
+              if (_controller.text.isNotEmpty)
                 IconButton(
                   icon: const Icon(Icons.cancel),
                   onPressed: () {
-                    widget.controller!.clear();
+                    _controller.clear();
                     _hideOverlay();
                   },
                 ),
@@ -213,7 +219,11 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
 
   @override
   void dispose() { // Clean up the controller and focus node when the widget is disposed
-    widget.controller?.dispose();
+    if (widget.shouldDisposeController && widget.controller != null) {
+      _controller.dispose();
+    }
+
+
     _focusNode.dispose();
     _overlayEntry?.remove();
     super.dispose();
