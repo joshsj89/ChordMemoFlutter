@@ -49,7 +49,12 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   @override
   void didUpdateWidget(covariant AutocompleteDropdown oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _suggestionList = widget.dataset;
+
+    if (oldWidget.dataset != widget.dataset) { // If the dataset has changed
+      _suggestionList = widget.dataset
+        .where((suggestion) => suggestion.toLowerCase().contains(widget.controller?.text.toLowerCase() ?? ''))
+        .toList();
+    }
   }
 
   void _onTextChanged() {
