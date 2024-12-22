@@ -5,6 +5,10 @@ List<TextSpan> highlightMatchingText(String suggestion, String query, TextStyle 
   final String lowerSuggestion = suggestion.toLowerCase();
   final String lowerQuery = query.toLowerCase();
 
+  if (query.isEmpty) {
+    return [TextSpan(text: suggestion, style: style)];
+  }
+
   int start = 0;
   int indexOfMatch = lowerSuggestion.indexOf(lowerQuery, start);
 

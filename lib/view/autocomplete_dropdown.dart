@@ -6,6 +6,7 @@ class AutocompleteDropdown extends StatefulWidget {
   final List<String> dataset;
   final String hintText;
   final TextStyle hintStyle;
+  final TextEditingController? controller;
   final ValueChanged<String> onChanged;
   final TextStyle style;
   final BorderSide borderSide;
@@ -17,6 +18,7 @@ class AutocompleteDropdown extends StatefulWidget {
     required this.dataset,
     required this.hintText,
     this.hintStyle = const TextStyle(color: Colors.grey),
+    this.controller,
     required this.onChanged,
     this.style = const TextStyle(),
     this.borderSide = const BorderSide(),
@@ -29,7 +31,6 @@ class AutocompleteDropdown extends StatefulWidget {
 }
 
 class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
-  final TextEditingController _controller = TextEditingController(); // Controller for the text field
   final FocusNode _focusNode = FocusNode(); // for handling focus events
   final LayerLink _layerLink = LayerLink(); // for positioning the suggestion list
   OverlayEntry? _overlayEntry; // The overlay entry for the suggestion list
@@ -40,7 +41,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onTextChanged);
+    widget.controller?.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
 
@@ -52,7 +53,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
   }
 
   void _onTextChanged() {
-    final input = _controller.text.toLowerCase();
+    final input = widget.controller?.text.toLowerCase() ?? '';
 
     setState(() {
     _suggestionList = widget.dataset
@@ -127,15 +128,15 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                     return ListTile(
                       title: RichText(
                         text: TextSpan(
-                          children: highlightMatchingText(_suggestionList[index], _controller.text, widget.style),
+                          children: highlightMatchingText(_suggestionList[index], widget.controller?.text ?? '', widget.style),
                         ),
                       ),
                       onTap: () {
                         setState(() {
-                          _controller.text = _suggestionList[index];
+                          widget.controller?.text = _suggestionList[index];
                           _hideOverlay();
 
-                          widget.onChanged(_controller.text);
+                          widget.onChanged(widget.controller?.text ?? '');
                         });
 
                         _focusNode.unfocus();
@@ -156,7 +157,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextField(
-        controller: _controller,
+        controller: widget.controller,
         focusNode: _focusNode,
         style: widget.style,
         decoration: InputDecoration(
@@ -165,11 +166,11 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (_controller.text.isNotEmpty)
+              if (widget.controller?.text.isNotEmpty ?? false)
                 IconButton(
                   icon: const Icon(Icons.cancel),
                   onPressed: () {
-                    _controller.clear();
+                    widget.controller!.clear();
                     _hideOverlay();
                   },
                 ),
@@ -206,7 +207,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
 
   @override
   void dispose() { // Clean up the controller and focus node when the widget is disposed
-    _controller.dispose();
+    widget.controller?.dispose();
     _focusNode.dispose();
     _overlayEntry?.remove();
     super.dispose();

@@ -22,6 +22,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   // class-level variables: persist across build calls
   String title = '';
   String artist = '';
+  final TextEditingController artistController = TextEditingController();
   List<ListTileOption> genres = [];
   List<ListTileOption> availableGenres = List.from(genreOptions);
   List<custom_types.Section> sections = [];
@@ -227,6 +228,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
               // Artist
               AutocompleteDropdown(
                 dataset: songArtists,
+                controller: artistController,
                 hintText: 'Artist',
                 hintStyle: TextStyle(color: Colors.grey[500]),
                 style: TextStyle(color: textColor),
