@@ -120,6 +120,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: _suggestionList.length,
+                  padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
