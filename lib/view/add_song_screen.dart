@@ -320,6 +320,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         children: [
                           DropdownButton<String>(
                             value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
+                            dropdownColor: backgroundColor,
                             disabledHint: Text(
                               keysInputs[0]?.tonic ?? 'C', // Show the first key when all keys are the same
                               style: TextStyle(color: Colors.grey[500]),
@@ -348,6 +349,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                           ),
                           DropdownButton<String>(
                             value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
+                            dropdownColor: backgroundColor,
                             disabledHint: Text(
                               keysInputs[0]?.symbol ?? '',
                               style: TextStyle(color: Colors.grey[500]),
@@ -376,6 +378,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                           ),
                           DropdownButton<String>(
                             value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
+                            dropdownColor: backgroundColor,
                             disabledHint: Text(
                               keysInputs[0]?.mode ?? 'Major',
                               style: TextStyle(color: Colors.grey[500]),
