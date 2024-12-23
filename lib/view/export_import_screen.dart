@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 
-import 'full_width_button.dart';
+import 'flexible_width_button.dart';
 import '../view_model/dark_mode_provider.dart';
 
 class ExportImportScreen extends StatefulWidget {
@@ -174,8 +174,9 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
                 textColor: textColor
               ),
               SizedBox(height: 10),
-              FullWidthButton(
+              FlexibleWidthButton(
                 label: 'Export',
+                width: double.infinity,
                 onPressed: exportSongs,
               ),
               SizedBox(height: 20),
@@ -187,8 +188,9 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
                 textColor: textColor
               ),
               SizedBox(height: 10),
-              FullWidthButton(
+              FlexibleWidthButton(
                 label: 'Import',
+                width: double.infinity,
                 onPressed: importSongs,
               ),
               SizedBox(height: 20),

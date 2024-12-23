@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-class FullWidthButton extends StatelessWidget {
+class FlexibleWidthButton extends StatelessWidget {
   final String label;
   final bool disabled;
   final VoidCallback onPressed;
+  final double? width;
 
-  const FullWidthButton({
+  const FlexibleWidthButton({
     super.key,
     required this.label,
     this.disabled = false,
     required this.onPressed,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: width,
       child: TextButton(
         onPressed: !disabled ? onPressed : null,
         style: ButtonStyle(
