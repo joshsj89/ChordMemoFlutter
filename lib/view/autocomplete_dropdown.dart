@@ -13,6 +13,7 @@ class AutocompleteDropdown extends StatefulWidget {
   final BorderSide borderSide;
   final Color suggestionListBackgroundColor;
   final int maxVisibleSuggestions;
+  final bool caseSensitive;
 
   const AutocompleteDropdown({
     super.key,
@@ -26,6 +27,7 @@ class AutocompleteDropdown extends StatefulWidget {
     this.borderSide = const BorderSide(),
     this.suggestionListBackgroundColor = Colors.white,
     this.maxVisibleSuggestions = 4,
+    this.caseSensitive = false,
   });
 
   @override
@@ -68,9 +70,15 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
     final inputLower = input.toLowerCase();
 
     setState(() {
-    _suggestionList = widget.dataset
-      .where((suggestion) => suggestion.toLowerCase().contains(inputLower))
-      .toList();
+      if (!widget.caseSensitive) {
+        _suggestionList = widget.dataset
+          .where((suggestion) => suggestion.toLowerCase().contains(inputLower))
+          .toList();
+      } else {
+        _suggestionList = widget.dataset
+          .where((suggestion) => suggestion.contains(input))
+          .toList();
+      }
 
       _showDropdown = input.isNotEmpty && _suggestionList.isNotEmpty;
       _updateOverlay();
