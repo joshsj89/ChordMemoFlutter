@@ -148,7 +148,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
                     return ListTile(
                       title: RichText(
                         text: TextSpan(
-                          children: highlightMatchingText(_suggestionList[index], _controller.text, widget.style),
+                          children: highlightMatchingText(_suggestionList[index], _controller.text, widget.style, widget.caseSensitive),
                         ),
                       ),
                       onTap: () {

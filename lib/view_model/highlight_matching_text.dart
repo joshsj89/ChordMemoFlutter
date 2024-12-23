@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-List<TextSpan> highlightMatchingText(String suggestion, String query, TextStyle style) {
+List<TextSpan> highlightMatchingText(String suggestion, String query, TextStyle style, [bool caseSensitive = false]) {
   final List<TextSpan> spans = []; // List of spans to return
-  final String lowerSuggestion = suggestion.toLowerCase();
-  final String lowerQuery = query.toLowerCase();
+  final String lowerSuggestion = !caseSensitive ? suggestion.toLowerCase() : suggestion;
+  final String lowerQuery = !caseSensitive ? query.toLowerCase() : query;
 
   if (query.isEmpty) {
     return [TextSpan(text: suggestion, style: style)];
