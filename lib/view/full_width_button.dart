@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class FullWidthButton extends StatelessWidget {
   final String label;
   final bool disabled;
   final VoidCallback onPressed;
 
-  const CustomButton({
+  const FullWidthButton({
     super.key,
     required this.label,
     this.disabled = false,
@@ -25,7 +25,7 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         child: Text(
-          label, 
+          label.toUpperCase(), 
           style: TextStyle(
             color: !disabled ? Colors.white : Color(0xffacacac), 
             fontWeight: FontWeight.bold,

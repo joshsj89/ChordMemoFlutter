@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'autocomplete_dropdown.dart';
-import 'custom_button.dart';
+import 'full_width_button.dart';
 import '../view_model/dark_mode_provider.dart';
 import '../view_model/song_persistence.dart';
 import '../model/options.dart';
@@ -250,8 +250,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
               SizedBox(height: 20),
         
               // Genres
-              CustomButton(
-                label: 'ADD GENRE',
+              FullWidthButton(
+                label: 'Add Genre',
                 onPressed: onAddGenrePress,
               ),
               SingleChildScrollView(
@@ -283,8 +283,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
               ),
         
               // Sections
-              CustomButton(
-                label: 'ADD SECTION',
+              FullWidthButton(
+                label: 'Add Section',
                 onPressed: onAddSectionPress,
               ),
 
@@ -454,8 +454,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 20),
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                child: CustomButton(
-                  label: 'ADD SONG',
+                child: FullWidthButton(
+                  label: 'Add Song',
                   disabled: title.isEmpty || sections.isEmpty,
                   onPressed: _onAddSong,
                 ),
