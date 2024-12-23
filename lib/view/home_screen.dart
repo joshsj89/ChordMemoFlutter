@@ -10,7 +10,9 @@ import 'about_screen.dart';
 import 'add_song_screen.dart';
 import '../view_model/dark_mode_provider.dart';
 import 'export_import_screen.dart';
+import 'search_dialog.dart';
 import 'song_details_screen.dart';
+import '../view_model/song_persistence.dart';
 import '../model/types.dart' as custom_types;
 
 class HomeScreen extends StatefulWidget {
@@ -76,6 +78,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _onSearchPressed() {
+    showDialog(
+      context: context,
+      builder: (ctx) => SearchDialog(songs: songs),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final darkModeProvider = Provider.of<DarkModeProvider>(context);
@@ -97,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: _onSearchPressed,
           ),
           IconButton(
             icon: Icon(Icons.info_outline),
