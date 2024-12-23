@@ -171,12 +171,19 @@ class _EditSongScreenState extends State<EditSongScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Add Section'),
+            title: Text(
+              'Add Section',
+              style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: backgroundColor,
             content: SingleChildScrollView(
               child: Column(
                 children: availableSectionTitles.map((sectionTitle) {
                   return ListTile(
-                    title: Text(sectionTitle.label),
+                    title: Text(
+                      sectionTitle.label,
+                      style: TextStyle(color: textColor),
+                    ),
                     onTap: () {
                       setState(() {
                         sectionTitles.add(sectionTitle);
