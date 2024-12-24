@@ -3,7 +3,10 @@ import 'package:chordmemoflutter/view/flexible_width_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'dart:core'; // for RegExp
+
 import '../view_model/dark_mode_provider.dart';
+import 'search_results_screen.dart';
 import '../model/types.dart' as custom_types;
 
 class SearchDialog extends StatefulWidget {
@@ -20,6 +23,7 @@ class SearchDialog extends StatefulWidget {
 
 class _SearchDialogState extends State<SearchDialog> {
   String _selectedOption = 'Title';
+  final TextEditingController _searchController = TextEditingController();
   List<String> suggestions = [];
   List<String> songTitles = [];
   List<String> songArtists = [];
@@ -31,8 +35,9 @@ class _SearchDialogState extends State<SearchDialog> {
   void initState() {
     super.initState();
 
-    songTitles = widget.songs.map((song) => song.title).toList();
-    songArtists = widget.songs.map((song) => song.artist).toList();
+    songTitles = widget.songs.map((song) => song.title).toSet().toList();
+    songArtists = widget.songs.map((song) => song.artist).toSet().toList();
+
     songGenres = widget.songs.expand((song) => song.genres) // flatten the list of genres into a single list
       .toSet() // remove duplicates
       .toList();
@@ -75,7 +80,44 @@ class _SearchDialogState extends State<SearchDialog> {
   }
 
   void _onSearch() {
+    Navigator.pop(context); // close the dialog
 
+    final filteredSongs = widget.songs.where((song) {
+      switch (_selectedOption) {
+        case 'Title':
+          return song.title.toLowerCase().contains(_searchController.text.toLowerCase());
+        case 'Artist':
+          return song.artist.toLowerCase().contains(_searchController.text.toLowerCase());
+        case 'Genre':
+          return song.genres.any((genre) => genre.toLowerCase().contains(_searchController.text.toLowerCase()));
+        case 'Key':
+          return song.sections.any((section) {
+            final key = '${section.key.tonic}${section.key.symbol} ${section.key.mode}';
+            return key.toLowerCase().contains(_searchController.text.toLowerCase());
+          });
+        case 'Chords': // case-sensitive
+          final List<String> words = _searchController.text.split(RegExp(r'-+')); // split by hyphens
+          final String regexPattern = r'(?<!\w)' + 
+            words.map((word) => '(${escapeRegExp(word.trim())})').join(r'-') +
+            r'(?!\w)'; // match whole words only
+          final RegExp regex = RegExp(regexPattern);
+
+          return song.sections.any((section) {
+            return regex.hasMatch(section.chords);
+          });
+        default:
+          return false;
+      }
+    }).toList();
+
+    filteredSongs.sort((a, b) => a.title.compareTo(b.title)); // sort alphabetically by title
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SearchResultsScreen(songs: filteredSongs),
+      ),
+    );
   }
 
   @override
@@ -100,6 +142,7 @@ class _SearchDialogState extends State<SearchDialog> {
             margin: EdgeInsets.symmetric(vertical: 10),
             child: AutocompleteDropdown(
               dataset: suggestions, 
+              controller: _searchController,
               caseSensitive: _selectedOption == 'Chords',
               hintText: 'Enter search text',
               hintStyle: TextStyle(color: Colors.grey[500]),
@@ -207,4 +250,8 @@ class RadioButtonOption extends StatelessWidget {
       ],
     );
   }
+}
+
+String escapeRegExp(String string) { // escape special characters in a string
+  return string.replaceAllMapped(RegExp(r'[.*+?^${}()|[\]\\]'), (match) => '\\${match[0]}');
 }
