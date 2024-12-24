@@ -11,3 +11,17 @@ Future<void> saveSongs(List<custom_types.Song> songs) async {
 
   await prefs.setString('songs', formattedJson);
 }
+
+Future<List<custom_types.Song>> loadSongs() async {
+  final prefs = await SharedPreferences.getInstance();
+  final savedSongs = prefs.getString('songs');
+  List<custom_types.Song> songs = [];
+
+  if (savedSongs != null) {
+    songs = (jsonDecode(savedSongs) as List)
+      .map((song) => custom_types.Song.fromJson(song))
+      .toList();
+  }
+
+  return songs;
+}

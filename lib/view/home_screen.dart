@@ -28,20 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadSongs();
-  }
-
-  Future<void> _loadSongs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedSongs = prefs.getString('songs');
-
-    if (savedSongs != null) {
+    
+    loadSongs().then((loadedSongs) {
       setState(() {
-        songs = (jsonDecode(savedSongs) as List)
-          .map((song) => custom_types.Song.fromJson(song))
-          .toList();
+        songs = loadedSongs;
       });
-    }
+    });
   }
 
   Future<void> _deleteSong(String songId) async {
@@ -153,7 +145,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // If the user imported songs, reload the list
                 if (result == true) {
-                  _loadSongs();
+                  loadSongs().then((loadedSongs) {
+                    setState(() {
+                      songs = loadedSongs;
+                    });
+                  });
                 }
               },
             ),
@@ -208,7 +204,11 @@ class _HomeScreenState extends State<HomeScreen> {
               );
 
               if (result == true) {
-                _loadSongs();
+                loadSongs().then((loadedSongs) {
+                  setState(() {
+                    songs = loadedSongs;
+                  });
+                });
               }
             },
             onLongPress: () => _confirmDelete(song),
@@ -252,7 +252,11 @@ class _HomeScreenState extends State<HomeScreen> {
           );
 
           if (result == true) {
-            _loadSongs();
+            loadSongs().then((loadedSongs) {
+              setState(() {
+                songs = loadedSongs;
+              });
+            });
           }
         },
         tooltip: 'Add Song',
