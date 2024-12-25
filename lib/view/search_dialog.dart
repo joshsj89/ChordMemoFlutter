@@ -126,6 +126,7 @@ class _SearchDialogState extends State<SearchDialog> {
     result = await showDialog<String>(
       context: context,
       builder: (_) => SymbolPickerModal(),
+      barrierDismissible: false,
     );
 
     if (result != null) {

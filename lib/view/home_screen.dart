@@ -74,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => SearchDialog(songs: songs),
+      barrierDismissible: false, // Prevent the user from dismissing the dialog by tapping outside
     );
   }
 
