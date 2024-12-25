@@ -7,6 +7,7 @@ import 'dart:core'; // for RegExp
 
 import '../view_model/dark_mode_provider.dart';
 import 'search_results_screen.dart';
+import 'symbol_picker_modal.dart';
 import '../model/types.dart' as custom_types;
 
 class SearchDialog extends StatefulWidget {
@@ -120,6 +121,17 @@ class _SearchDialogState extends State<SearchDialog> {
     );
   }
 
+  void _onSymbolPicker() async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) => SymbolPickerModal(),
+    );
+
+    if (result != null) {
+      _searchController.text += result;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
@@ -150,6 +162,20 @@ class _SearchDialogState extends State<SearchDialog> {
               borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
               suggestionListBackgroundColor: backgroundColor,
               onChanged: (value) {},
+            ),
+          ),
+
+          // "Insert Symbol" Button
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlexibleWidthButton(
+                  label: 'Insert Symbol',
+                  onPressed: _onSymbolPicker,
+                ),
+              ],
             ),
           ),
 
