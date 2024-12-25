@@ -122,7 +122,8 @@ class _SearchDialogState extends State<SearchDialog> {
   }
 
   void _onSymbolPicker() async {
-    final result = await showDialog(
+    final String? result;
+    result = await showDialog<String>(
       context: context,
       builder: (_) => SymbolPickerModal(),
     );
