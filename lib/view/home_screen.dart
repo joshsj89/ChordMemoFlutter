@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confrim Deletion'),
+        title: const Text('Confirm Deletion'),
         content: Text('Are you sure you want to delete ${song.title}?'),
         actions: [
           TextButton(
