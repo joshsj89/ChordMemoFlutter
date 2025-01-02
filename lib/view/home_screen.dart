@@ -70,6 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Delete all songs from the list
+  void _deleteAllSongs() {
+    setState(() {
+      songs = [];
+    });
+
+    saveSongs(songs);
+  }
+
   void _onSearchPressed() {
     showDialog(
       context: context,

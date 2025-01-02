@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'autocomplete_dropdown.dart';
+import 'chord_keyboard.dart';
 import 'flexible_width_button.dart';
 import '../view_model/dark_mode_provider.dart';
 import '../view_model/song_persistence.dart';
@@ -53,6 +54,32 @@ class _AddSongScreenState extends State<AddSongScreen> {
         songArtists = songs.map((song) => song.artist).toSet().toList(); // Remove duplicates
       });
     }
+  }
+
+  void _showKeyboard(BuildContext context) {
+    // showModalBottomSheet(
+    //   context: context,
+    //   barrierColor: Colors.transparent,
+    //   builder: (context) {
+    //     return ChordKeyboard(
+    //       originalChords: [],
+    //       onChordComplete: (chord) {
+    //         // Do something with the chord
+    //       },
+    //       );
+    //   },
+    // );
+
+    Scaffold.of(context).showBottomSheet(
+      (context) {
+        return ChordKeyboard(
+          originalChords: [],
+          onChordComplete: (chord) {
+            // Do something with the chord
+          },
+        );
+      }
+    );
   }
 
   void _onAddSong() async {
@@ -191,281 +218,292 @@ class _AddSongScreenState extends State<AddSongScreen> {
         iconTheme: IconThemeData(color: altTextColor), // Change the color of the back button
       ),
       backgroundColor: backgroundColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 10),
-                child: Text(
-                  'Add Song',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
-                ),
-              ),
-              // Title
-              TextField(
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Title',
-                  hintStyle: TextStyle(color: Colors.grey[500]),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                  ),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    title = value;
-                  });
-                },
-              ),
-              SizedBox(height: 20),
-        
-              // Artist
-              AutocompleteDropdown(
-                dataset: songArtists,
-                controller: artistController,
-                hintText: 'Artist',
-                hintStyle: TextStyle(color: Colors.grey[500]),
-                style: TextStyle(color: textColor),
-                borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                suggestionListBackgroundColor: backgroundColor,
-                onChanged: (value) {
-                  setState(() {
-                    artist = value;
-                  });
-                },
-              ),
-              SizedBox(height: 20),
-        
-              // Genres
-              FlexibleWidthButton(
-                label: 'Add Genre',
-                width: double.infinity,
-                onPressed: onAddGenrePress,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: genres.map((genre) {
-                    return Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      child: Chip(
-                        label: Text(genre.label),
-                        backgroundColor: isDarkMode ? Colors.grey[900]: const Color(0xfff4faf8),
-                        labelStyle: TextStyle(color: textColor),
-                        deleteIcon: Icon(Icons.cancel, color: Colors.red),
-                        onDeleted: () {
-                          setState(() {
-                            genres.remove(genre);
-
-                            // Sort the genres by id
-                            availableGenres.add(genre);
-                            availableGenres.sort((a, b) {
-                              return a.id.compareTo(b.id);
-                            });
-                          });
-                        },
+      body: Builder(
+        builder: (context2) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'Add Song',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
-        
-              // Sections
-              FlexibleWidthButton(
-                label: 'Add Section',
-                width: double.infinity,
-                onPressed: onAddSectionPress,
-              ),
-
-              if (sections.isNotEmpty)
-                CheckboxListTile(
-                  title: Text('Same Key For All Sections', style: TextStyle(color: textColor)),
-                  value: isSameKeyForAllSections,      
-                  onChanged: (value) {
-                    setState(() {
-                      isSameKeyForAllSections = value!;
-
-                      if (value) {
-                        for (int i = 1; i < sections.length; i++) {
-                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
-                        }
-                      }
-                    });
-                  },
-                  activeColor: const Color(0xff009788),
-                  side: const BorderSide(color: 
-                    Color(0xff009788),
-                    width: 2,
+                    ),
                   ),
-                ),
-
-              // Section Chooser List (Accordion)
-              Column(
-                children: sections.asMap().entries.map((entry) {
-                  final int index = entry.key;
-                  final custom_types.Section section = entry.value;
-
-                  final custom_types.Key currentKey = keysInputs[index] ?? section.key;
-                  // final TextEditingController chordsController = TextEditingController(
-                  //   text: chordsInputs[index] ?? section.chords,
-                  // );
-
-                  return ExpansionTile(
-                    title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
-                    initiallyExpanded: true,
-                    children: [
-                      Row(
+                  // Title
+                  TextField(
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Title',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        title = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+            
+                  // Artist
+                  AutocompleteDropdown(
+                    dataset: songArtists,
+                    controller: artistController,
+                    hintText: 'Artist',
+                    hintStyle: TextStyle(color: Colors.grey[500]),
+                    style: TextStyle(color: textColor),
+                    borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                    suggestionListBackgroundColor: backgroundColor,
+                    onChanged: (value) {
+                      setState(() {
+                        artist = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+            
+                  // Genres
+                  FlexibleWidthButton(
+                    label: 'Add Genre',
+                    width: double.infinity,
+                    onPressed: onAddGenrePress,
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: genres.map((genre) {
+                        return Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Chip(
+                            label: Text(genre.label),
+                            backgroundColor: isDarkMode ? Colors.grey[900]: const Color(0xfff4faf8),
+                            labelStyle: TextStyle(color: textColor),
+                            deleteIcon: Icon(Icons.cancel, color: Colors.red),
+                            onDeleted: () {
+                              setState(() {
+                                genres.remove(genre);
+          
+                                // Sort the genres by id
+                                availableGenres.add(genre);
+                                availableGenres.sort((a, b) {
+                                  return a.id.compareTo(b.id);
+                                });
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+            
+                  // Sections
+                  FlexibleWidthButton(
+                    label: 'Add Section',
+                    width: double.infinity,
+                    onPressed: onAddSectionPress,
+                  ),
+          
+                  if (sections.isNotEmpty)
+                    CheckboxListTile(
+                      title: Text('Same Key For All Sections', style: TextStyle(color: textColor)),
+                      value: isSameKeyForAllSections,      
+                      onChanged: (value) {
+                        setState(() {
+                          isSameKeyForAllSections = value!;
+          
+                          if (value) {
+                            for (int i = 1; i < sections.length; i++) {
+                              keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                            }
+                          }
+                        });
+                      },
+                      activeColor: const Color(0xff009788),
+                      side: const BorderSide(color: 
+                        Color(0xff009788),
+                        width: 2,
+                      ),
+                    ),
+          
+                  // Section Chooser List (Accordion)
+                  Column(
+                    children: sections.asMap().entries.map((entry) {
+                      final int index = entry.key;
+                      final custom_types.Section section = entry.value;
+          
+                      final custom_types.Key currentKey = keysInputs[index] ?? section.key;
+                      // final TextEditingController chordsController = TextEditingController(
+                      //   text: chordsInputs[index] ?? section.chords,
+                      // );
+          
+                      return ExpansionTile(
+                        title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
+                        initiallyExpanded: true,
                         children: [
-                          DropdownButton<String>(
-                            value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
-                            dropdownColor: backgroundColor,
-                            disabledHint: Text(
-                              keysInputs[0]?.tonic ?? 'C', // Show the first key when all keys are the same
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                            items: keyTonicOptions.map((tonic) {
-                              return DropdownMenuItem<String>(
-                                value: tonic,
-                                child: Text(tonic, style: TextStyle(color: textColor)),
-                              );
-                            }).toList(),
-                            onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
-                              setState(() {
-                                keysInputs[index] = custom_types.Key(
-                                  tonic: value!,
-                                  symbol: currentKey.symbol,
-                                  mode: currentKey.mode,
-                                );
-
-                                if (isSameKeyForAllSections) {
-                                  for (int i = 1; i < sections.length; i++) {
-                                    keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
-                                  }
-                                }
-                              });
-                            },
+                          Row(
+                            children: [
+                              DropdownButton<String>(
+                                value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
+                                dropdownColor: backgroundColor,
+                                disabledHint: Text(
+                                  keysInputs[0]?.tonic ?? 'C', // Show the first key when all keys are the same
+                                  style: TextStyle(color: Colors.grey[500]),
+                                ),
+                                items: keyTonicOptions.map((tonic) {
+                                  return DropdownMenuItem<String>(
+                                    value: tonic,
+                                    child: Text(tonic, style: TextStyle(color: textColor)),
+                                  );
+                                }).toList(),
+                                onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                                  setState(() {
+                                    keysInputs[index] = custom_types.Key(
+                                      tonic: value!,
+                                      symbol: currentKey.symbol,
+                                      mode: currentKey.mode,
+                                    );
+          
+                                    if (isSameKeyForAllSections) {
+                                      for (int i = 1; i < sections.length; i++) {
+                                        keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                      }
+                                    }
+                                  });
+                                },
+                              ),
+                              DropdownButton<String>(
+                                value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
+                                dropdownColor: backgroundColor,
+                                disabledHint: Text(
+                                  keysInputs[0]?.symbol ?? '',
+                                  style: TextStyle(color: Colors.grey[500]),
+                                ),
+                                items: keySymbolOptions.map((symbol) {
+                                  return DropdownMenuItem<String>(
+                                    value: symbol,
+                                    child: Text(symbol, style: TextStyle(color: textColor)),
+                                  );
+                                }).toList(),
+                                onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                                  setState(() {
+                                    keysInputs[index] = custom_types.Key(
+                                      tonic: currentKey.tonic,
+                                      symbol: value!,
+                                      mode: currentKey.mode,
+                                    );
+          
+                                    if (isSameKeyForAllSections) {
+                                      for (int i = 1; i < sections.length; i++) {
+                                        keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                      }
+                                    }
+                                  });
+                                },
+                              ),
+                              DropdownButton<String>(
+                                value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
+                                dropdownColor: backgroundColor,
+                                disabledHint: Text(
+                                  keysInputs[0]?.mode ?? 'Major',
+                                  style: TextStyle(color: Colors.grey[500]),
+                                ),
+                                items: keyModeOptions.map((mode) {
+                                  return DropdownMenuItem<String>(
+                                    value: mode,
+                                    child: Text(mode, style: TextStyle(color: textColor)),
+                                  );
+                                }).toList(),
+                                onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                                  setState(() {
+                                    keysInputs[index] = custom_types.Key(
+                                      tonic: currentKey.tonic,
+                                      symbol: currentKey.symbol,
+                                      mode: value!,
+                                    );
+          
+                                    if (isSameKeyForAllSections) {
+                                      for (int i = 1; i < sections.length; i++) {
+                                        keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                      }
+                                    }
+                                  });
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    sections.removeAt(index);
+                                    keysInputs.remove(index);
+                                    chordsInputs.remove(index);
+                                  });
+                                },
+                              ),
+                            ],
                           ),
-                          DropdownButton<String>(
-                            value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
-                            dropdownColor: backgroundColor,
-                            disabledHint: Text(
-                              keysInputs[0]?.symbol ?? '',
-                              style: TextStyle(color: Colors.grey[500]),
+                          TextField(
+                            // controller: chordsController,
+                            style: TextStyle(color: textColor),
+                            decoration: InputDecoration(
+                              hintText: 'Chords',
+                              hintStyle: TextStyle(color: Colors.grey[500]),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                              ),
                             ),
-                            items: keySymbolOptions.map((symbol) {
-                              return DropdownMenuItem<String>(
-                                value: symbol,
-                                child: Text(symbol, style: TextStyle(color: textColor)),
-                              );
-                            }).toList(),
-                            onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                            onChanged: (value) {
                               setState(() {
-                                keysInputs[index] = custom_types.Key(
-                                  tonic: currentKey.tonic,
-                                  symbol: value!,
-                                  mode: currentKey.mode,
-                                );
-
-                                if (isSameKeyForAllSections) {
-                                  for (int i = 1; i < sections.length; i++) {
-                                    keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
-                                  }
-                                }
+                                chordsInputs[index] = value;
                               });
                             },
-                          ),
-                          DropdownButton<String>(
-                            value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
-                            dropdownColor: backgroundColor,
-                            disabledHint: Text(
-                              keysInputs[0]?.mode ?? 'Major',
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                            items: keyModeOptions.map((mode) {
-                              return DropdownMenuItem<String>(
-                                value: mode,
-                                child: Text(mode, style: TextStyle(color: textColor)),
-                              );
-                            }).toList(),
-                            onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
-                              setState(() {
-                                keysInputs[index] = custom_types.Key(
-                                  tonic: currentKey.tonic,
-                                  symbol: currentKey.symbol,
-                                  mode: value!,
-                                );
-
-                                if (isSameKeyForAllSections) {
-                                  for (int i = 1; i < sections.length; i++) {
-                                    keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
-                                  }
-                                }
-                              });
+                            onTap: () {
+                              _showKeyboard(context2);
+                              // FocusScope.of(context).unfocus();
                             },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                sections.removeAt(index);
-                                keysInputs.remove(index);
-                                chordsInputs.remove(index);
-                              });
-                            },
+                            readOnly: true,
+                            showCursor: true,
+                            
                           ),
                         ],
-                      ),
-                      TextField(
-                        // controller: chordsController,
-                        style: TextStyle(color: textColor),
-                        decoration: InputDecoration(
-                          hintText: 'Chords',
-                          hintStyle: TextStyle(color: Colors.grey[500]),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            chordsInputs[index] = value;
-                          });
-                        }
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-        
-              // Add Song Button
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: FlexibleWidthButton(
-                  label: 'Add Song',
-                  disabled: title.isEmpty || sections.isEmpty,
-                  width: double.infinity,
-                  onPressed: _onAddSong,
-                ),
+                      );
+                    }).toList(),
+                  ),
+            
+                  // Add Song Button
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: FlexibleWidthButton(
+                      label: 'Add Song',
+                      disabled: title.isEmpty || sections.isEmpty,
+                      width: double.infinity,
+                      onPressed: _onAddSong,
+                    ),
+                  )
+                ],
               )
-            ],
-          )
-        ),
+            ),
+          );
+        }
       )
     );
   }

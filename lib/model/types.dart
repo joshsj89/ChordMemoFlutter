@@ -96,3 +96,17 @@ class Song {
     };
   }
 }
+
+class ChordType {
+  final String label;
+  final String alt;
+  final String value;
+
+  ChordType({
+    required this.label,
+    required this.alt,
+    required this.value,
+  });
+}
+
+typedef ExtendedChordTypes = Map<String, List<ChordType>>;
