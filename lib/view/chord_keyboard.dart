@@ -144,9 +144,19 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
 
     final backgroundColor = isDarkMode ? Color(0xff0a0a0a) : Color(0xffe6e6e6);
     final textColor = isDarkMode ? Colors.white : Colors.black;
-    final altTextColor = isDarkMode ? Colors.black : Colors.white;
     final toolbarButtonStyle = ButtonStyle(
       backgroundColor: WidgetStatePropertyAll<Color>(isDarkMode ? Color(0xff505050) : Color(0xffeaeaea)),
+      foregroundColor: WidgetStatePropertyAll<Color>(textColor),
+      iconColor: WidgetStatePropertyAll<Color>(textColor),
+      overlayColor: WidgetStatePropertyAll<Color>(Color(0xff009788)),
+      shape: WidgetStatePropertyAll<OutlinedBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))
+      ),
+    );
+    final toolbarOnButtonStyle = ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll<Color>(Color(0xff009788)),
+      foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+      iconColor: WidgetStatePropertyAll<Color>(Colors.white),
       shape: WidgetStatePropertyAll<OutlinedBorder>(
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))
       ),
@@ -161,8 +171,6 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
             color: isDarkMode ? Color(0xff262626) : Color(0xfff6f6f6),
             child: LayoutBuilder(
               builder:(context, constraints) {
-                final buttonWidth = constraints.maxWidth / 9; // 9 buttons in the row
-
                 return Row(
                   spacing: 7,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -173,7 +181,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                         SizedBox(
                           width: 33,
                           child: TextButton(
-                            style: toolbarButtonStyle,
+                            style: flat ? toolbarOnButtonStyle : toolbarButtonStyle,
                             onPressed: _handleFlatPress,
                             child: Text('♭'),
                           ),
@@ -181,7 +189,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                         SizedBox(
                           width: 33,
                           child: TextButton(
-                            style: toolbarButtonStyle,
+                            style: sharp ? toolbarOnButtonStyle : toolbarButtonStyle,
                             onPressed: _handleSharpPress,
                             child: Text('♯'),
                           ),
@@ -262,7 +270,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
           Expanded(
             child: Row(
               children: [
-                Expanded(
+                SizedBox(
+                  width: 60,
                   child: ListView.builder(
                     itemCount: romanNumerals.length,
                     itemBuilder: (context, index) {
