@@ -127,6 +127,58 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
     }
   }
 
+  void _handleKeyChangeDownPress() {
+    if (chords.isNotEmpty) {
+      final lastChord = chords[chords.length - 1];
+
+      if (lastChord == ' ' && chords[chords.length - 2].contains('K')) { // cycle through key changes
+        final keyChange = chords[chords.length - 2].split('K–');
+        final key = keyChange[1];
+        final keyIndex = keyChangeTypes['–']!.indexOf('K–$key');
+        final newKey = keyChangeTypes['–']![(keyIndex + 1) % keyChangeTypes['–']!.length];
+
+        setState(() {
+          chords[chords.length - 2] = newKey;
+          chords[chords.length - 1] = ' ';
+        });
+      } else if (chords[chords.length - 1] == ' ') { // add key change after space
+        setState(() {
+          chords.addAll(['K–m2', ' ']);
+        });
+      } else if (chords[chords.length - 1] != '(') { // add key change after chord
+        setState(() {
+          chords.addAll([' ', 'K–m2', ' ']);
+        });
+      }
+    }
+  }
+
+  void _handleKeyChangeUpPress() {
+    if (chords.isNotEmpty) {
+      final lastChord = chords[chords.length - 1];
+
+      if (lastChord == ' ' && chords[chords.length - 2].contains('K')) { // cycle through key changes
+        final keyChange = chords[chords.length - 2].split('K+');
+        final key = keyChange[1];
+        final keyIndex = keyChangeTypes['+']!.indexOf('K+$key');
+        final newKey = keyChangeTypes['+']![(keyIndex + 1) % keyChangeTypes['+']!.length];
+
+        setState(() {
+          chords[chords.length - 2] = newKey;
+          chords[chords.length - 1] = ' ';
+        });
+      } else if (chords[chords.length - 1] == ' ') { // add key change after space
+        setState(() {
+          chords.addAll(['K+m2', ' ']);
+        });
+      } else if (chords[chords.length - 1] != '(') { // add key change after chord
+        setState(() {
+          chords.addAll([' ', 'K+m2', ' ']);
+        });
+      }
+    }
+  }
+
   void _handleFlatPress() {
     setState(() {
       flat = !flat;
@@ -341,7 +393,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                           width: 33,
                           child: TextButton(
                             style: toolbarButtonStyle,
-                            onPressed: () {},
+                            onPressed: _handleKeyChangeDownPress,
                             child: Icon(Icons.arrow_downward),
                           ),
                         ),
@@ -349,7 +401,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                           width: 33,
                           child: TextButton(
                             style: toolbarButtonStyle,
-                            onPressed: () {},
+                            onPressed: _handleKeyChangeUpPress,
                             child: Icon(Icons.arrow_upward),
                           ),
                         ),
