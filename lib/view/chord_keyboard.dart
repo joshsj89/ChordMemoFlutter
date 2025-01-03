@@ -417,6 +417,30 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
   }
 
   @override
+  void didUpdateWidget(covariant ChordKeyboard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final transformedChords = chords.join('-').replaceAllMapped(
+      RegExp(r'-\s-|- |-\(|-\)'),
+      (match) {
+        switch (match[0]) {
+          case '- -':
+          case '- ':
+            return ' '; // Replace dash with a space
+          case '(-':
+            return '('; // Remove dash after '('
+          case '-)':
+            return ')'; // Remove dash before ')'
+          default:
+            return ''; // Default fallback
+        }
+      },
+    );
+
+    widget.onChordComplete(transformedChords);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
 
