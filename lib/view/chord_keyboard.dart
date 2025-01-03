@@ -267,126 +267,137 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
               },
             ),
           ),
-          Expanded(
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 60,
-                  child: ListView.builder(
-                    itemCount: romanNumerals.length,
-                    itemBuilder: (context, index) {
-                      String numeral = romanNumerals[index];
-                      return RomanNumeralButton(
-                        numeral: numeral,
-                        selected: selectedRomanNumeral == numeral,
-                        onPressed:_handleRomanNumeralPress,
-                      );
-                    },
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                  ),
-                ),
-                // Triad types
-                if (selectedRomanNumeral != null)
-                  Expanded(
+          SizedBox(
+            height: 250,
+            width: double.infinity, // Fill the width of the parent and start from the left
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 60,
                     child: ListView.builder(
-                      itemCount: triadTypes.length,
+                      itemCount: romanNumerals.length,
                       itemBuilder: (context, index) {
-                        ChordType triad = triadTypes[index];
-                        return ChordTypeButton(
-                          chordType: triad,
-                          selected: selectedTriad == triad,
-                          onPressed: _handleTriadPress,
+                        String numeral = romanNumerals[index];
+                        return RomanNumeralButton(
+                          numeral: numeral,
+                          selected: selectedRomanNumeral == numeral,
+                          onPressed:_handleRomanNumeralPress,
                         );
                       },
                       padding: EdgeInsets.symmetric(horizontal: 8),
                     ),
                   ),
-      
-                // Seventh types
-                if (selectedTriad != null && seventhTypes[selectedTriad!.alt] != null)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: seventhTypes[selectedTriad!.alt]!.length,
-                      itemBuilder: (context, index) {
-                        ChordType seventh = seventhTypes[selectedTriad!.alt]![index];
-                        return ChordTypeButton(
-                          chordType: seventh,
-                          selected: selectedSeventh == seventh,
-                          onPressed: _handleSeventhPress,
-                        );
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                  // Triad types
+                  if (selectedRomanNumeral != null)
+                    SizedBox(
+                      width: 60,
+                      child: ListView.builder(
+                        itemCount: triadTypes.length,
+                        itemBuilder: (context, index) {
+                          ChordType triad = triadTypes[index];
+                          return ChordTypeButton(
+                            chordType: triad,
+                            selected: selectedTriad == triad,
+                            onPressed: _handleTriadPress,
+                          );
+                        },
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      ),
                     ),
-                  ),
-                
-                // Ninth types
-                if (selectedSeventh != null && ninthTypes[selectedSeventh!.alt] != null)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: ninthTypes[selectedSeventh!.alt]!.length,
-                      itemBuilder: (context, index) {
-                        ChordType ninth = ninthTypes[selectedSeventh!.alt]![index];
-                        return ChordTypeButton(
-                          chordType: ninth,
-                          selected: selectedNinth == ninth,
-                          onPressed: _handleNinthPress,
-                        );
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    
+                  // Seventh types
+                  if (selectedTriad != null && seventhTypes[selectedTriad!.alt] != null)
+                    SizedBox(
+                      width: 60,
+                      child: ListView.builder(
+                        itemCount: seventhTypes[selectedTriad!.alt]!.length,
+                        itemBuilder: (context, index) {
+                          ChordType seventh = seventhTypes[selectedTriad!.alt]![index];
+                          return ChordTypeButton(
+                            chordType: seventh,
+                            selected: selectedSeventh == seventh,
+                            onPressed: _handleSeventhPress,
+                          );
+                        },
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      ),
                     ),
-                  ),
-      
-                // Eleventh types
-                if (selectedNinth != null && eleventhTypes[selectedNinth!.alt] != null)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: eleventhTypes[selectedNinth!.alt]!.length,
-                      itemBuilder: (context, index) {
-                        ChordType eleventh = eleventhTypes[selectedNinth!.alt]![index];
-                        return ChordTypeButton(
-                          chordType: eleventh,
-                          selected: selectedEleventh == eleventh,
-                          onPressed: _handleEleventhPress,
-                        );
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                  
+                  // Ninth types
+                  if (selectedSeventh != null && ninthTypes[selectedSeventh!.alt] != null)
+                    SizedBox(
+                      width: 60,
+                      child: ListView.builder(
+                        itemCount: ninthTypes[selectedSeventh!.alt]!.length,
+                        itemBuilder: (context, index) {
+                          ChordType ninth = ninthTypes[selectedSeventh!.alt]![index];
+                          return ChordTypeButton(
+                            chordType: ninth,
+                            selected: selectedNinth == ninth,
+                            onPressed: _handleNinthPress,
+                          );
+                        },
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      ),
                     ),
-                  ),
-      
-                // Thirteenth types
-                if (selectedEleventh != null && thirteenthTypes[selectedEleventh!.alt] != null)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: thirteenthTypes[selectedEleventh!.alt]!.length,
-                      itemBuilder: (context, index) {
-                        ChordType thirteenth = thirteenthTypes[selectedEleventh!.alt]![index];
-                        return ChordTypeButton(
-                          chordType: thirteenth,
-                          selected: selectedThirteenth == thirteenth,
-                          onPressed: _handleThirteenthPress,
-                        );
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    
+                  // Eleventh types
+                  if (selectedNinth != null && eleventhTypes[selectedNinth!.alt] != null)
+                    SizedBox(
+                      width: 60,
+                      child: ListView.builder(
+                        itemCount: eleventhTypes[selectedNinth!.alt]!.length,
+                        itemBuilder: (context, index) {
+                          ChordType eleventh = eleventhTypes[selectedNinth!.alt]![index];
+                          return ChordTypeButton(
+                            chordType: eleventh,
+                            selected: selectedEleventh == eleventh,
+                            onPressed: _handleEleventhPress,
+                          );
+                        },
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      ),
                     ),
-                  ),
-      
-                // Inversions
-                if (allInversions != null)
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: allInversions!.length,
-                      itemBuilder: (context, index) {
-                        ChordType inversion = allInversions![index];
-                        return ChordTypeButton(
-                          chordType: inversion,
-                          selected: selectedInversion == inversion,
-                          onPressed: _handleInversionSelect,
-                        );
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    
+                  // Thirteenth types
+                  if (selectedEleventh != null && thirteenthTypes[selectedEleventh!.alt] != null)
+                    SizedBox(
+                      width: 70,
+                      child: ListView.builder(
+                        itemCount: thirteenthTypes[selectedEleventh!.alt]!.length,
+                        itemBuilder: (context, index) {
+                          ChordType thirteenth = thirteenthTypes[selectedEleventh!.alt]![index];
+                          return ChordTypeButton(
+                            chordType: thirteenth,
+                            selected: selectedThirteenth == thirteenth,
+                            onPressed: _handleThirteenthPress,
+                          );
+                        },
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      ),
                     ),
-                  ),
-              ],
+                    
+                  // Inversions
+                  if (allInversions != null)
+                    SizedBox(
+                      width: 60,
+                      child: ListView.builder(
+                        itemCount: allInversions!.length,
+                        itemBuilder: (context, index) {
+                          ChordType inversion = allInversions![index];
+                          return ChordTypeButton(
+                            chordType: inversion,
+                            selected: selectedInversion == inversion,
+                            onPressed: _handleInversionSelect,
+                          );
+                        },
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],
