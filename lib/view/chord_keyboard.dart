@@ -120,11 +120,37 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
     });
   }
 
+  void _handleRepeatPress() {
+    if (chords.isNotEmpty) {
+      final lastChord = chords[chords.length - 1];
+      final secondLastChord = chords.length > 1 ? chords[chords.length - 2] : null;
+
+      if (lastChord == ' ' && secondLastChord!.contains(':')) { // increment repeat bar
+        final repeatBar = secondLastChord.split(':')[1];
+        final repeatCount = int.tryParse(repeatBar[1])! + 1;
+
+        setState(() {
+          chords[chords.length - 2] = ':$repeatCount';
+          chords[chords.length - 1] = ' ';
+        });
+      } else if (lastChord == ' ') { // add repeat bar after space
+        setState(() {
+          chords.addAll([':1', ' ']);
+        });
+      } else if (lastChord != '(') { // add repeat bar after chord
+        setState(() {
+          chords.addAll([' ', ':1', ' ']);
+        });
+      }
+    }
+  }
+
   void _handleInversionPress() {
     List<ChordType> inversions = [];
 
     if (chords.isNotEmpty) {
       final lastChord = chords[chords.length - 1];
+
       if (lastChord.contains('/')) return; // prevent multiple inversions or inversion on a slash chord
     }
 
@@ -312,7 +338,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                       width: 33,
                       child: TextButton(
                         style: toolbarButtonStyle,
-                        onPressed: () {},
+                        onPressed: _handleRepeatPress,
                         child: Text(':|'),
                       ),
                     ),
