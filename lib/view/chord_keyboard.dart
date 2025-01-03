@@ -307,6 +307,115 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
     });
   }
 
+  void _handleErasePress() {
+    if (chords[chords.length - 1] == ' ' && chords[chords.length - 2].contains(':')) { // erase repeat bar and spaces around it
+      setState(() {
+        chords.removeRange(chords.length - 3, chords.length); // remove last 3 elements
+      });
+    } else if (chords[chords.length - 1] == ' ' && chords[chords.length - 2].contains('K')) { // erase key change and space
+      setState(() {
+        chords.removeRange(chords.length - 3, chords.length); // remove last 3 elements
+      });
+    } else { // erase last character
+      setState(() {
+        chords.removeLast();
+      });
+    }
+  }
+
+  void _handleSpacePress() {
+    if (chords.isNotEmpty && chords[chords.length - 1] != ' ' && chords[chords.length - 1] != '(') { // prevent multiple spaces or space at beginning
+      setState(() {
+        chords.add(' ');
+      });
+    }
+  }
+
+  void handleChordComplete() {
+    String completeChord = '';
+
+    if (selectedRomanNumeral != null && selectedTriad != null) {
+      if (selectedTriad == selectedSeventh && 
+        selectedSeventh == selectedNinth && 
+        selectedNinth == selectedEleventh && 
+        selectedEleventh == selectedThirteenth) { // triads
+
+        if (selectedTriad!.label == 'm' || selectedTriad!.label == '°') {
+          completeChord = selectedRomanNumeral!.toLowerCase() + selectedTriad!.value;
+        } else {
+          completeChord = selectedRomanNumeral! + selectedTriad!.value;
+        }
+      } else if (selectedSeventh == selectedNinth && 
+        selectedNinth == selectedEleventh &&
+        selectedEleventh == selectedThirteenth) { // seventh chords
+        
+        if (selectedTriad!.label == 'm' || selectedTriad!.label == '°') {
+          completeChord = selectedRomanNumeral!.toLowerCase() + selectedSeventh!.value;
+        } else {
+          completeChord = selectedRomanNumeral! + selectedSeventh!.value;
+        }
+      } else if (selectedNinth == selectedEleventh && 
+        selectedEleventh == selectedThirteenth) { // ninth chords
+        
+        if (selectedTriad!.label == 'm' || selectedTriad!.label == '°') {
+          completeChord = selectedRomanNumeral!.toLowerCase() + selectedNinth!.value;
+        } else {
+          completeChord = selectedRomanNumeral! + selectedNinth!.value;
+        }
+      } else if (selectedEleventh == selectedThirteenth) { // eleventh chords
+              
+        if (selectedTriad!.label == 'm' || selectedTriad!.label == '°') {
+          completeChord = selectedRomanNumeral!.toLowerCase() + selectedEleventh!.value;
+        } else {
+          completeChord = selectedRomanNumeral! + selectedEleventh!.value;
+        }
+      } else if (selectedThirteenth != null) { // thirteenth chords
+          
+        if (selectedTriad!.label == 'm' || selectedTriad!.label == '°') {
+          completeChord = selectedRomanNumeral!.toLowerCase() + selectedThirteenth!.value;
+        } else {
+          completeChord = selectedRomanNumeral! + selectedThirteenth!.value;
+        }
+      }
+
+      if (flat) {
+        completeChord = '♭$completeChord';
+      } else if (sharp) {
+        completeChord = '♯$completeChord';
+      }
+
+      if (selectedInversion != null) { // add inversion
+        completeChord += selectedInversion!.value;
+      }
+
+      if (chords.isNotEmpty) { // add chord right after slash
+        final lastChord = chords[chords.length - 1];
+        if (lastChord[lastChord.length - 1] == '/') {
+          completeChord = lastChord + completeChord;
+          setState(() {
+            chords.removeLast();
+          });
+        }
+      }
+
+      setState(() {
+        chords.add(completeChord);
+
+        flat = false;
+        sharp = false;
+
+        selectedRomanNumeral = null;
+        selectedTriad = null;
+        selectedSeventh = null;
+        selectedNinth = null;
+        selectedEleventh = null;
+        selectedThirteenth = null;
+        allInversions = null;
+        selectedInversion = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
