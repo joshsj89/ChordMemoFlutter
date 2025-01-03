@@ -120,6 +120,76 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
     });
   }
 
+  void _handleInversionPress() {
+    List<ChordType> inversions = [];
+
+    if (chords.isNotEmpty) {
+      final lastChord = chords[chords.length - 1];
+      if (lastChord.contains('/')) return; // prevent multiple inversions or inversion on a slash chord
+    }
+
+    if (selectedRomanNumeral != null && selectedTriad != null) {
+      if (selectedTriad!.label == 'M' || 
+        selectedTriad!.label == 'm' || 
+        selectedTriad!.label == '°' || 
+        selectedTriad!.label == '+') { // '/3' and '/5' inversions
+
+        inversions.add(inversionTypes['/3']!);
+        inversions.add(inversionTypes['/5']!);
+      } else if (selectedTriad!.label == 'sus4') { // '/4' and '/5' inversions
+        inversions.add(inversionTypes['/4']!);
+        inversions.add(inversionTypes['/5']!);
+      } else if (selectedTriad!.label == 'sus2') { // '/2' and '/5' inversions
+        inversions.add(inversionTypes['/2']!);
+        inversions.add(inversionTypes['/5']!);
+      } else if (selectedTriad!.label == '5') { // '/5' inversion
+        inversions.add(inversionTypes['/5']!);
+      } else if  (selectedTriad!.label == 'no5') { // '/3' inversion
+        inversions.add(inversionTypes['/3']!);
+      }
+
+      if (selectedTriad != selectedSeventh) { // seventh chords
+        if (selectedSeventh?.label == '6') {
+          inversions.add(inversionTypes['/6']!);
+        } else {
+          inversions.add(inversionTypes['/7']!);
+        }
+      }
+
+      if (selectedSeventh == selectedNinth && 
+        selectedNinth == selectedEleventh &&
+        selectedEleventh == selectedThirteenth) {
+        
+        // do nothing
+      } else if (selectedNinth == selectedEleventh &&
+        selectedEleventh == selectedThirteenth) { // ninth chords
+        
+        inversions.add(inversionTypes['/9']!);
+      } else if (selectedEleventh == selectedThirteenth) { // eleventh chords
+          
+        if (selectedEleventh?.label == 'add11') {
+          inversions.add(inversionTypes['/11']!);
+        } else {
+          inversions.add(inversionTypes['/9']!);
+          inversions.add(inversionTypes['/11']!);
+        }
+      } else if (selectedThirteenth != null) { // thirteenth chords
+          
+        if (selectedThirteenth!.label == 'add13') {
+          inversions.add(inversionTypes['/13']!);
+        } else {
+          inversions.add(inversionTypes['/9']!);
+          inversions.add(inversionTypes['/11']!);
+          inversions.add(inversionTypes['/13']!);
+        }
+      }
+    }
+
+    setState(() {
+      allInversions = inversions;
+    });
+  }
+
   void _handleInversionSelect(ChordType inversion) {
     setState(() {
       selectedInversion = inversion;
@@ -250,7 +320,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                       width: 48,
                       child: TextButton(
                         style: toolbarButtonStyle,
-                        onPressed: () {},
+                        onPressed: _handleInversionPress,
                         child: Text('INV'),
                       ),
                     ),
