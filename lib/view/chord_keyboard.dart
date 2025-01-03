@@ -106,6 +106,27 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
     });
   }
 
+  void _handleLeftParenthesisPress() {
+    final lastChord = chords.isNotEmpty ? chords[chords.length - 1] : '';
+    if (lastChord != '(') { // prevent multiple parentheses or parentheses at beginning
+      setState(() {
+        chords.add('(');
+      });
+    }
+  }
+
+  void _handleRightParenthesisPress() {
+    if (chords.isNotEmpty && // prevent right parentheses at beginning
+      chords[chords.length - 1] != ')' &&  // prevent multiple right parentheses
+      chords[chords.length - 1] != ' ' && // prevent right parentheses after space
+      chords[chords.length - 1] != '(') { // prevent right parentheses after left parentheses
+
+      setState(() {
+        chords.add(')');
+      });
+    }
+  }
+
   void _handleFlatPress() {
     setState(() {
       flat = !flat;
@@ -299,7 +320,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                           width: 33,
                           child: TextButton(
                             style: toolbarButtonStyle,
-                            onPressed: () {},
+                            onPressed: _handleLeftParenthesisPress,
                             child: Text('('),
                           ),
                         ),
@@ -307,7 +328,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                           width: 33,
                           child: TextButton(
                             style: toolbarButtonStyle,
-                            onPressed: () {},
+                            onPressed: _handleRightParenthesisPress,
                             child: Text(')'),
                           ),
                         ),
