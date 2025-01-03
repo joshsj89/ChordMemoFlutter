@@ -128,7 +128,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
 
   void _handleSlashPress() {
     setState(() {
-      if (chords.length > 0) {
+      if (chords.isNotEmpty) {
         final lastChord = chords[chords.length - 1];
 
         if (lastChord != ' ' && lastChord != '(' && lastChord != ')' && !lastChord.contains('/')) {
@@ -159,61 +159,104 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
         children: [
           Container(
             color: isDarkMode ? Color(0xff262626) : Color(0xfff6f6f6),
-            child: Row(
-              children: [
-                Row(
+            child: LayoutBuilder(
+              builder:(context, constraints) {
+                final buttonWidth = constraints.maxWidth / 9; // 9 buttons in the row
+
+                return Row(
+                  spacing: 7,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextButton(
-                      style: toolbarButtonStyle,
-                      onPressed: _handleFlatPress,
-                      child: Text('♭'),
+                    Row(
+                      spacing: 3,
+                      children: [
+                        SizedBox(
+                          width: 33,
+                          child: TextButton(
+                            style: toolbarButtonStyle,
+                            onPressed: _handleFlatPress,
+                            child: Text('♭'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 33,
+                          child: TextButton(
+                            style: toolbarButtonStyle,
+                            onPressed: _handleSharpPress,
+                            child: Text('♯'),
+                          ),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      style: toolbarButtonStyle,
-                      onPressed: _handleSharpPress,
-                      child: Text('♯'),
+                    Row(
+                      spacing: 3,
+                      children: [
+                        SizedBox(
+                          width: 33,
+                          child: TextButton(
+                            style: toolbarButtonStyle,
+                            onPressed: () {},
+                            child: Text('('),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 33,
+                          child: TextButton(
+                            style: toolbarButtonStyle,
+                            onPressed: () {},
+                            child: Text(')'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      spacing: 3,
+                      children: [
+                        SizedBox(
+                          width: 33,
+                          child: TextButton(
+                            style: toolbarButtonStyle,
+                            onPressed: () {},
+                            child: Icon(Icons.arrow_downward),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 33,
+                          child: TextButton(
+                            style: toolbarButtonStyle,
+                            onPressed: () {},
+                            child: Icon(Icons.arrow_upward),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 33,
+                      child: TextButton(
+                        style: toolbarButtonStyle,
+                        onPressed: () {},
+                        child: Text(':|'),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 48,
+                      child: TextButton(
+                        style: toolbarButtonStyle,
+                        onPressed: () {},
+                        child: Text('INV'),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 33,
+                      child: TextButton(
+                        style: toolbarButtonStyle,
+                        onPressed: _handleSlashPress,
+                        child: Text('/'),
+                      ),
                     ),
                   ],
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                      style: toolbarButtonStyle,
-                      onPressed: () {},
-                      child: Text('('),
-                    ),
-                    TextButton(
-                      style: toolbarButtonStyle,
-                      onPressed: () {},
-                      child: Text(')'),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                      style: toolbarButtonStyle,
-                      onPressed: () {},
-                      child: Icon(Icons.arrow_downward),
-                    ),
-                    TextButton(
-                      style: toolbarButtonStyle,
-                      onPressed: () {},
-                      child: Icon(Icons.arrow_upward),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  style: toolbarButtonStyle,
-                  onPressed: () {},
-                  child: Text('INV'),
-                ),
-                TextButton(
-                  style: toolbarButtonStyle,
-                  onPressed: _handleSlashPress,
-                  child: Text('/'),
-                ),
-              ],
+                );
+              },
             ),
           ),
           Expanded(
