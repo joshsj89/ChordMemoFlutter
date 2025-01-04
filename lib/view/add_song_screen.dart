@@ -25,7 +25,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   String title = '';
   String artist = '';
   final TextEditingController artistController = TextEditingController();
-  // final TextEditingController chordsController = TextEditingController();
+  Map<int, TextEditingController> chordsControllers = {}; // hold the controllers for each section (cursor blink state won't be lost)
   List<ListTileOption> genres = [];
   List<ListTileOption> availableGenres = List.from(genreOptions);
   List<custom_types.Section> sections = [];
@@ -97,7 +97,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
 
                   chordsInputs[currentKeyboardSectionIndex!] = chord;
 
-                  // chordsController.text = chord;
+                  chordsControllers[currentKeyboardSectionIndex!]!.text = chord; // Update the text field
                 });
               });
             }
@@ -238,6 +238,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                           chords: '',
                         ));
                       });
+
+                      int newIndex = sections.length - 1;
+                      chordsControllers[newIndex] = TextEditingController();
 
                       Navigator.pop(context);
                     },
@@ -400,9 +403,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       final custom_types.Section section = entry.value;
           
                       final custom_types.Key currentKey = keysInputs[index] ?? section.key;
-                      final TextEditingController chordsController = TextEditingController(
-                        text: chordsInputs[index] ?? section.chords,
-                      );
+                      final TextEditingController chordsController = chordsControllers[index] ?? TextEditingController();
+                      print('chordsControllers[$index]: ${chordsControllers[index]}');
           
                       return ExpansionTile(
                         title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
@@ -562,7 +564,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   @override
   void dispose() {
     artistController.dispose();
-    // chordsController.dispose();
+    chordsControllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
 }
