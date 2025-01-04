@@ -526,6 +526,13 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                       sections.removeAt(index);
                                       keysInputs.remove(index);
                                       chordsInputs.remove(index);
+
+                                      availableSectionTitles.add(sectionTitles[index]);
+                                      availableSectionTitles.sort((a, b) {
+                                        return a.id.compareTo(b.id);
+                                      });
+
+                                      sectionTitles.removeAt(index);
                                     });
                                   },
                                 ),
