@@ -308,6 +308,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
   }
 
   void _handleErasePress() {
+    if (chords.isEmpty) return;
+    
     if (chords[chords.length - 1] == ' ' && chords[chords.length - 2].contains(':')) { // erase repeat bar and spaces around it
       setState(() {
         chords.removeRange(chords.length - 3, chords.length); // remove last 3 elements
