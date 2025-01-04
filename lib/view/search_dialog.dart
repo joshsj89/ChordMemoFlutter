@@ -153,7 +153,7 @@ class _SearchDialogState extends State<SearchDialog> {
         children: [
           // Search field / Autocomplete Dropdown
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.only(bottom: 5),
             child: AutocompleteDropdown(
               dataset: suggestions, 
               controller: _searchController,
@@ -168,77 +168,68 @@ class _SearchDialogState extends State<SearchDialog> {
           ),
 
           // "Insert Symbol" Button
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FlexibleWidthButton(
-                  label: 'Insert Symbol',
-                  onPressed: _onSymbolPicker,
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlexibleWidthButton(
+                label: 'Insert Symbol',
+                onPressed: _onSymbolPicker,
+              ),
+            ],
           ),
 
           // Radio buttons
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Wrap(
-              direction: Axis.horizontal,
-              spacing: 50,
-              children: [
-                RadioButtonOption(
-                  label: 'Title',
-                  selectedValue: _selectedOption,
-                  onChanged: _onRadioChanged,
-                  textColor: textColor
-                ),
-                RadioButtonOption(
-                  label: 'Artist',
-                  selectedValue: _selectedOption,
-                  onChanged: _onRadioChanged,
-                  textColor: textColor
-                ),
-                RadioButtonOption(
-                  label: 'Genre',
-                  selectedValue: _selectedOption,
-                  onChanged: _onRadioChanged,
-                  textColor: textColor
-                ),
-                RadioButtonOption(
-                  label: 'Key',
-                  selectedValue: _selectedOption,
-                  onChanged: _onRadioChanged,
-                  textColor: textColor
-                ),
-                RadioButtonOption(
-                  label: 'Chords',
-                  selectedValue: _selectedOption,
-                  onChanged: _onRadioChanged,
-                  textColor: textColor
-                ),
-              ],
-            ),
+          Wrap(
+            direction: Axis.horizontal,
+            spacing: 50,
+            children: [
+              RadioButtonOption(
+                label: 'Title',
+                selectedValue: _selectedOption,
+                onChanged: _onRadioChanged,
+                textColor: textColor
+              ),
+              RadioButtonOption(
+                label: 'Artist',
+                selectedValue: _selectedOption,
+                onChanged: _onRadioChanged,
+                textColor: textColor
+              ),
+              RadioButtonOption(
+                label: 'Genre',
+                selectedValue: _selectedOption,
+                onChanged: _onRadioChanged,
+                textColor: textColor
+              ),
+              RadioButtonOption(
+                label: 'Key',
+                selectedValue: _selectedOption,
+                onChanged: _onRadioChanged,
+                textColor: textColor
+              ),
+              RadioButtonOption(
+                label: 'Chords',
+                selectedValue: _selectedOption,
+                onChanged: _onRadioChanged,
+                textColor: textColor
+              ),
+            ],
           ),
 
           // Buttons
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              spacing: 10,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FlexibleWidthButton(
-                  label: 'Close',
-                  onPressed: () => Navigator.pop(context),
-                ),
-                FlexibleWidthButton(
-                  label: 'Search',
-                  onPressed: _onSearch,
-                ),
-              ],
-            ),
+          Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlexibleWidthButton(
+                label: 'Close',
+                onPressed: () => Navigator.pop(context),
+              ),
+              FlexibleWidthButton(
+                label: 'Search',
+                onPressed: _onSearch,
+              ),
+            ],
           )
         ]
       )
