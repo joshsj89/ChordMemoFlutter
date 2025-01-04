@@ -295,6 +295,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       });
                     },
                     enabled: isChordKeyboardVisible ? false : true,
+                    textCapitalization: TextCapitalization.words,
                   ),
                   SizedBox(height: 20),
             
@@ -313,6 +314,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       });
                     },
                     enabled: isChordKeyboardVisible ? false : true,
+                    textCapitalization: TextCapitalization.words,
                   ),
                   SizedBox(height: 20),
             

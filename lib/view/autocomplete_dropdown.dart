@@ -15,6 +15,7 @@ class AutocompleteDropdown extends StatefulWidget {
   final int maxVisibleSuggestions;
   final bool caseSensitive;
   final bool enabled;
+  final TextCapitalization textCapitalization;
 
   const AutocompleteDropdown({
     super.key,
@@ -30,6 +31,7 @@ class AutocompleteDropdown extends StatefulWidget {
     this.maxVisibleSuggestions = 4,
     this.caseSensitive = false,
     this.enabled = true,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   @override
@@ -227,6 +229,7 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
           ),
         ),
         enabled: widget.enabled,
+        textCapitalization: widget.textCapitalization,
       ),
     );
   }
