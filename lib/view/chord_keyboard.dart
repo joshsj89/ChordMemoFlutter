@@ -133,7 +133,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
 
       if (lastChord == ' ' && chords[chords.length - 2].contains('K')) { // cycle through key changes
         final keyChange = chords[chords.length - 2].split('K–');
-        final key = keyChange[1];
+        final key = keyChange.length > 1 ? keyChange[1] : 'M7'; // allows switching from key change up to key change down
         final keyIndex = keyChangeTypes['–']!.indexOf('K–$key');
         final newKey = keyChangeTypes['–']![(keyIndex + 1) % keyChangeTypes['–']!.length];
 
@@ -159,7 +159,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
 
       if (lastChord == ' ' && chords[chords.length - 2].contains('K')) { // cycle through key changes
         final keyChange = chords[chords.length - 2].split('K+');
-        final key = keyChange[1];
+        final key = keyChange.length > 1 ? keyChange[1] : 'M7'; // allows switching from key change down to key change up
         final keyIndex = keyChangeTypes['+']!.indexOf('K+$key');
         final newKey = keyChangeTypes['+']![(keyIndex + 1) % keyChangeTypes['+']!.length];
 
