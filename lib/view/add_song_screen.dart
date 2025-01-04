@@ -25,7 +25,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   String title = '';
   String artist = '';
   final TextEditingController artistController = TextEditingController();
-  Map<int, TextEditingController> chordsControllers = {}; // hold the controllers for each section (cursor blink state won't be lost)
+  List<TextEditingController> chordsControllers = []; // hold the controllers for each section (cursor blink state won't be lost)
   List<ListTileOption> genres = [];
   List<ListTileOption> availableGenres = List.from(genreOptions);
   List<custom_types.Section> sections = [];
@@ -81,7 +81,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
 
                   chordsInputs[currentKeyboardSectionIndex!] = chord;
 
-                  chordsControllers[currentKeyboardSectionIndex!]!.text = chord; // Update the text field
+                  chordsControllers[currentKeyboardSectionIndex!].text = chord; // Update the text field
                 });
               });
             }
@@ -95,6 +95,36 @@ class _AddSongScreenState extends State<AddSongScreen> {
       setState(() {
         isChordKeyboardVisible = false;
       });
+    });
+  }
+
+  void _removeSection(int index) {
+    setState(() {
+      chordsControllers[index].dispose();
+      chordsControllers.removeAt(index);
+
+      sections.removeAt(index);
+      keysInputs.remove(index);
+      chordsInputs.remove(index);
+
+      availableSectionTitles.add(sectionTitles[index]);
+      availableSectionTitles.sort((a, b) {
+        return a.id.compareTo(b.id);
+      });
+
+      sectionTitles.removeAt(index);
+
+      if (isChordKeyboardVisible) {
+        if (currentKeyboardSectionIndex == index) { // close keyboard if current keyboard section is removed
+          _handleKeyboardToggle(context, index);
+          currentKeyboardSectionIndex = null;
+        } else if (currentKeyboardSectionIndex != null && index < currentKeyboardSectionIndex!) { // close keyboard if keyboard section now has different index
+          _handleKeyboardToggle(context, index);
+          currentKeyboardSectionIndex = null;
+        }
+        // do nothing if currentKeyboardSectionIndex > index
+      }
+
     });
   }
 
@@ -223,8 +253,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         ));
                       });
 
-                      int newIndex = sections.length - 1;
-                      chordsControllers[newIndex] = TextEditingController();
+                      chordsControllers.add(TextEditingController());
 
                       Navigator.pop(context);
                     },
@@ -389,7 +418,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       final custom_types.Section section = entry.value;
           
                       final custom_types.Key currentKey = keysInputs[index] ?? section.key;
-                      final TextEditingController chordsController = chordsControllers[index] ?? TextEditingController();
+                      final TextEditingController chordsController = chordsControllers[index];
           
                       return ExpansionTile(
                         title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
@@ -490,21 +519,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () {
-                                    setState(() {
-                                      chordsControllers[index]?.dispose();
-                                      chordsControllers.remove(index);
-                            
-                                      sections.removeAt(index);
-                                      keysInputs.remove(index);
-                                      chordsInputs.remove(index);
-
-                                      availableSectionTitles.add(sectionTitles[index]);
-                                      availableSectionTitles.sort((a, b) {
-                                        return a.id.compareTo(b.id);
-                                      });
-
-                                      sectionTitles.removeAt(index);
-                                    });
+                                    _removeSection(index);
                                   },
                                 ),
                               ],
@@ -565,7 +580,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
   @override
   void dispose() {
     artistController.dispose();
-    chordsControllers.forEach((_, controller) => controller.dispose());
+    for (final controller in chordsControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 }
