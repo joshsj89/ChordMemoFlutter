@@ -20,7 +20,7 @@ List<String> splitChordsIntoArray(String chords) {
 
 String transformChords(List<String> chords) {
   return chords.join('-').replaceAllMapped(
-    RegExp(r'-\s-|- |-\(|-\)'),
+    RegExp(r'-\s-|- |\(-|-\)'),
     (match) {
       switch (match[0]) {
         case '- -':
