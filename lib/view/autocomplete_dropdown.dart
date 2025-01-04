@@ -14,6 +14,7 @@ class AutocompleteDropdown extends StatefulWidget {
   final Color suggestionListBackgroundColor;
   final int maxVisibleSuggestions;
   final bool caseSensitive;
+  final bool enabled;
 
   const AutocompleteDropdown({
     super.key,
@@ -28,6 +29,7 @@ class AutocompleteDropdown extends StatefulWidget {
     this.suggestionListBackgroundColor = Colors.white,
     this.maxVisibleSuggestions = 4,
     this.caseSensitive = false,
+    this.enabled = true,
   });
 
   @override
@@ -220,7 +222,11 @@ class _AutocompleteDropdownState extends State<AutocompleteDropdown> {
           focusedBorder: OutlineInputBorder(
             borderSide: widget.borderSide,
           ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: widget.borderSide,
+          ),
         ),
+        enabled: widget.enabled,
       ),
     );
   }
