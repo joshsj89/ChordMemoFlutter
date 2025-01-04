@@ -548,7 +548,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: FlexibleWidthButton(
                       label: 'Add Song',
-                      disabled: title.isEmpty || sections.isEmpty,
+                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible,
                       width: double.infinity,
                       onPressed: _onAddSong,
                     ),

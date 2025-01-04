@@ -577,7 +577,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: FlexibleWidthButton(
                       label: 'Edit Song',
-                      disabled: title.isEmpty || sections.isEmpty,
+                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible,
                       width: double.infinity,
                       onPressed: _onEditSong,
                     ),
