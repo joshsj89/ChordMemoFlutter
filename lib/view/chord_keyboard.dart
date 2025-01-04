@@ -1,3 +1,4 @@
+import 'package:chordmemoflutter/view_model/chords.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
     super.initState();
 
     chords = List.from(widget.originalChords);
+    widget.onChordComplete(transformChords(chords));
   }
 
   void _handleRomanNumeralPress(String numeral) {
@@ -112,6 +114,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
       setState(() {
         chords.add('(');
       });
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -124,6 +128,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
       setState(() {
         chords.add(')');
       });
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -150,6 +156,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
           chords.addAll([' ', 'K–m2', ' ']);
         });
       }
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -176,6 +184,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
           chords.addAll([' ', 'K+m2', ' ']);
         });
       }
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -215,6 +225,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
           chords.addAll([' ', ':1', ' ']);
         });
       }
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -303,6 +315,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
         if (lastChord != ' ' && lastChord != '(' && lastChord != ')' && !lastChord.contains('/')) {
           chords[chords.length - 1] = '$lastChord/';
         }
+
+        widget.onChordComplete(transformChords(chords));
       }
     });
   }
@@ -323,6 +337,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
         chords.removeLast();
       });
     }
+
+    widget.onChordComplete(transformChords(chords));
   }
 
   void _handleSpacePress() {
@@ -330,6 +346,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
       setState(() {
         chords.add(' ');
       });
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -415,6 +433,8 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
         allInversions = null;
         selectedInversion = null;
       });
+
+      widget.onChordComplete(transformChords(chords));
     }
   }
 
@@ -422,22 +442,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
   void didUpdateWidget(covariant ChordKeyboard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final transformedChords = chords.join('-').replaceAllMapped(
-      RegExp(r'-\s-|- |-\(|-\)'),
-      (match) {
-        switch (match[0]) {
-          case '- -':
-          case '- ':
-            return ' '; // Replace dash with a space
-          case '(-':
-            return '('; // Remove dash after '('
-          case '-)':
-            return ')'; // Remove dash before ')'
-          default:
-            return ''; // Default fallback
-        }
-      },
-    );
+    final transformedChords = transformChords(chords);
 
     widget.onChordComplete(transformedChords);
   }

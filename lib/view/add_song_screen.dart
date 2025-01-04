@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'autocomplete_dropdown.dart';
+import '../view_model/chords.dart';
 import 'chord_keyboard.dart';
 import 'flexible_width_button.dart';
 import '../view_model/dark_mode_provider.dart';
@@ -24,6 +25,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   String title = '';
   String artist = '';
   final TextEditingController artistController = TextEditingController();
+  // final TextEditingController chordsController = TextEditingController();
   List<ListTileOption> genres = [];
   List<ListTileOption> availableGenres = List.from(genreOptions);
   List<custom_types.Section> sections = [];
@@ -33,12 +35,30 @@ class _AddSongScreenState extends State<AddSongScreen> {
   Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
   Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
   bool isSameKeyForAllSections = false;
+  bool isChordKeyboardVisible = false;
+  int? currentKeyboardSectionIndex;
 
   @override
   void initState() {
     super.initState();
 
     _loadArtists();
+
+    // chordsController.addListener(() {
+    //   if (currentKeyboardSectionIndex != null) {
+    //     final section = sections[currentKeyboardSectionIndex!];
+
+    //     if (chordsController.text != section.chords) {
+    //       setState(() {
+    //         sections[currentKeyboardSectionIndex!] = custom_types.Section(
+    //           sectionTitle: section.sectionTitle,
+    //           key: section.key,
+    //           chords: chordsController.text,
+    //         );
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   Future<void> _loadArtists() async {
@@ -57,29 +77,41 @@ class _AddSongScreenState extends State<AddSongScreen> {
   }
 
   void _showKeyboard(BuildContext context) {
-    // showModalBottomSheet(
-    //   context: context,
-    //   barrierColor: Colors.transparent,
-    //   builder: (context) {
-    //     return ChordKeyboard(
-    //       originalChords: [],
-    //       onChordComplete: (chord) {
-    //         // Do something with the chord
-    //       },
-    //       );
-    //   },
-    // );
-
-    Scaffold.of(context).showBottomSheet(
-      (context) {
+    final bottomSheetController = Scaffold.of(context).showBottomSheet(
+      (context2) {
         return ChordKeyboard(
-          originalChords: [],
+          originalChords: splitChordsIntoArray(sections[currentKeyboardSectionIndex!].chords),
           onChordComplete: (chord) {
-            // Do something with the chord
+            if (currentKeyboardSectionIndex != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) { // Wait for the keyboard to close
+                setState(() {
+                  final updatedSections = [...sections];
+
+                  updatedSections[currentKeyboardSectionIndex!] = custom_types.Section(
+                    sectionTitle: sections[currentKeyboardSectionIndex!].sectionTitle,
+                    key: sections[currentKeyboardSectionIndex!].key, // can it be keysInputs[currentKeyboardSectionIndex!] ?
+                    chords: chord,
+                  );
+
+                  sections = updatedSections;
+
+                  chordsInputs[currentKeyboardSectionIndex!] = chord;
+
+                  // chordsController.text = chord;
+                });
+              });
+            }
           },
         );
-      }
+      },
     );
+
+    // listen for when the keyboard is closed
+    bottomSheetController.closed.then((_) {
+      setState(() {
+        isChordKeyboardVisible = false;
+      });
+    });
   }
 
   void _onAddSong() async {
@@ -88,7 +120,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
         sections[i] = custom_types.Section(
           sectionTitle: sections[i].sectionTitle,
           key: keysInputs[i] ?? sections[i].key,
-          chords: chordsInputs[i] ?? '',
+          chords: chordsInputs[i] ?? sections[i].chords,
         );
       }
     });
@@ -118,6 +150,19 @@ class _AddSongScreenState extends State<AddSongScreen> {
     }
 
     Navigator.pop(context, true);
+  }
+
+  void _handleKeyboardToggle(BuildContext context, int index) {
+    if (isChordKeyboardVisible) {
+      Navigator.pop(context); // closes keyboard
+    } else {
+      _showKeyboard(context); // opens keyboard
+    }
+
+    setState(() {
+      isChordKeyboardVisible = !isChordKeyboardVisible;
+      currentKeyboardSectionIndex = index;
+    });
   }
 
   @override
@@ -221,6 +266,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
       body: Builder(
         builder: (context2) {
           return SingleChildScrollView(
+            // padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: isChordKeyboardVisible? EdgeInsets.only(bottom: 300) : EdgeInsets.only(bottom: 0), // Adjust the padding when the keyboard is visible
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -252,12 +299,16 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
                       ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                      ),
                     ),
                     onChanged: (value) {
                       setState(() {
                         title = value;
                       });
                     },
+                    enabled: isChordKeyboardVisible ? false : true,
                   ),
                   SizedBox(height: 20),
             
@@ -275,6 +326,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         artist = value;
                       });
                     },
+                    enabled: isChordKeyboardVisible ? false : true,
                   ),
                   SizedBox(height: 20),
             
@@ -348,9 +400,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                       final custom_types.Section section = entry.value;
           
                       final custom_types.Key currentKey = keysInputs[index] ?? section.key;
-                      // final TextEditingController chordsController = TextEditingController(
-                      //   text: chordsInputs[index] ?? section.chords,
-                      // );
+                      final TextEditingController chordsController = TextEditingController(
+                        text: chordsInputs[index] ?? section.chords,
+                      );
           
                       return ExpansionTile(
                         title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
@@ -458,16 +510,16 @@ class _AddSongScreenState extends State<AddSongScreen> {
                             ],
                           ),
                           TextField(
-                            // controller: chordsController,
+                            controller: chordsController,
                             style: TextStyle(color: textColor),
                             decoration: InputDecoration(
                               hintText: 'Chords',
                               hintStyle: TextStyle(color: Colors.grey[500]),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                borderSide: BorderSide(color: isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                borderSide: BorderSide(color: isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
                               ),
                             ),
                             onChanged: (value) {
@@ -476,12 +528,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
                               });
                             },
                             onTap: () {
-                              _showKeyboard(context2);
+                              _handleKeyboardToggle(context2, index);
                               // FocusScope.of(context).unfocus();
                             },
                             readOnly: true,
                             showCursor: true,
-                            
                           ),
                         ],
                       );
@@ -506,5 +557,12 @@ class _AddSongScreenState extends State<AddSongScreen> {
         }
       )
     );
+  }
+
+  @override
+  void dispose() {
+    artistController.dispose();
+    // chordsController.dispose();
+    super.dispose();
   }
 }
