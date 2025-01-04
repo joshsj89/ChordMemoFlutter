@@ -199,7 +199,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
       final secondLastChord = chords.length > 1 ? chords[chords.length - 2] : null;
 
       if (lastChord == ' ' && secondLastChord!.contains(':')) { // increment repeat bar
-        final repeatBar = secondLastChord.split(':')[1];
+        final repeatBar = secondLastChord.split(':');
         final repeatCount = int.tryParse(repeatBar[1])! + 1;
 
         setState(() {
