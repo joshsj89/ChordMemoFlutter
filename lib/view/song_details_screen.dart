@@ -51,7 +51,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => EditSongScreen(song: widget.song),
+        builder: (_) => EditSongScreen(song: _song),
       ),
     );
 
