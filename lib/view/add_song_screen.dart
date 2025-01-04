@@ -43,22 +43,6 @@ class _AddSongScreenState extends State<AddSongScreen> {
     super.initState();
 
     _loadArtists();
-
-    // chordsController.addListener(() {
-    //   if (currentKeyboardSectionIndex != null) {
-    //     final section = sections[currentKeyboardSectionIndex!];
-
-    //     if (chordsController.text != section.chords) {
-    //       setState(() {
-    //         sections[currentKeyboardSectionIndex!] = custom_types.Section(
-    //           sectionTitle: section.sectionTitle,
-    //           key: section.key,
-    //           chords: chordsController.text,
-    //         );
-    //       });
-    //     }
-    //   }
-    // });
   }
 
   Future<void> _loadArtists() async {
@@ -269,8 +253,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
       body: Builder(
         builder: (context2) {
           return SingleChildScrollView(
-            // padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            padding: isChordKeyboardVisible? EdgeInsets.only(bottom: 300) : EdgeInsets.only(bottom: 0), // Adjust the padding when the keyboard is visible
+            padding: isChordKeyboardVisible ? EdgeInsets.only(bottom: 300) : EdgeInsets.zero, // Adjust the padding when the keyboard is visible
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -404,7 +387,6 @@ class _AddSongScreenState extends State<AddSongScreen> {
           
                       final custom_types.Key currentKey = keysInputs[index] ?? section.key;
                       final TextEditingController chordsController = chordsControllers[index] ?? TextEditingController();
-                      print('chordsControllers[$index]: ${chordsControllers[index]}');
           
                       return ExpansionTile(
                         title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
@@ -503,6 +485,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
+                                    chordsControllers[index]?.dispose();
+                                    chordsControllers.remove(index);
+                                    
                                     sections.removeAt(index);
                                     keysInputs.remove(index);
                                     chordsInputs.remove(index);
@@ -531,7 +516,6 @@ class _AddSongScreenState extends State<AddSongScreen> {
                             },
                             onTap: () {
                               _handleKeyboardToggle(context2, index);
-                              // FocusScope.of(context).unfocus();
                             },
                             readOnly: true,
                             showCursor: true,
