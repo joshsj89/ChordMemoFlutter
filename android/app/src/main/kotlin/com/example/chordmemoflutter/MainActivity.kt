@@ -1,4 +1,4 @@
-package com.example.chordmemoflutter
+package com.joshsj89.ChordMemo
 
 import io.flutter.embedding.android.FlutterActivity
 
