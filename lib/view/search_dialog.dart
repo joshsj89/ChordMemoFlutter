@@ -111,7 +111,7 @@ class _SearchDialogState extends State<SearchDialog> {
       }
     }).toList();
 
-    filteredSongs.sort((a, b) => a.title.compareTo(b.title)); // sort alphabetically by title
+    filteredSongs.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase())); // sort alphabetically by title
 
     Navigator.push(
       context,
