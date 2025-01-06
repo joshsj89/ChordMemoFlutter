@@ -24,6 +24,19 @@ class Key {
       'mode': mode,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! Key) return false;
+
+    return other.tonic == tonic &&
+      other.symbol == symbol &&
+      other.mode == mode;
+  }
+
+  @override
+  int get hashCode => Object.hash(tonic, symbol, mode);
 }
 
 class Section {

@@ -37,7 +37,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
   List<String> songArtists = [];
   Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
   Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
-  bool isSameKeyForAllSections = false;
+  late bool isSameKeyForAllSections;
   bool isChordKeyboardVisible = false;
   int? currentKeyboardSectionIndex;
 
@@ -67,6 +67,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
 
       chordsControllers.add(TextEditingController(text: sections[i].chords));
     }
+
+    isSameKeyForAllSections = keysInputs.length > 1 ? keysInputs.values.every((key) => key == keysInputs[0]) : false;
 
     _loadArtists();
   }
