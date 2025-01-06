@@ -57,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void initialization() async {
-    await Future.delayed(const Duration(seconds: 3));
     FlutterNativeSplash.remove();
   }
 
