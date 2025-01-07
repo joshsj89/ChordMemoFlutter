@@ -45,26 +45,35 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
           'Search Results',
           style: TextStyle(color: altTextColor, fontWeight: FontWeight.w500),
         ),
-        iconTheme: IconThemeData(color: altTextColor), // Change the color of the back button
-      ),
-      body: ListView.builder(
-        itemCount: _songs.length,
-        itemBuilder: (context, index) {
-          final song = _songs[index];
-
-          return InkWell(
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => SongDetailsScreen(song: song),
-                ),
-              );
-
-              if (result == true) {
-                loadSongs().then((loadedSongs) {
-                  setState(() {
-                    _songs = loadedSongs;
+        body: ListView.builder(
+          itemCount: _songs.length,
+          itemBuilder: (context, index) {
+            final song = _songs[index];
+      
+            return InkWell(
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SongDetailsScreen(song: song),
+                  ),
+                );
+      
+                if (result[0] == true) { // If song was edited
+                  loadSongs().then((loadedSongs) {
+                    setState(() {
+                      _didEdit = true;
+                      
+                      final custom_types.Song editedSong = result[1] as custom_types.Song;
+      
+                      // Update the song in the full list of songs
+                      final int songIndex = loadedSongs.indexWhere((s) => s.id == editedSong.id);
+                      loadedSongs[songIndex] = editedSong;
+      
+                      // Update the song in the current search results list of songs
+                      final int songIndex2 =_songs.indexWhere((s) => s.id == editedSong.id);
+                      _songs[songIndex2] = editedSong;
+                    });
                   });
                 });
               }
