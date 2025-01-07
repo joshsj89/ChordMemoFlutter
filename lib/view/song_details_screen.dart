@@ -60,13 +60,14 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
     _didEdit = result[0] as bool;
     final updatedSong = result[1] as custom_types.Song;
 
-    if (_didEdit) {
-      // Refresh the song details
-      setState(() {
-        _song = updatedSong;
-        _showSections = false;
-      });
-    }
+    setState(() {
+      if (_didEdit) {
+        // Refresh the song details
+          _song = updatedSong;
+      }
+      
+      _showSections = false;
+    });
   }
 
   Future<void> _deleteSong() async {
@@ -94,7 +95,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confrim Deletion'),
+        title: const Text('Confirm Deletion'),
         content: Text('Are you sure you want to delete ${_song.title}?'),
         actions: [
           TextButton(
@@ -126,9 +127,9 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
       canPop: false, // Prevent default behavior of back button
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          if (!_showSections) {
-            Navigator.pop(context, _didEdit);
-          } else {
+          if (!_showSections) { // Pop the screen if sections are hidden
+            Navigator.pop(context, [_didEdit, _song]);
+          } else { // Hide sections if visible when back button is pressed
             setState(() {
               _showSections = false;
             });

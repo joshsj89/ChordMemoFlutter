@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'dart:core'; // for RegExp
 
 import '../view_model/dark_mode_provider.dart';
-import 'search_results_screen.dart';
 import 'symbol_picker_modal.dart';
 import '../model/types.dart' as custom_types;
 
@@ -81,7 +80,6 @@ class _SearchDialogState extends State<SearchDialog> {
   }
 
   void _onSearch() {
-    Navigator.pop(context); // close the dialog
 
     final filteredSongs = widget.songs.where((song) {
       switch (_selectedOption) {
@@ -113,12 +111,7 @@ class _SearchDialogState extends State<SearchDialog> {
 
     filteredSongs.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase())); // sort alphabetically by title
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SearchResultsScreen(songs: filteredSongs),
-      ),
-    );
+    Navigator.pop(context, filteredSongs); // close the dialog and return the filtered songs
   }
 
   void _onSymbolPicker() async {

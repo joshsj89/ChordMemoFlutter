@@ -11,6 +11,7 @@ import 'add_song_screen.dart';
 import '../view_model/dark_mode_provider.dart';
 import 'export_import_screen.dart';
 import 'search_dialog.dart';
+import 'search_results_screen.dart';
 import 'song_details_screen.dart';
 import '../view_model/song_persistence.dart';
 import '../model/types.dart' as custom_types;
@@ -70,12 +71,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _onSearchPressed() {
-    showDialog(
+  void _onSearchPressed() async {
+    final filteredSongs = await showDialog(
       context: context,
       builder: (ctx) => SearchDialog(songs: songs),
       barrierDismissible: false, // Prevent the user from dismissing the dialog by tapping outside
     );
+
+    if (filteredSongs != null) {
+      final result = await Navigator.push( // Open the search results screen
+        context,
+        MaterialPageRoute(
+          builder: (_) => SearchResultsScreen(songs: filteredSongs),
+        ),
+      );
+
+      if (result == true) { // If the user edited a song
+        loadSongs().then((loadedSongs) {
+          setState(() {
+            songs = loadedSongs;
+          });
+        });
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    loadSongs().then((loadedSongs) {
+      setState(() {
+        songs = loadedSongs;
+      });
+    });
   }
 
   @override
@@ -204,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
 
-              if (result == true) {
+              if (result[0] == true) {
                 loadSongs().then((loadedSongs) {
                   setState(() {
                     songs = loadedSongs;

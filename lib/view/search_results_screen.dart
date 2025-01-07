@@ -20,6 +20,7 @@ class SearchResultsScreen extends StatefulWidget {
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   List<custom_types.Song> _songs = [];
+  bool _didEdit = false;
 
   @override
   void initState() {
@@ -35,15 +36,24 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final altTextColor = isDarkMode ? Colors.black : Colors.white;
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Color(0xff009788),
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(
-          'Search Results',
-          style: TextStyle(color: altTextColor, fontWeight: FontWeight.w500),
+    return PopScope(
+      canPop: false, // Prevent default behavior of back button
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          Navigator.pop(context, _didEdit);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: Color(0xff009788),
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(
+            'Search Results',
+            style: TextStyle(color: altTextColor, fontWeight: FontWeight.w500),
+          ),
+          iconTheme: IconThemeData(color: altTextColor), // Change the color of the back button
         ),
         body: ListView.builder(
           itemCount: _songs.length,
@@ -75,39 +85,39 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                       _songs[songIndex2] = editedSong;
                     });
                   });
-                });
-              }
-            },
-            // onLongPress: () => _confirmDelete(song),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    song.title,
-                    style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                }
+              },
+              // onLongPress: () => _confirmDelete(song),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      song.title,
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  Text(
-                    song.artist,
-                    style: TextStyle(
-                      color: isDarkMode
-                        ? Color(0xff99999e)
-                        : Colors.black,
+                    Text(
+                      song.artist,
+                      style: TextStyle(
+                        color: isDarkMode
+                          ? Color(0xff99999e)
+                          : Colors.black,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
