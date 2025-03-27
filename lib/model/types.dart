@@ -25,6 +25,13 @@ class Key {
     };
   }
 
+  // for debugging: print(key.toString());
+  // Returns the key in the format of 'C Major'
+  @override
+  String toString() {
+    return '$tonic$symbol $mode';
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
