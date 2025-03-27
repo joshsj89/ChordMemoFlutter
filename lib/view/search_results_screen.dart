@@ -69,7 +69,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                   ),
                 );
       
-                if (result[0] == true) { // If song was edited
+                if (result == true) { // If song was edited
                   loadSongs().then((loadedSongs) {
                     setState(() {
                       _didEdit = true;

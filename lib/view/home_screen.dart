@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
 
-              if (result[0] == true) {
+              if (result == true) {
                 loadSongs().then((loadedSongs) {
                   setState(() {
                     songs = loadedSongs;
