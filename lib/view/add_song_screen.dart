@@ -34,6 +34,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   List<String> songArtists = [];
   Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
   Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
+  custom_types.Key lastSelectedKey = custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
   bool isSameKeyForAllSections = false;
   bool isChordKeyboardVisible = false;
   int? currentKeyboardSectionIndex;
@@ -248,7 +249,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
 
                         sections.add(custom_types.Section(
                           sectionTitle: sectionTitle.label,
-                          key: custom_types.Key(tonic: 'C', symbol: '', mode: 'Major'), // Change later to use last selected key
+                          key: isSameKeyForAllSections && sections.isNotEmpty ? keysInputs[0]! : lastSelectedKey,
                           chords: '',
                         ));
                       });
@@ -449,6 +450,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                         symbol: currentKey.symbol,
                                         mode: currentKey.mode,
                                       );
+
+                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
@@ -478,6 +481,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                         symbol: value!,
                                         mode: currentKey.mode,
                                       );
+
+                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
@@ -507,6 +512,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                         symbol: currentKey.symbol,
                                         mode: value!,
                                       );
+
+                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
