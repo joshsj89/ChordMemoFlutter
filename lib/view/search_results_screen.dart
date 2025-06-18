@@ -67,9 +67,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                   MaterialPageRoute(
                     builder: (_) => SongDetailsScreen(song: song),
                   ),
-                );
+                ) as List<dynamic>;
+
+                final didEdit = result[0] as bool;
       
-                if (result == true) { // If song was edited
+                if (didEdit == true) { // If song was edited
                   loadSongs().then((loadedSongs) {
                     setState(() {
                       _didEdit = true;
