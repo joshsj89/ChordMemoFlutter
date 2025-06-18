@@ -252,6 +252,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
                           key: isSameKeyForAllSections && sections.isNotEmpty ? keysInputs[0]! : lastSelectedKey,
                           chords: '',
                         ));
+
+                        chordsInputs[sections.length - 1] = sections.last.chords;
+                        keysInputs[sections.length - 1] = sections.last.key;
                       });
 
                       chordsControllers.add(TextEditingController());

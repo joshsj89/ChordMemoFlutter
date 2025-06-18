@@ -85,7 +85,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
         savedSongs.removeWhere((song) => song.id == _song.id);
         await prefs.setString('songs', jsonEncode(savedSongs));
 
-        Navigator.pop(context, true); // Refresh the list of songs
+        Navigator.pop(context, [true, _song]); // Refresh the list of songs
       }
     } catch (error) {
       log('Error deleting song: $error');
