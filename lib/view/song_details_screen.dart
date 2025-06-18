@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
+import 'dart:developer';
 
 import '../view_model/dark_mode_provider.dart';
 import 'edit_song_screen.dart';
@@ -87,7 +88,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
         Navigator.pop(context, true); // Refresh the list of songs
       }
     } catch (error) {
-      print('Error deleting song: $error');
+      log('Error deleting song: $error');
     }
   }
 

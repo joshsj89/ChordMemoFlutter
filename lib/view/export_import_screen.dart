@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'flexible_width_button.dart';
@@ -45,7 +46,7 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
         _showAlert('No Songs to Export', 'There are no songs to export.');
       }
     } catch(error) {
-      print('Error exporting songs: $error');
+      log('Error exporting songs: $error');
       _showAlert('Error', 'Failed to export songs.');
     }
   }
@@ -82,7 +83,7 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
         _showAlert('Import Cancelled', 'No file was selected.');
       }
     } catch (error) {
-      print('Error importing songs: $error');
+      log('Error importing songs: $error');
       _showAlert('Error', 'Failed to import songs.');
     }
   }

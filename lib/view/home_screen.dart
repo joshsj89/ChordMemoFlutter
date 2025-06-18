@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'about_screen.dart';
 import 'add_song_screen.dart';
@@ -318,7 +319,7 @@ class LinkButton extends StatelessWidget {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
       } else {
-        print('Could not launch $url');
+        log('Could not launch $url');
       }
     }
 

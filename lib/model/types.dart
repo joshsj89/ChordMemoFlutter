@@ -25,7 +25,7 @@ class Key {
     };
   }
 
-  // for debugging: print(key.toString());
+  // for debugging: log(key.toString());
   // Returns the key in the format of 'C Major'
   @override
   String toString() {
@@ -76,6 +76,11 @@ class Section {
       'chords': chords,
     };
   }
+
+  @override
+  String toString() {
+    return 'Section(sectionTitle: $sectionTitle, key: $key, chords: $chords)';
+  }
 }
 
 class Song {
@@ -114,6 +119,11 @@ class Song {
       'genres': genres,
       'sections': sections.map((section) => section.toJson()).toList(),
     };
+  }
+
+  @override
+  String toString() {
+    return 'Song(id: $id, title: $title, artist: $artist, genres: $genres, sections: [${sections.map((s) => s.toString()).join(', ')}])';
   }
 }
 

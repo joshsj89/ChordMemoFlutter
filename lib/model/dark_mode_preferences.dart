@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DarkModePreferences {
@@ -8,7 +10,7 @@ class DarkModePreferences {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_key, enabled);
     } catch (error) {
-      print('Error saving dark mode preference: $error');
+      log('Error saving dark mode preference: $error');
     }
   }
 
@@ -17,7 +19,7 @@ class DarkModePreferences {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getBool(_key) ?? false;
     } catch (error) {
-      print('Error loading dark mode preference: $error');
+      log('Error loading dark mode preference: $error');
       return false;
     }
   }
