@@ -1,0 +1,18 @@
+Progression → Sequence ProgressionTail*
+ProgressionTail → space KeyChange space Sequence
+               | space Repeat space (Sequence)?
+               | space Sequence
+Sequence         → ChordGroup (dash ChordGroup)*
+ChordGroup       → Chord | Parenthesized
+Parenthesized    → leftParenthesis Sequence rightParenthesis
+Chord            → (accidental)? RomanNumeral (ChordType)? (InversionOrSlash)?
+RomanNumeral     → romanNumeral
+ChordType        → chordType
+InversionOrSlash → inversion | slashChord
+KeyChange        → keyChange
+Repeat           → repeat
+dash             → dash
+space            → space
+accidental       → accidental
+leftParenthesis  → leftParenthesis
+rightParenthesis → rightParenthesis
