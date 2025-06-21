@@ -1,0 +1,675 @@
+Parsing: I-vi-IV-V
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: I-(I-III-I-VII)-VI-V I-(I-III-I-VII)-VI-(VII-VI)-V
+RomanNumeralNode: I
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: VII
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: V
+SpaceNode:  
+RomanNumeralNode: I
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: VII
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: VI
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: i-III-iv :2 i-III-iv-V
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: iv
+SpaceNode:  
+RepeatNode: :2
+SpaceNode:  
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: iv
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: III-VIM7 III-(VIM7-V7)
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: VI
+ChordTypeNode: M7
+SpaceNode:  
+RomanNumeralNode: III
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: VI
+ChordTypeNode: M7
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 7
+ParenthesisNode: )
+---
+Parsing: i-VII-VI-♯VII III
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+AccidentalNode: ♯
+RomanNumeralNode: VII
+SpaceNode:  
+RomanNumeralNode: III
+---
+Parsing: I-I+-I6-I7-IV-iv6-I-V9
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: I
+ChordTypeNode: +
+DashNode: -
+RomanNumeralNode: I
+ChordTypeNode: 6
+DashNode: -
+RomanNumeralNode: I
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: iv
+ChordTypeNode: 6
+DashNode: -
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 9
+---
+Parsing: VI7-i :2 II7-V7
+RomanNumeralNode: VI
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: i
+SpaceNode:  
+RepeatNode: :2
+SpaceNode:  
+RomanNumeralNode: II
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 7
+---
+Parsing: i-III-viø7-IV
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: vi
+ChordTypeNode: ø7
+DashNode: -
+RomanNumeralNode: IV
+---
+Parsing: i i-iv-VII i VI-III
+RomanNumeralNode: i
+SpaceNode:  
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: iv
+DashNode: -
+RomanNumeralNode: VII
+SpaceNode:  
+RomanNumeralNode: i
+SpaceNode:  
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: III
+---
+Parsing: i-VI-IV7-VI-VII-I-VI-IV7-Vsus4-V
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: IV
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: IV
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: sus4
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: v-(v-♯iv)-iv
+RomanNumeralNode: v
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: v
+DashNode: -
+AccidentalNode: ♯
+RomanNumeralNode: iv
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: iv
+---
+Parsing: I-iii-I-iii-vi-(V)-IV-V-vi-V
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: iii
+DashNode: -
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: iii
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: V
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: i-VI-VII(add9)-♯vi-III-♭I
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: VII
+ChordTypeNode: (add9)
+DashNode: -
+AccidentalNode: ♯
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: I
+---
+Parsing: I-♯iv7-IVM7-(ii7-V11)
+RomanNumeralNode: I
+DashNode: -
+AccidentalNode: ♯
+RomanNumeralNode: iv
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: IV
+ChordTypeNode: M7
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: ii
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: V
+InversionNode: 11
+ParenthesisNode: )
+---
+Parsing: i7-ii7-III6-IV i7/5-IV/3-i7/5-IV/5
+RomanNumeralNode: i
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: ii
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: III
+ChordTypeNode: 6
+DashNode: -
+RomanNumeralNode: IV
+SpaceNode:  
+RomanNumeralNode: i
+ChordTypeNode: 7
+InversionNode: /5
+DashNode: -
+RomanNumeralNode: IV
+InversionNode: /3
+DashNode: -
+RomanNumeralNode: i
+ChordTypeNode: 7
+InversionNode: /5
+DashNode: -
+RomanNumeralNode: IV
+InversionNode: /5
+---
+Parsing: I-v(add11)-v(add11)-ii7
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: v
+ChordTypeNode: (add11)
+DashNode: -
+RomanNumeralNode: v
+ChordTypeNode: (add11)
+DashNode: -
+RomanNumeralNode: ii
+ChordTypeNode: 7
+---
+Parsing: IV7sus2-I-V6 :2 IV-IVM7 :1 
+RomanNumeralNode: IV
+ChordTypeNode: 7sus2
+DashNode: -
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 6
+SpaceNode:  
+RepeatNode: :2
+SpaceNode:  
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: IV
+ChordTypeNode: M7
+SpaceNode:  
+RepeatNode: :1
+SpaceNode:  
+---
+Parsing: i-VII-IV/3-V :1 i-VII-VI-V i
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: IV
+InversionNode: /3
+DashNode: -
+RomanNumeralNode: V
+SpaceNode:  
+RepeatNode: :1
+SpaceNode:  
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: V
+SpaceNode:  
+RomanNumeralNode: i
+---
+Parsing: i-i/5-iv i-V-i
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: i
+InversionNode: /5
+DashNode: -
+RomanNumeralNode: iv
+SpaceNode:  
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: i
+---
+Parsing: i K+M2 i
+RomanNumeralNode: i
+SpaceNode:  
+KeyChangeNode: K+M2
+SpaceNode:  
+RomanNumeralNode: i
+---
+Parsing: I5-VII5-I5 VI5-V5 ♯VII5-V5 :3 i-♭II
+RomanNumeralNode: I
+ChordTypeNode: 5
+DashNode: -
+RomanNumeralNode: VII
+ChordTypeNode: 5
+DashNode: -
+RomanNumeralNode: I
+ChordTypeNode: 5
+SpaceNode:  
+RomanNumeralNode: VI
+ChordTypeNode: 5
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 5
+SpaceNode:  
+AccidentalNode: ♯
+RomanNumeralNode: VII
+ChordTypeNode: 5
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 5
+SpaceNode:  
+RepeatNode: :3
+SpaceNode:  
+RomanNumeralNode: i
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: II
+---
+Parsing: i-VII-VI-ivsus2-V7-V7/3
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: iv
+ChordTypeNode: sus2
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 7
+InversionNode: /3
+---
+Parsing: I5-♭II5-I5
+RomanNumeralNode: I
+ChordTypeNode: 5
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: II
+ChordTypeNode: 5
+DashNode: -
+RomanNumeralNode: I
+ChordTypeNode: 5
+---
+Parsing: V7♭9
+RomanNumeralNode: V
+ChordTypeNode: 7♭9
+---
+Parsing: I-I I5-VIno5-♭VIIno5-vii I-V
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: I
+SpaceNode:  
+RomanNumeralNode: I
+ChordTypeNode: 5
+DashNode: -
+RomanNumeralNode: VI
+ChordTypeNode: no5
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: VII
+ChordTypeNode: no5
+DashNode: -
+RomanNumeralNode: vii
+SpaceNode:  
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: i-v7 :1 K–M2 III-VII i-VI IV-V (V-VII)
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: v
+ChordTypeNode: 7
+SpaceNode:  
+RepeatNode: :1
+SpaceNode:  
+KeyChangeNode: K–M2
+SpaceNode:  
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: VII
+SpaceNode:  
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VI
+SpaceNode:  
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+SpaceNode:  
+ParenthesisNode: (
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: VII
+ParenthesisNode: )
+---
+Parsing: I6-♭III6-♭VII-vi-♭VI-Vsus4-(I6-♭vii°)-♭II
+RomanNumeralNode: I
+ChordTypeNode: 6
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: III
+ChordTypeNode: 6
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: sus4
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: I
+ChordTypeNode: 6
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: vii
+ChordTypeNode: °
+ParenthesisNode: )
+DashNode: -
+AccidentalNode: ♭
+RomanNumeralNode: II
+---
+Parsing: I-vi-IV-V :2 IV-V/3-vi-II I-V/3-vi-II
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+SpaceNode:  
+RepeatNode: :2
+SpaceNode:  
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+InversionNode: /3
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: II
+SpaceNode:  
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: V
+InversionNode: /3
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: II
+---
+Parsing: I-(V/5-I)-IV-V
+RomanNumeralNode: I
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: V
+InversionNode: /5
+DashNode: -
+RomanNumeralNode: I
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: I(add9)-III-vi-ii-V
+RomanNumeralNode: I
+ChordTypeNode: (add9)
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: vi
+DashNode: -
+RomanNumeralNode: ii
+DashNode: -
+RomanNumeralNode: V
+---
+Parsing: VI-V-i ii/VI-V/VI-VI-V-i
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: i
+SpaceNode:  
+RomanNumeralNode: ii
+SlashChordNode: /VI
+DashNode: -
+RomanNumeralNode: V
+SlashChordNode: /VI
+DashNode: -
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: i
+---
+Parsing: ii-V-ii-V I-IV7-iii-♯ii° ii-V-ii-V-I
+RomanNumeralNode: ii
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: ii
+DashNode: -
+RomanNumeralNode: V
+SpaceNode:  
+RomanNumeralNode: I
+DashNode: -
+RomanNumeralNode: IV
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: iii
+DashNode: -
+AccidentalNode: ♯
+RomanNumeralNode: ii
+ChordTypeNode: °
+SpaceNode:  
+RomanNumeralNode: ii
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: ii
+DashNode: -
+RomanNumeralNode: V
+DashNode: -
+RomanNumeralNode: I
+---
+Parsing: i-IIIM7♯5-III-IV-VIM7-(VII)-i :1 III-IV-VIM7-i-(VII)-III-VII-IV
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: III
+ChordTypeNode: M7♯5
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: VI
+ChordTypeNode: M7
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: VII
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: i
+SpaceNode:  
+RepeatNode: :1
+SpaceNode:  
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: VI
+ChordTypeNode: M7
+DashNode: -
+RomanNumeralNode: i
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: VII
+ParenthesisNode: )
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: VII
+DashNode: -
+RomanNumeralNode: IV
+---
+Parsing: VI-III-V7-(i-VII/3-III-IV-V) VI-III-iv7-V7
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 7
+DashNode: -
+ParenthesisNode: (
+RomanNumeralNode: i
+DashNode: -
+RomanNumeralNode: VII
+InversionNode: /3
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: IV
+DashNode: -
+RomanNumeralNode: V
+ParenthesisNode: )
+SpaceNode:  
+RomanNumeralNode: VI
+DashNode: -
+RomanNumeralNode: III
+DashNode: -
+RomanNumeralNode: iv
+ChordTypeNode: 7
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: 7
+---
+Parsing: i/3-Vsus4/5-v/5
+RomanNumeralNode: i
+InversionNode: /3
+DashNode: -
+RomanNumeralNode: V
+ChordTypeNode: sus4
+InversionNode: /5
+DashNode: -
+RomanNumeralNode: v
+InversionNode: /5
+---
