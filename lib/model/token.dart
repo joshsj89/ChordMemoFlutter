@@ -440,6 +440,7 @@ class Token {
 
 List<Token> tokenize(String input) {
   final tokens = <Token>[];
+  int index = 0;
   final pattern = RegExp(
     r'(iii|III|ii|II|iv|IV|vii|VII|vi|VI|[iIvV])|'         // Roman numerals
     r'(\/([2-79]|11|13))|' // inversion slash (e.g., /2, /3, /4, /5, /6, /7, /9, /11, /13)
@@ -455,34 +456,45 @@ List<Token> tokenize(String input) {
     caseSensitive: true,
   );
 
-  for (final match in pattern.allMatches(input)) {
-    final value = match.group(0)!;
-    if (RegExp(r'^(iii|III|ii|II|iv|IV|vii|VII|vi|VI|[iIvV])$', caseSensitive: true).hasMatch(value)) {
-      tokens.add(Token(TokenType.romanNumeral, value));
-    } else if (RegExp(r'^(\/[2-79]|11|13)$').hasMatch(value)) {
-      tokens.add(Token(TokenType.inversion, value));
-    } else if (RegExp(r'^[\-]$').hasMatch(value)) {
-      tokens.add(Token(TokenType.dash, value));
-    } else if (RegExp(r'^[♯#♭]$').hasMatch(value)) {
-      tokens.add(Token(TokenType.accidental, value));
-    } else if (RegExp(r'^(\/[^\d\-\(\)]+)$', caseSensitive: true).hasMatch(value)) {
-      tokens.add(Token(TokenType.slashChord, value));
-    } else if (RegExp(r'^(:(\d+))$').hasMatch(value)) {
-      tokens.add(Token(TokenType.repeat, value));
-    } else if (RegExp(r'^(K[+–]([mM][2367]|P[45]|TT))$', caseSensitive: true).hasMatch(value)) {
-      tokens.add(Token(TokenType.keyChange, value));
-    } else if (RegExp(r'^\s$').hasMatch(value)) {
-      tokens.add(Token(TokenType.space, value));
-    } else if (RegExp(chordTypeRegexString, caseSensitive: true).hasMatch(value)) {
-      tokens.add(Token(TokenType.chordType, value));
-    } else if (value == '(') {
-      tokens.add(Token(TokenType.leftParenthesis, value));
-    } else if (value == ')') {
-      tokens.add(Token(TokenType.rightParenthesis, value));
+  while (index < input.length) {
+    final match = pattern.matchAsPrefix(input, index);
+    if (match != null) {
+      final value = match.group(0)!;
+      if (RegExp(r'^(iii|III|ii|II|iv|IV|vii|VII|vi|VI|[iIvV])$', caseSensitive: true).hasMatch(value)) {
+        tokens.add(Token(TokenType.romanNumeral, value));
+      } else if (RegExp(r'^(\/[2-79]|11|13)$').hasMatch(value)) {
+        tokens.add(Token(TokenType.inversion, value));
+      } else if (RegExp(r'^[\-]$').hasMatch(value)) {
+        tokens.add(Token(TokenType.dash, value));
+      } else if (RegExp(r'^[♯#♭]$').hasMatch(value)) {
+        tokens.add(Token(TokenType.accidental, value));
+      } else if (RegExp(r'^(\/[^\d\-\(\)]+)$', caseSensitive: true).hasMatch(value)) {
+        tokens.add(Token(TokenType.slashChord, value));
+      } else if (RegExp(r'^(:(\d+))$').hasMatch(value)) {
+        tokens.add(Token(TokenType.repeat, value));
+      } else if (RegExp(r'^(K[+–]([mM][2367]|P[45]|TT))$', caseSensitive: true).hasMatch(value)) {
+        tokens.add(Token(TokenType.keyChange, value));
+      } else if (RegExp(r'^\s$').hasMatch(value)) {
+        tokens.add(Token(TokenType.space, value));
+      } else if (RegExp(chordTypeRegexString, caseSensitive: true).hasMatch(value)) {
+        tokens.add(Token(TokenType.chordType, value));
+      } else if (value == '(') {
+        tokens.add(Token(TokenType.leftParenthesis, value));
+      } else if (value == ')') {
+        tokens.add(Token(TokenType.rightParenthesis, value));
+      } else {
+        tokens.add(Token(TokenType.error, value));
+      }
+
+      // index += match.end - match.start; // Move the index forward
+      index += value.length; // Move the index forward by the length of the matched value
     } else {
-      tokens.add(Token(TokenType.error, value));
+      // If no match is found, we can treat it as an error token
+      tokens.add(Token(TokenType.error, input[index]));
+      index++;
     }
   }
+
   return tokens;
 }
 

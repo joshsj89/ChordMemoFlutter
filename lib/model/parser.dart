@@ -9,6 +9,9 @@ class Parser {
   Token get current =>
       position < tokens.length ? tokens[position] : Token(TokenType.error, '');
 
+  Token get nextToken =>
+      position + 1 < tokens.length ? tokens[position + 1] : Token(TokenType.error, '');
+
   Token advance() {
     return tokens[position++];
   }
@@ -31,25 +34,39 @@ class Parser {
     return false;
   }
 
-  List<ASTNode> parseRepeatTail() { // space KeyChange space Sequence
-  final children = <ASTNode>[];
-
-  if (match(TokenType.space)) { 
-    advance(); // consume space
-
-    if (match(TokenType.keyChange)) {
-      final keyChange = KeyChangeNode(advance());
-
-      if (match(TokenType.space)) advance();
-
-      children.add(keyChange);
-      children.add(parseSequence());
+  bool peek(TokenType type) {
+    if (nextToken.type == TokenType.error) {
+      return false; // No next token
     }
+
+    return nextToken.type == type;
   }
 
-  // empty (epsilon)
-  return children;
-}
+  List<ASTNode> parseRepeatTail() { // space KeyChange space Sequence
+    final children = <ASTNode>[];
+
+    if (match(TokenType.space)) { 
+      advance(); // consume space
+
+      if (match(TokenType.keyChange)) {
+        final keyChange = KeyChangeNode(advance());
+
+        if (keyChange.token.type == TokenType.error) {
+          children.add(ErrorNode(keyChange.token));
+
+          return children;
+        }
+
+        if (match(TokenType.space)) advance();
+
+        children.add(keyChange);
+        children.add(parseSequence());
+      }
+    }
+
+    // empty (epsilon)
+    return children;
+  }
 
   // Grammar: Progression → Sequence ProgressionTail*
   ASTNode parseProgression() {
@@ -60,9 +77,13 @@ class Parser {
     while (!isAtEnd()) {
       if (match(TokenType.space)) {
         advance(); // consume space
-        
+
         if (match(TokenType.keyChange)) { // KeyChange space Sequence
           final keyChange = KeyChangeNode(advance());
+
+          if (keyChange.token.type == TokenType.error) {
+            return ErrorNode(keyChange.token);
+          }
 
           if (match(TokenType.space)) advance();
 
@@ -71,8 +92,24 @@ class Parser {
         } else if (match(TokenType.repeat)) { // Repeat RepeatTail
           final repeat = RepeatNode(advance());
 
+          if (repeat.token.type == TokenType.error) {
+            return ErrorNode(repeat.token);
+          }
+
           children.add(repeat);
-          children.addAll(parseRepeatTail());
+
+          if (match(TokenType.space)) {
+            if (peek(TokenType.keyChange)) {
+              // If there's a space followed by a key change, we parse the repeat tail
+              final repeatTail = parseRepeatTail();
+              if (repeatTail.isNotEmpty) {
+                children.addAll(repeatTail);
+              }
+            } else if (nextToken.type == TokenType.error) { // Progression ends with a repeat
+              advance(); // consume space
+              break;
+            }
+          }
         } else { // Sequence
           children.add(parseSequence());
         }
@@ -81,20 +118,23 @@ class Parser {
       }
     }
 
-    return ProgressionNode(Token(TokenType.progression, ''), children);
+    if (isAtEnd()) {
+      // If we reach the end without any further tokens, we can return the progression
+      return ProgressionNode(Token(TokenType.progression, ''), children);
+    } else {
+      // If we encounter an unexpected token, we return an error node
+      return ErrorNode(Token(TokenType.error, 'Unexpected token: ${current.value}'));
+    }
   }
 
   // Grammar: Sequence → ChordGroup (dash ChordGroup)*
   ASTNode parseSequence() {
     final children = <ASTNode>[];
-
     children.add(parseChordGroup());
-
     while (match(TokenType.dash)) { // (dash ChordGroup)*
       children.add(DashNode(advance()));
       children.add(parseChordGroup());
     }
-
     return SequenceNode(Token(TokenType.sequence, ''), children);
   }
 
@@ -110,10 +150,16 @@ class Parser {
   // Grammar: Parenthesized → leftParenthesis Sequence rightParenthesis
   ASTNode parseParenthesized() {
     final left = advance(); // consume '('
+    if (left.type == TokenType.error) {
+      return ErrorNode(left);
+    }
     final seq = parseSequence();
-
     if (match(TokenType.rightParenthesis)) { // rightParenthesis
       final right = advance(); // consume ')'
+      if (right.type == TokenType.error) {
+        return ErrorNode(right);
+      }
+
       return ParenthesizedNode(left, seq, right);
     } else {
       return ErrorNode(Token(TokenType.error, 'Expected right parenthesis'));
@@ -129,29 +175,54 @@ class Parser {
     final SlashChordNode? slashChord;
 
     if (match(TokenType.accidental)) { // (accidental)?
-      accidental = AccidentalNode(advance());
+      final accTok = advance();
+      if (accTok.type == TokenType.error) {
+        return ErrorNode(accTok);
+      }
+
+      accidental = AccidentalNode(accTok);
     } else {
       accidental = null;
     }
 
     if (match(TokenType.romanNumeral)) { // RomanNumeral
-      romanNumeral = RomanNumeralNode(advance());
+      final romanTok = advance();
+      if (romanTok.type == TokenType.error) {
+        return ErrorNode(romanTok);
+      }
+      romanNumeral = RomanNumeralNode(romanTok);
     } else {
       return ErrorNode(Token(TokenType.error, 'Expected Roman numeral'));
     }
 
     if (match(TokenType.chordType)) { // (ChordType)?
-      chordType = ChordTypeNode(advance());
+      final chordTypeTok = advance();
+      if (chordTypeTok.type == TokenType.error) {
+        return ErrorNode(chordTypeTok);
+      }
+      chordType = ChordTypeNode(chordTypeTok);
     } else {
       chordType = null;
     }
-    
+
     // (InversionOrSlash)?
     if (match(TokenType.inversion)) {
-      inversion = InversionNode(advance());
+      final invTok = advance();
+
+      if (invTok.type == TokenType.error) {
+        return ErrorNode(invTok);
+      }
+
+      inversion = InversionNode(invTok);
       slashChord = null;
     } else if (match(TokenType.slashChord)) {
-      slashChord = SlashChordNode(advance());
+      final slashTok = advance();
+
+      if (slashTok.type == TokenType.error) {
+        return ErrorNode(slashTok);
+      }
+
+      slashChord = SlashChordNode(slashTok);
       inversion = null;
     } else {
       inversion = null;
