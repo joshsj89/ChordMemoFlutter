@@ -40,7 +40,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       canPop: false, // Prevent default behavior of back button
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Navigator.pop(context, _didEdit);
+          Navigator.pop(context, [_didEdit]);
         }
       },
       child: Scaffold(
