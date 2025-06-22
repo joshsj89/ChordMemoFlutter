@@ -34,6 +34,15 @@ enum TokenType {
 
   // The token represents an unknown token
   error,
+
+  // The token represents a chord
+  chord,
+
+  // The token represents a sequence of chords
+  sequence,
+
+  // The token represents a full chord progression
+  progression,
 }
 
 abstract class ASTNode {
@@ -50,11 +59,21 @@ class RomanNumeralNode extends ASTNode {
 
   RomanNumeralNode(super.token);
   String get numeral => token.value;
+
+  @override
+  String toString() {
+    return 'RomanNumeralNode($numeral)';
+  }
 }
 
 class ChordTypeNode extends ASTNode {
   ChordTypeNode(super.token);
   String get chordType => token.value;
+
+  @override
+  String toString() {
+    return 'ChordTypeNode($chordType)';
+  }
 }
 
 class RepeatNode extends ASTNode {
@@ -62,6 +81,11 @@ class RepeatNode extends ASTNode {
 
   RepeatNode(super.token)
     : count = int.parse(token.value.split(':')[1]);
+
+  @override
+  String toString() {
+    return 'RepeatNode($count)';
+  }
 }
 
 class InversionNode extends ASTNode {
@@ -69,6 +93,11 @@ class InversionNode extends ASTNode {
 
   InversionNode(super.token)
     : degree = token.value.substring(1); // Remove the leading slash
+
+  @override
+  String toString() {
+    return 'InversionNode($degree)';
+  }
 }
 
 class SlashChordNode extends ASTNode {
@@ -76,6 +105,11 @@ class SlashChordNode extends ASTNode {
 
   SlashChordNode(super.token)
     : chord = token.value.substring(1); // Remove the leading slash
+
+  @override
+  String toString() {
+    return 'SlashChordNode($chord)';
+  }
 }
 
 class KeyChangeNode extends ASTNode {
@@ -85,22 +119,45 @@ class KeyChangeNode extends ASTNode {
   KeyChangeNode(super.token)
     : direction = token.value.substring(1, 2), // Extract the direction (e.g., + or –)
       interval = token.value.substring(2); // Extract the interval (e.g., m2, M2, P4, TT)
+
+  @override
+  String toString() {
+    return 'KeyChangeNode(direction: $direction, interval: $interval)';
+  }
 }
 
 class DashNode extends ASTNode {
   DashNode(super.token);
+
+  @override
+  String toString() {
+    return 'DashNode(token: ${token.value})';
+  }
 }
 
 class AccidentalNode extends ASTNode {
   AccidentalNode(super.token);
   String get accidental => token.value;
+
+  @override
+  String toString() {
+    return 'AccidentalNode($accidental)';
+  }
 }
 
-class ParenthesisNode extends ASTNode {
-  final bool isLeft;
+class ParenthesizedNode extends ASTNode {
+  final ASTNode sequence;
+  final Token rightParenthesis;
 
-  ParenthesisNode(super.token)
-    : isLeft = token.type == TokenType.leftParenthesis && token.value == '(';
+  ParenthesizedNode(super.leftParenthesis, this.sequence, this.rightParenthesis);
+
+  bool get isLeft => token.type == TokenType.leftParenthesis && token.value == '(';
+  bool get isRight => token.type == TokenType.rightParenthesis && token.value == ')';
+
+  @override
+  String toString() {
+    return 'ParenthesizedNode($sequence)';
+  }
 }
 
 class SpaceNode extends ASTNode {
@@ -110,16 +167,71 @@ class SpaceNode extends ASTNode {
 class ErrorNode extends ASTNode {
   ErrorNode(super.token);
   String get error => token.value;
+
+  @override
+  String toString() {
+    return 'ErrorNode(error: $error)';
+  }
 }
 
-class ChordSequenceNode extends ASTNode {
+class ChordNode extends ASTNode {
+  final AccidentalNode? accidental;
+  final RomanNumeralNode romanNumeral;
+  final ChordTypeNode? chordType;
+  final InversionNode? inversion;
+  final SlashChordNode? slashChord;
+
+  ChordNode(
+    super.token, {
+    this.accidental,
+    required this.romanNumeral,
+    this.chordType,
+    this.inversion,
+    this.slashChord,
+  });
+
+  @override
+  String toString() {
+    if (inversion != null) {
+      return 'ChordNode($accidental$romanNumeral$chordType$inversion)';
+    } else if (slashChord != null) {
+      return 'ChordNode($accidental$romanNumeral$chordType$slashChord)';
+    }
+
+    return 'ChordNode($accidental$romanNumeral$chordType)';
+  }
+}
+
+class ChordGroupNode extends ASTNode {
   final List<ASTNode> children;
 
-  ChordSequenceNode(super.token, this.children);
+  ChordGroupNode(super.token, this.children);
+
+  @override
+  String toString() {
+    return 'ChordGroupNode(children: $children)';
+  }
+}
+
+class SequenceNode extends ASTNode {
+  final List<ASTNode> children;
+
+  SequenceNode(super.token, this.children);
   
   @override
   String toString() {
-    return 'ChordSequenceNode(children: $children)';
+    return 'SequenceNode($children)';
+  }
+}
+
+class ProgressionNode extends ASTNode {
+  final List<ASTNode> children;
+
+  ProgressionNode(super.token, this.children);
+
+  @override
+  String toString() {
+    return 'ProgressionNode($children)';
   }
 }
 
