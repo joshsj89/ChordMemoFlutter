@@ -558,6 +558,12 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                   ),
                                 ),
                                 errorText: chordsErrors[index],
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xFFB71C1C)),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
                               ),
                               onTap: () {
                                 _handleKeyboardToggle(context2, index);
