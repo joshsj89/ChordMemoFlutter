@@ -167,28 +167,17 @@ class Parser {
       slashChord: slashChord,
     );
   }
-
-  // Entry point for parsing
-  List<ASTNode> parseAll() {
-    final List<ASTNode> ast = [];
-
-    if (!isAtEnd()) {
-      ast.add(parseProgression());
-    }
-
-    return ast;
-  }
 }
 
+/* // Test parser
 void main() {
   for (final testCase in testCases) {
     print('Parsing: $testCase');
     final tokens = tokenize(testCase);
     final parser = Parser(tokens);
-    final ast = parser.parseAll();
-    for (final node in ast) {
-      print(node);
-    }
+    final ast = parser.parseProgression();
+    print(ast);
     print('---');
   }
 }
+*/

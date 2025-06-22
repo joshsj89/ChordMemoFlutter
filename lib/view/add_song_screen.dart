@@ -9,6 +9,7 @@ import '../view_model/chords.dart';
 import 'chord_keyboard.dart';
 import 'flexible_width_button.dart';
 import '../view_model/dark_mode_provider.dart';
+import '../view_model/progression_validator.dart';
 import '../view_model/song_persistence.dart';
 import '../model/options.dart';
 import '../model/types.dart' as custom_types;
@@ -34,6 +35,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
   List<String> songArtists = [];
   Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
   Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
+  Map<int, String?> chordsErrors = {}; // hold the chords errors
   custom_types.Key lastSelectedKey = custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
   bool isSameKeyForAllSections = false;
   bool isChordKeyboardVisible = false;
@@ -81,6 +83,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
                   sections = updatedSections;
 
                   chordsInputs[currentKeyboardSectionIndex!] = chord;
+
+                  chordsErrors[currentKeyboardSectionIndex!] = validateProgression(chord);
 
                   chordsControllers[currentKeyboardSectionIndex!].text = chord; // Update the text field
                 });
@@ -544,17 +548,17 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                 hintText: 'Chords',
                                 hintStyle: TextStyle(color: Colors.grey[500]),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                  borderSide: BorderSide(
+                                    color: chordsErrors[index] != null ? Colors.red : (isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                  borderSide: BorderSide(
+                                    color: chordsErrors[index] != null ? Colors.red : (isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                  ),
                                 ),
+                                errorText: chordsErrors[index],
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  chordsInputs[index] = value;
-                                });
-                              },
                               onTap: () {
                                 _handleKeyboardToggle(context2, index);
                               },
@@ -573,7 +577,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: FlexibleWidthButton(
                       label: 'Add Song',
-                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible,
+                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible || chordsErrors.values.any((e) => e != null),
                       width: double.infinity,
                       onPressed: _onAddSong,
                     ),
