@@ -1,7 +1,9 @@
 Progression → Sequence ProgressionTail*
 ProgressionTail → space KeyChange space Sequence
-               | space Repeat space (Sequence)?
+               | space Repeat RepeatTail
                | space Sequence
+RepeatTail     → space KeyChange space Sequence
+               | (empty)
 Sequence         → ChordGroup (dash ChordGroup)*
 ChordGroup       → Chord | Parenthesized
 Parenthesized    → leftParenthesis Sequence rightParenthesis

@@ -122,7 +122,7 @@ class KeyChangeNode extends ASTNode {
 
   @override
   String toString() {
-    return 'KeyChangeNode(direction: $direction, interval: $interval)';
+    return 'KeyChangeNode($direction$interval)';
   }
 }
 

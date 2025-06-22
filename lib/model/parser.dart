@@ -31,6 +31,26 @@ class Parser {
     return false;
   }
 
+  List<ASTNode> parseRepeatTail() { // space KeyChange space Sequence
+  final children = <ASTNode>[];
+
+  if (match(TokenType.space)) { 
+    advance(); // consume space
+
+    if (match(TokenType.keyChange)) {
+      final keyChange = KeyChangeNode(advance());
+
+      if (match(TokenType.space)) advance();
+
+      children.add(keyChange);
+      children.add(parseSequence());
+    }
+  }
+
+  // empty (epsilon)
+  return children;
+}
+
   // Grammar: Progression → Sequence ProgressionTail*
   ASTNode parseProgression() {
     final children = <ASTNode>[];
@@ -46,26 +66,14 @@ class Parser {
 
           if (match(TokenType.space)) advance();
 
-          // If next token is not a key change or repeat, we parse the next sequence
-          if (!isAtEnd() && !matchAny([TokenType.keyChange, TokenType.repeat])) {
-            children.add(keyChange);
-            children.add(parseSequence());
-          } else { // CHECK THIS LATER
-            children.add(keyChange);
-          }
-        } else if (match(TokenType.repeat)) { // Repeat space (Sequence)?
+          children.add(keyChange);
+          children.add(parseSequence());
+        } else if (match(TokenType.repeat)) { // Repeat RepeatTail
           final repeat = RepeatNode(advance());
 
-          if (match(TokenType.space)) advance();
-
-          // If next token is not a repeat, we parse the next sequence
-          if (!isAtEnd() && !matchAny([TokenType.repeat])) {
-            children.add(repeat);
-            children.add(parseSequence());
-          } else { // CHECK THIS LATER
-            children.add(repeat);
-          }
-        } else {
+          children.add(repeat);
+          children.addAll(parseRepeatTail());
+        } else { // Sequence
           children.add(parseSequence());
         }
       } else { // If not a space, we assume it's the end of the progression

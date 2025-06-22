@@ -1,0 +1,105 @@
+Parsing: I-vi-IV-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: I-(I-III-I-VII)-VI-V I-(I-III-I-VII)-VI-(VII-VI)-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(VII)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: i-III-iv :2 i-III-iv-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)null)]), RepeatNode(2)])
+---
+Parsing: III-VIM7 III-(VIM7-V7)
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)ChordTypeNode(M7))]), SequenceNode([ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(VI)ChordTypeNode(M7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(7))]))])])
+---
+Parsing: i-VII-VI-♯VII III
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(AccidentalNode(♯)RomanNumeralNode(VII)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(III)null)])])
+---
+Parsing: I-I+-I6-I7-IV-iv6-I-V9
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)ChordTypeNode(+)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)ChordTypeNode(6)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)ChordTypeNode(6)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(9))])])
+---
+Parsing: VI7-i :2 II7-V7
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(VI)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)null)]), RepeatNode(2)])
+---
+Parsing: i-III-viø7-IV
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)ChordTypeNode(ø7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null)])])
+---
+Parsing: i i-iv-VII i VI-III
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(i)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null)])])
+---
+Parsing: i-VI-IV7-VI-VII-I-VI-IV7-Vsus4-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(sus4)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: v-(v-♯iv)-iv
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(v)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(v)null), DashNode(token: -), ChordNode(AccidentalNode(♯)RomanNumeralNode(iv)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)null)])])
+---
+Parsing: I-iii-I-iii-vi-(V)-IV-V-vi-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(V)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: i-VI-VII(add9)-♯vi-III-♭I
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)ChordTypeNode((add9))), DashNode(token: -), ChordNode(AccidentalNode(♯)RomanNumeralNode(vi)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(I)null)])])
+---
+Parsing: I-♯iv7-IVM7-(ii7-V11)
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(AccidentalNode(♯)RomanNumeralNode(iv)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)ChordTypeNode(M7)), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(ii)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)nullInversionNode(1))]))])])
+---
+Parsing: i7-ii7-III6-IV i7/5-IV/3-i7/5-IV/5
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(ii)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)ChordTypeNode(6)), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(i)ChordTypeNode(7)InversionNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)nullInversionNode(3)), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)ChordTypeNode(7)InversionNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)nullInversionNode(5))])])
+---
+Parsing: I-v(add11)-v(add11)-ii7
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(v)ChordTypeNode((add11))), DashNode(token: -), ChordNode(nullRomanNumeralNode(v)ChordTypeNode((add11))), DashNode(token: -), ChordNode(nullRomanNumeralNode(ii)ChordTypeNode(7))])])
+---
+Parsing: IV7sus2-I-V6 :2 IV-IVM7 :1 
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(IV)ChordTypeNode(7sus2)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(6))]), RepeatNode(2)])
+---
+Parsing: i-VII-IV/3-V :1 i-VII-VI-V i
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)nullInversionNode(3)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)]), RepeatNode(1)])
+---
+Parsing: i-i/5-iv i-V-i
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)nullInversionNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)null)])])
+---
+Parsing: i K+M2 i
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null)]), KeyChangeNode(+M2), SequenceNode([ChordNode(nullRomanNumeralNode(i)null)])])
+---
+Parsing: I5-VII5-I5 VI5-V5 ♯VII5-V5 :3 i-♭II
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)ChordTypeNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)ChordTypeNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)ChordTypeNode(5))]), SequenceNode([ChordNode(nullRomanNumeralNode(VI)ChordTypeNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(5))]), SequenceNode([ChordNode(AccidentalNode(♯)RomanNumeralNode(VII)ChordTypeNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(5))]), RepeatNode(3)])
+---
+Parsing: i-VII-VI-ivsus2-V7-V7/3
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)ChordTypeNode(sus2)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(7)InversionNode(3))])])
+---
+Parsing: I5-♭II5-I5
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)ChordTypeNode(5)), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(II)ChordTypeNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)ChordTypeNode(5))])])
+---
+Parsing: V7♭9
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(V)ChordTypeNode(7♭9))])])
+---
+Parsing: I-I I5-VIno5-♭VIIno5-vii I-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(I)ChordTypeNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)ChordTypeNode(no5)), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(VII)ChordTypeNode(no5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(vii)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: i-v7 :1 K–M2 III-VII i-VI IV-V (V-VII)
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(v)ChordTypeNode(7))]), RepeatNode(1), KeyChangeNode(–M2), SequenceNode([ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)]), SequenceNode([ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)null)]))])])
+---
+Parsing: I6-♭III6-♭VII-vi-♭VI-Vsus4-(I6-♭vii°)-♭II
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)ChordTypeNode(6)), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(III)ChordTypeNode(6)), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(VII)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)null), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(sus4)), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(I)ChordTypeNode(6)), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(vii)ChordTypeNode(°))])), DashNode(token: -), ChordNode(AccidentalNode(♭)RomanNumeralNode(II)null)])])
+---
+Parsing: I-vi-IV-V :2 IV-V/3-vi-II I-V/3-vi-II
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)]), RepeatNode(2)])
+---
+Parsing: I-(V/5-I)-IV-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(V)nullInversionNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: I(add9)-III-vi-ii-V
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(I)ChordTypeNode((add9))), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(vi)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(ii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)])])
+---
+Parsing: VI-V-i ii/VI-V/VI-VI-V-i
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(ii)nullSlashChordNode(VI)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)nullSlashChordNode(VI)), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)null)])])
+---
+Parsing: ii-V-ii-V I-IV7-iii-♯ii° ii-V-ii-V-I
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(ii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(ii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)]), SequenceNode([ChordNode(nullRomanNumeralNode(I)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(iii)null), DashNode(token: -), ChordNode(AccidentalNode(♯)RomanNumeralNode(ii)ChordTypeNode(°))]), SequenceNode([ChordNode(nullRomanNumeralNode(ii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(ii)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(I)null)])])
+---
+Parsing: i-IIIM7♯5-III-IV-VIM7-(VII)-i :1 III-IV-VIM7-i-(VII)-III-VII-IV
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)ChordTypeNode(M7♯5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VI)ChordTypeNode(M7)), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(VII)null)])), DashNode(token: -), ChordNode(nullRomanNumeralNode(i)null)]), RepeatNode(1)])
+---
+Parsing: VI-III-V7-(i-VII/3-III-IV-V) VI-III-iv7-V7
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(7)), DashNode(token: -), ParenthesizedNode(SequenceNode([ChordNode(nullRomanNumeralNode(i)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(VII)nullInversionNode(3)), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(IV)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)null)]))]), SequenceNode([ChordNode(nullRomanNumeralNode(VI)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(III)null), DashNode(token: -), ChordNode(nullRomanNumeralNode(iv)ChordTypeNode(7)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(7))])])
+---
+Parsing: i/3-Vsus4/5-v/5
+ProgressionNode([SequenceNode([ChordNode(nullRomanNumeralNode(i)nullInversionNode(3)), DashNode(token: -), ChordNode(nullRomanNumeralNode(V)ChordTypeNode(sus4)InversionNode(5)), DashNode(token: -), ChordNode(nullRomanNumeralNode(v)nullInversionNode(5))])])
+---
