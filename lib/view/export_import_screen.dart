@@ -130,7 +130,7 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
       canPop: false, // Prevent default behavior of back button
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          Navigator.pop(context, didImport);
+          Navigator.pop(context, [didImport]);
         }
       },
       child: Scaffold(
@@ -146,7 +146,7 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
           iconTheme: IconThemeData(color: altTextColor), // Change the color of the back button
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context, didImport),
+            onPressed: () => Navigator.pop(context, [didImport]),
           ),
         ),
         backgroundColor: backgroundColor,

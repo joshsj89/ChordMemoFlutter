@@ -85,9 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
         MaterialPageRoute(
           builder: (_) => SearchResultsScreen(songs: filteredSongs),
         ),
-      ) as bool;
+      ) as List<dynamic>;
 
-      if (result == true) { // If the user edited a song
+      final didEdit = result[0] as bool;
+
+      if (didEdit == true) { // If the user edited a song
         loadSongs().then((loadedSongs) {
           setState(() {
             songs = loadedSongs;
@@ -172,10 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(
                     builder: (_) => ExportImportScreen(),
                   ),
-                ) as bool;
+                ) as List<dynamic>;
+
+                final didImport = result[0] as bool;
 
                 // If the user imported songs, reload the list
-                if (result == true) {
+                if (didImport == true) {
                   loadSongs().then((loadedSongs) {
                     setState(() {
                       songs = loadedSongs;
@@ -282,9 +286,13 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(
               builder: (_) => AddSongScreen(),
             ),
-          ) as bool;
+          ) as List<dynamic>?;
 
-          if (result == true) {
+          if (result == null || result.isEmpty) return;
+          
+          final didAdd = result[0] as bool;
+
+          if (didAdd == true) {
             loadSongs().then((loadedSongs) {
               setState(() {
                 songs = loadedSongs;

@@ -164,7 +164,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
       saveSongs([newSong]);
     }
 
-    Navigator.pop(context, true);
+    Navigator.pop(context, [true, newSong]);
   }
 
   void _handleKeyboardToggle(BuildContext context, int index) {
