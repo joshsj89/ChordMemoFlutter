@@ -33,9 +33,9 @@ class _AddSongScreenState extends State<AddSongScreen> {
   List<ListTileOption> sectionTitles = [];
   List<ListTileOption> availableSectionTitles = List.from(sectionTypeOptions);
   List<String> songArtists = [];
-  Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
-  Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
-  Map<int, String?> chordsErrors = {}; // hold the chords errors
+  List<String> chordsInputs = []; // hold the chords text temporarily
+  List<custom_types.Key> keysInputs = []; // hold the key object temporarily
+  List<String?> chordsErrors = []; // hold the chords errors
   custom_types.Key lastSelectedKey = custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
   bool isSameKeyForAllSections = false;
   bool isChordKeyboardVisible = false;
@@ -109,13 +109,12 @@ class _AddSongScreenState extends State<AddSongScreen> {
       chordsControllers.removeAt(index);
 
       sections.removeAt(index);
-      keysInputs.remove(index);
-      chordsInputs.remove(index);
+      keysInputs.removeAt(index);
+      chordsInputs.removeAt(index);
+      chordsErrors.removeAt(index);
 
       availableSectionTitles.add(sectionTitles[index]);
-      availableSectionTitles.sort((a, b) {
-        return a.id.compareTo(b.id);
-      });
+      availableSectionTitles.sort((a, b) => a.id.compareTo(b.id));
 
       sectionTitles.removeAt(index);
 
@@ -138,8 +137,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
       for (int i = 0; i < sections.length; i++) {
         sections[i] = custom_types.Section(
           sectionTitle: sections[i].sectionTitle,
-          key: keysInputs[i] ?? sections[i].key,
-          chords: chordsInputs[i] ?? sections[i].chords,
+          key: keysInputs[i],
+          chords: chordsInputs[i],
         );
       }
     });
@@ -251,17 +250,20 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         sectionTitles.add(sectionTitle);
                         availableSectionTitles.remove(sectionTitle);
 
-                        sections.add(custom_types.Section(
+                        custom_types.Section newSection = custom_types.Section(
                           sectionTitle: sectionTitle.label,
-                          key: isSameKeyForAllSections && sections.isNotEmpty ? keysInputs[0]! : lastSelectedKey,
+                          key: isSameKeyForAllSections && sections.isNotEmpty ? keysInputs[0] : lastSelectedKey,
                           chords: '',
-                        ));
+                        );
 
-                        chordsInputs[sections.length - 1] = sections.last.chords;
-                        keysInputs[sections.length - 1] = sections.last.key;
+                        sections.add(newSection);
+
+                        keysInputs.add(newSection.key);
+                        chordsInputs.add(newSection.chords);
+                        chordsControllers.add(TextEditingController());
+                        chordsErrors.add(null); // Initialize with no error
                       });
 
-                      chordsControllers.add(TextEditingController());
 
                       Navigator.pop(context);
                     },
@@ -406,7 +408,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
           
                           if (value) {
                             for (int i = 1; i < sections.length; i++) {
-                              keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                              keysInputs[i] = keysInputs[0];
                             }
                           }
                         });
@@ -421,11 +423,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
                   // Section Chooser List (Accordion)
                   Column(
                     spacing: 10,
-                    children: sections.asMap().entries.map((entry) {
+                    children: sections.asMap().entries.map((entry) { // Use asMap to access index
                       final int index = entry.key;
                       final custom_types.Section section = entry.value;
           
-                      final custom_types.Key currentKey = keysInputs[index] ?? section.key;
+                      final custom_types.Key currentKey = keysInputs[index];
                       final TextEditingController chordsController = chordsControllers[index];
           
                       return ExpansionTile(
@@ -441,7 +443,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                   value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
                                   dropdownColor: backgroundColor,
                                   disabledHint: Text(
-                                    keysInputs[0]?.tonic ?? 'C', // Show the first key when all keys are the same
+                                    keysInputs[0].tonic, // Show the first key when all keys are the same
                                     style: TextStyle(color: Colors.grey[500]),
                                   ),
                                   items: keyTonicOptions.map((tonic) {
@@ -458,11 +460,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                         mode: currentKey.mode,
                                       );
 
-                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
+                                      lastSelectedKey = keysInputs[index]; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
-                                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                          keysInputs[i] = keysInputs[0];
                                         }
                                       }
                                     });
@@ -472,7 +474,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                   value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
                                   dropdownColor: backgroundColor,
                                   disabledHint: Text(
-                                    keysInputs[0]?.symbol ?? '',
+                                    keysInputs[0].symbol,
                                     style: TextStyle(color: Colors.grey[500]),
                                   ),
                                   items: keySymbolOptions.map((symbol) {
@@ -489,11 +491,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                         mode: currentKey.mode,
                                       );
 
-                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
+                                      lastSelectedKey = keysInputs[index]; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
-                                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                          keysInputs[i] = keysInputs[0];
                                         }
                                       }
                                     });
@@ -503,7 +505,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                   value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
                                   dropdownColor: backgroundColor,
                                   disabledHint: Text(
-                                    keysInputs[0]?.mode ?? 'Major',
+                                    keysInputs[0].mode,
                                     style: TextStyle(color: Colors.grey[500]),
                                   ),
                                   items: keyModeOptions.map((mode) {
@@ -520,11 +522,11 @@ class _AddSongScreenState extends State<AddSongScreen> {
                                         mode: value!,
                                       );
 
-                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
+                                      lastSelectedKey = keysInputs[index]; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
-                                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                          keysInputs[i] = keysInputs[0];
                                         }
                                       }
                                     });
@@ -583,7 +585,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: FlexibleWidthButton(
                       label: 'Add Song',
-                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible || chordsErrors.values.any((e) => e != null),
+                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible || chordsErrors.any((e) => e != null),
                       width: double.infinity,
                       onPressed: _onAddSong,
                     ),

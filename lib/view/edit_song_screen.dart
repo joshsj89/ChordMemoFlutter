@@ -36,9 +36,9 @@ class _EditSongScreenState extends State<EditSongScreen> {
   List<ListTileOption> sectionTitles = [];
   List<ListTileOption> availableSectionTitles = List.from(sectionTypeOptions);
   List<String> songArtists = [];
-  Map<int, String> chordsInputs = {}; // hold the chords text temporarily using the section index as key
-  Map<int, custom_types.Key> keysInputs = {}; // hold the key object temporarily using the section index as key
-  Map<int, String?> chordsErrors = {}; // hold the chords errors
+  List<String> chordsInputs = []; // hold the chords text temporarily
+  List<custom_types.Key> keysInputs = []; // hold the key object temporarily
+  List<String?> chordsErrors = []; // hold the chords errors
   custom_types.Key lastSelectedKey = custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
   late bool isSameKeyForAllSections;
   bool isChordKeyboardVisible = false;
@@ -65,13 +65,14 @@ class _EditSongScreenState extends State<EditSongScreen> {
     availableSectionTitles.removeWhere((section) => sectionTitles.contains(section));
 
     for (int i = 0; i < sections.length; i++) {
-      chordsInputs[i] = sections[i].chords;
-      keysInputs[i] = sections[i].key;
+      chordsInputs.add(sections[i].chords);
+      keysInputs.add(sections[i].key);
 
       chordsControllers.add(TextEditingController(text: sections[i].chords));
+      chordsErrors.add(null); // initialize with no error
     }
 
-    isSameKeyForAllSections = keysInputs.length > 1 ? keysInputs.values.every((key) => key == keysInputs[0]) : false;
+    isSameKeyForAllSections = keysInputs.length > 1 ? keysInputs.every((key) => key == keysInputs[0]) : false;
 
     _loadArtists();
   }
@@ -137,13 +138,12 @@ class _EditSongScreenState extends State<EditSongScreen> {
       chordsControllers.removeAt(index);
 
       sections.removeAt(index);
-      keysInputs.remove(index);
-      chordsInputs.remove(index);
+      keysInputs.removeAt(index);
+      chordsInputs.removeAt(index);
+      chordsErrors.removeAt(index);
 
       availableSectionTitles.add(sectionTitles[index]);
-      availableSectionTitles.sort((a, b) {
-        return a.id.compareTo(b.id);
-      });
+      availableSectionTitles.sort((a, b) => a.id.compareTo(b.id));
 
       sectionTitles.removeAt(index);
 
@@ -166,8 +166,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
       for (int i = 0; i < sections.length; i++) {
         sections[i] = custom_types.Section(
           sectionTitle: sections[i].sectionTitle,
-          key: keysInputs[i] ?? sections[i].key,
-          chords: chordsInputs[i] ?? sections[i].chords,
+          key: keysInputs[i],
+          chords: chordsInputs[i],
         );
       }
     });
@@ -281,14 +281,19 @@ class _EditSongScreenState extends State<EditSongScreen> {
                         sectionTitles.add(sectionTitle);
                         availableSectionTitles.remove(sectionTitle);
 
-                        sections.add(custom_types.Section(
+                        custom_types.Section newSection = custom_types.Section(
                           sectionTitle: sectionTitle.label,
-                          key: isSameKeyForAllSections && sections.isNotEmpty ? keysInputs[0]! : lastSelectedKey,
+                          key: isSameKeyForAllSections && sections.isNotEmpty ? keysInputs[0] : lastSelectedKey,
                           chords: '',
-                        ));
-                      });
+                        );
 
-                      chordsControllers.add(TextEditingController());
+                        sections.add(newSection);
+
+                        keysInputs.add(newSection.key);
+                        chordsInputs.add(newSection.chords);
+                        chordsControllers.add(TextEditingController());
+                        chordsErrors.add(null); // initialize with no error
+                      });
 
                       Navigator.pop(context);
                     },
@@ -434,7 +439,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
           
                           if (value) {
                             for (int i = 1; i < sections.length; i++) {
-                              keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                              keysInputs[i] = keysInputs[0];
                             }
                           }
                         });
@@ -449,11 +454,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
                   // Section Chooser List (Accordion)
                   Column(
                     spacing: 10,
-                    children: sections.asMap().entries.map((entry) {
+                    children: sections.asMap().entries.map((entry) { // Use asMap to access index
                       final int index = entry.key;
                       final custom_types.Section section = entry.value;
           
-                      final custom_types.Key currentKey = keysInputs[index] ?? section.key;
+                      final custom_types.Key currentKey = keysInputs[index];
                       final TextEditingController chordsController = chordsControllers[index];
           
                       return ExpansionTile(
@@ -469,7 +474,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                   value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
                                   dropdownColor: backgroundColor,
                                   disabledHint: Text(
-                                    keysInputs[0]?.tonic ?? 'C', // Show the first key when all keys are the same
+                                    keysInputs[0].tonic, // Show the first key when all keys are the same
                                     style: TextStyle(color: Colors.grey[500]),
                                   ),
                                   items: keyTonicOptions.map((tonic) {
@@ -486,11 +491,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                         mode: currentKey.mode,
                                       );
 
-                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
+                                      lastSelectedKey = keysInputs[index]; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
-                                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                          keysInputs[i] = keysInputs[0];
                                         }
                                       }
                                     });
@@ -500,7 +505,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                   value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
                                   dropdownColor: backgroundColor,
                                   disabledHint: Text(
-                                    keysInputs[0]?.symbol ?? '',
+                                    keysInputs[0].symbol, // Show the first key when all keys are the same
                                     style: TextStyle(color: Colors.grey[500]),
                                   ),
                                   items: keySymbolOptions.map((symbol) {
@@ -517,11 +522,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                         mode: currentKey.mode,
                                       );
 
-                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
+                                      lastSelectedKey = keysInputs[index]; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
-                                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                          keysInputs[i] = keysInputs[0];
                                         }
                                       }
                                     });
@@ -531,7 +536,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                   value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
                                   dropdownColor: backgroundColor,
                                   disabledHint: Text(
-                                    keysInputs[0]?.mode ?? 'Major',
+                                    keysInputs[0].mode, // Show the first key when all keys are the same
                                     style: TextStyle(color: Colors.grey[500]),
                                   ),
                                   items: keyModeOptions.map((mode) {
@@ -548,11 +553,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
                                         mode: value!,
                                       );
 
-                                      lastSelectedKey = keysInputs[index]!; // Save the last selected key
+                                      lastSelectedKey = keysInputs[index]; // Save the last selected key
                                       
                                       if (isSameKeyForAllSections) {
                                         for (int i = 1; i < sections.length; i++) {
-                                          keysInputs[i] = keysInputs[0] ?? custom_types.Key(tonic: 'C', symbol: '', mode: 'Major');
+                                          keysInputs[i] = keysInputs[0];
                                         }
                                       }
                                     });
@@ -611,7 +616,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: FlexibleWidthButton(
                       label: 'Edit Song',
-                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible || chordsErrors.values.any((e) => e != null),
+                      disabled: title.isEmpty || sections.isEmpty || isChordKeyboardVisible || chordsErrors.any((e) => e != null),
                       width: double.infinity,
                       onPressed: _onEditSong,
                     ),
