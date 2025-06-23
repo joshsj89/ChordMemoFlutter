@@ -1,5 +1,5 @@
-import '../model/parser.dart';
-import '../model/token.dart';
+import 'package:chordmemoflutter/model/parser.dart';
+import 'package:chordmemoflutter/model/token.dart';
 
 String? validateProgression(String input) {
   final tokens = tokenize(input);

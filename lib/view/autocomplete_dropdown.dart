@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../view_model/highlight_matching_text.dart';
+import 'package:chordmemoflutter/view_model/highlight_matching_text.dart';
 
 class AutocompleteDropdown extends StatefulWidget {
   final List<String> dataset;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../view_model/dark_mode_provider.dart';
-import '../model/types.dart';
+import 'package:chordmemoflutter/model/types.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
 
 class ChordTypeButton extends StatefulWidget {
   final ChordType chordType;

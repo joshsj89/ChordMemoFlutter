@@ -1,13 +1,13 @@
-import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
-import 'package:chordmemoflutter/view/flexible_width_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:core'; // for RegExp
 
-import '../view_model/dark_mode_provider.dart';
-import 'symbol_picker_modal.dart';
-import '../model/types.dart' as custom_types;
+import 'package:chordmemoflutter/model/types.dart' as custom_types;
+import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
+import 'package:chordmemoflutter/view/flexible_width_button.dart';
+import 'package:chordmemoflutter/view/symbol_picker_modal.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
 
 class SearchDialog extends StatefulWidget {
   final List<custom_types.Song> songs;

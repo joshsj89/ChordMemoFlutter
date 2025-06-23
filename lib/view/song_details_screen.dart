@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:developer';
 
-import '../view_model/dark_mode_provider.dart';
-import 'edit_song_screen.dart';
-import '../model/types.dart' as custom_types;
+import 'package:chordmemoflutter/model/types.dart' as custom_types;
+import 'package:chordmemoflutter/view/edit_song_screen.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
 
 class SongDetailsScreen extends StatefulWidget {
   final custom_types.Song song;

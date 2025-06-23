@@ -1,8 +1,8 @@
-import 'package:chordmemoflutter/view/flexible_width_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import'../view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view/flexible_width_button.dart';
+import'package:chordmemoflutter/view_model/dark_mode_provider.dart';
 
 const List<String> symbols = ['♭', '♯'];
 

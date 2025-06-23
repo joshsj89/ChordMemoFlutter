@@ -7,15 +7,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'about_screen.dart';
-import 'add_song_screen.dart';
-import '../view_model/dark_mode_provider.dart';
-import 'export_import_screen.dart';
-import 'search_dialog.dart';
-import 'search_results_screen.dart';
-import 'song_details_screen.dart';
-import '../view_model/song_persistence.dart';
-import '../model/types.dart' as custom_types;
+import 'package:chordmemoflutter/model/types.dart' as custom_types;
+import 'package:chordmemoflutter/view/about_screen.dart';
+import 'package:chordmemoflutter/view/add_song_screen.dart';
+import 'package:chordmemoflutter/view/export_import_screen.dart';
+import 'package:chordmemoflutter/view/search_dialog.dart';
+import 'package:chordmemoflutter/view/search_results_screen.dart';
+import 'package:chordmemoflutter/view/song_details_screen.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/song_persistence.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

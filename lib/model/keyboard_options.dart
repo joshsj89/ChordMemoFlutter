@@ -1,4 +1,4 @@
-import 'types.dart';
+import 'package:chordmemoflutter/model/types.dart';
 
 const List<String> romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 

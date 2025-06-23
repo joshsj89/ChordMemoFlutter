@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
 
 class AboutScreen extends StatelessWidget {
   AboutScreen({super.key});

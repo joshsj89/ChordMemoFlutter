@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../view_model/dark_mode_provider.dart';
-import 'song_details_screen.dart';
-import '../view_model/song_persistence.dart';
-import '../model/types.dart' as custom_types;
+import 'package:chordmemoflutter/model/types.dart' as custom_types;
+import 'package:chordmemoflutter/view_model/song_persistence.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view/song_details_screen.dart';
 
 class SearchResultsScreen extends StatefulWidget {
   final List<custom_types.Song> songs;

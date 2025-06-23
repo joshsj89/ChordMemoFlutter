@@ -4,15 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
 
-import 'autocomplete_dropdown.dart';
-import '../view_model/chords.dart';
-import 'chord_keyboard.dart';
-import 'flexible_width_button.dart';
-import '../view_model/dark_mode_provider.dart';
-import '../view_model/progression_validator.dart';
-import '../view_model/song_persistence.dart';
-import '../model/options.dart';
-import '../model/types.dart' as custom_types;
+import 'package:chordmemoflutter/model/options.dart';
+import 'package:chordmemoflutter/model/types.dart' as custom_types;
+import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
+import 'package:chordmemoflutter/view/chord_keyboard.dart';
+import 'package:chordmemoflutter/view/flexible_width_button.dart';
+import 'package:chordmemoflutter/view_model/chords.dart';
+import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/progression_validator.dart';
+import 'package:chordmemoflutter/view_model/song_persistence.dart';
 
 class EditSongScreen extends StatefulWidget {
   final custom_types.Song song;

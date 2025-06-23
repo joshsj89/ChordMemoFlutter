@@ -1,6 +1,6 @@
-import 'dart:developer';
-
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dart:developer';
 
 class DarkModePreferences {
   static const String _key = 'darkMode';

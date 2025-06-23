@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/dark_mode_preferences.dart';
+
+import 'package:chordmemoflutter/model/dark_mode_preferences.dart';
 
 class DarkModeProvider extends ChangeNotifier {
   final DarkModePreferences _preferences = DarkModePreferences();
