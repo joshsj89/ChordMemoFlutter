@@ -446,7 +446,7 @@ List<Token> tokenize(String input) {
     r'(\/([2-79]|11|13))|' // inversion slash (e.g., /2, /3, /4, /5, /6, /7, /9, /11, /13)
     r'([\-])|'             // dash
     r'([♯#♭])|'             // accidentals
-    r'(\/[^\d\-\(\)]+)|'     // slash chord
+    r'(\/[^\d\s\-\(\)]+)|'     // slash chord
     r'(:(\d+))|'               // repeat (e.g., x2)
     r'(K[+–]([mM][2367]|P[45]|TT))|'     // key change
     '$chordTypeRegexString|' // Chord types
@@ -468,7 +468,7 @@ List<Token> tokenize(String input) {
         tokens.add(Token(TokenType.dash, value));
       } else if (RegExp(r'^[♯#♭]$').hasMatch(value)) {
         tokens.add(Token(TokenType.accidental, value));
-      } else if (RegExp(r'^(\/[^\d\-\(\)]+)$', caseSensitive: true).hasMatch(value)) {
+      } else if (RegExp(r'^(\/[^\d\s\-\(\)]+)$', caseSensitive: true).hasMatch(value)) {
         tokens.add(Token(TokenType.slashChord, value));
       } else if (RegExp(r'^(:(\d+))$').hasMatch(value)) {
         tokens.add(Token(TokenType.repeat, value));
