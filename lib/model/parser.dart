@@ -70,6 +70,11 @@ class Parser {
 
   // Grammar: Progression → Sequence ProgressionTail*
   ASTNode parseProgression() {
+    // If the progression is empty, we return an empty ProgressionNode
+    if (isAtEnd()) {
+      return ProgressionNode(Token(TokenType.progression, ''), []);
+    }
+
     final children = <ASTNode>[];
 
     children.add(parseSequence());
@@ -129,6 +134,11 @@ class Parser {
 
   // Grammar: Sequence → ChordGroup (dash ChordGroup)*
   ASTNode parseSequence() {
+    // If the sequence is empty, we return an empty SequenceNode
+    if (isAtEnd()) {
+      return SequenceNode(Token(TokenType.sequence, ''), []);
+    }
+
     final children = <ASTNode>[];
     children.add(parseChordGroup());
     while (match(TokenType.dash)) { // (dash ChordGroup)*
