@@ -8,6 +8,7 @@ import 'dart:developer';
 import 'package:chordmemoflutter/model/types.dart' as custom_types;
 import 'package:chordmemoflutter/view/edit_song_screen.dart';
 import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/pretty_chord_builder.dart';
 
 class SongDetailsScreen extends StatefulWidget {
   final custom_types.Song song;
@@ -251,11 +252,25 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
                                   color: textColor,
                                 ),
                               ),
-                              Text(
-                                "${section.key.tonic}${section.key.symbol} ${section.key.mode} - ${section.chords}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: textColor,
+                              SizedBox(
+                                width: double.infinity,
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(fontSize: 16, color: textColor),
+                                    children: [
+                                      TextSpan(
+                                        text: "${section.key.tonic}${section.key.symbol} ${section.key.mode} - ",
+                                        style: TextStyle(fontWeight: FontWeight.normal, color: textColor),
+                                      ),
+                                      buildPrettyChordProgression(
+                                        progression: section.chords,
+                                        textColor: textColor,
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.left,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
                                 ),
                               ),
                             ],
