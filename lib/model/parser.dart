@@ -42,6 +42,11 @@ class Parser {
     return nextToken.type == type;
   }
 
+  static ASTNode parse(String input) {
+    final tokens = tokenize(input);
+    return Parser(tokens).parseProgression();
+  }
+
   List<ASTNode> parseRepeatTail() { // space KeyChange space Sequence
     final children = <ASTNode>[];
 

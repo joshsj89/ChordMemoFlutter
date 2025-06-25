@@ -2,14 +2,7 @@ import 'package:chordmemoflutter/model/parser.dart';
 import 'package:chordmemoflutter/model/token.dart';
 
 String? validateProgression(String input) {
-  final tokens = tokenize(input);
-
-  if (tokens.isEmpty) { // Empty input is allowed
-    return null;
-  }
-
-  final parser = Parser(tokens);
-  final ast = parser.parseProgression();
+  final ast = Parser.parse(input);
 
   if (ast is ErrorNode) {
     return ast.error;

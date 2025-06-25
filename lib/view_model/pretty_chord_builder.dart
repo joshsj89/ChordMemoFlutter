@@ -3,9 +3,7 @@ import 'package:chordmemoflutter/model/parser.dart';
 import 'package:chordmemoflutter/model/token.dart';
 
 InlineSpan buildPrettyChordProgression({required String progression, required Color textColor}) {
-  final tokens = tokenize(progression);
-  final parser = Parser(tokens);
-  final ast = parser.parseProgression();
+  final ast = Parser.parse(progression);
 
   InlineSpan buildSpan(ASTNode node) {
     if (node is ErrorNode) {
