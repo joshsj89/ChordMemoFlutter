@@ -69,7 +69,8 @@ class _EditSongScreenState extends State<EditSongScreen> {
       keysInputs.add(sections[i].key);
 
       chordsControllers.add(TextEditingController(text: sections[i].chords));
-      chordsErrors.add(null); // initialize with no error
+      
+      chordsErrors.add(validateProgression(sections[i].chords));
     }
 
     isSameKeyForAllSections = keysInputs.length > 1 ? keysInputs.every((key) => key == keysInputs[0]) : false;
