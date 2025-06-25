@@ -15,7 +15,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
       );
     } else if (node is DashNode) {
       return TextSpan(
-        text: ' - ',
+        text: '-',
         style: TextStyle(color: textColor),
       );
     } else if (node is SpaceNode) {
@@ -24,7 +24,12 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
       );
     } else if (node is RepeatNode) {
       return TextSpan(
-        text: '  :${node.count}  ',
+        text: ' x${node.count} ',
+        style: TextStyle(color: textColor),
+      );
+    } else if (node is KeyChangeNode) {
+      return TextSpan(
+        text: ' K${node.direction}${node.interval} ',
         style: TextStyle(color: textColor),
       );
     } else if (node is ProgressionNode) {
@@ -44,6 +49,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
         ],
       );
     } else if (node is ChordNode) {
+      final accidental = node.accidental?.accidental ?? '';
       final roman = node.romanNumeral.numeral;
       final chordType = node.chordType?.chordType ?? '';
 
@@ -54,7 +60,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                roman,
+                ' $accidental$roman ',
                 style: TextStyle(
                   color: textColor,
                   fontWeight: FontWeight.bold,
@@ -91,7 +97,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                roman,
+                ' $accidental$roman ',
                 style: TextStyle(
                   color: textColor,
                   fontWeight: FontWeight.bold,
@@ -125,7 +131,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
         return TextSpan(
           children: [
             TextSpan(
-              text: roman,
+              text: ' $accidental$roman ',
               style: TextStyle(
                 color: textColor,
                 fontWeight: FontWeight.bold,
@@ -136,7 +142,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
               WidgetSpan(
                 alignment: PlaceholderAlignment.top,
                 child: Transform.translate(
-                  offset: Offset(0, -6),
+                  offset: Offset(-3, -6),
                   child: Text(
                     chordType,
                     style: TextStyle(
