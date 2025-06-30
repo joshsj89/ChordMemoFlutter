@@ -20,7 +20,7 @@ List<String> splitChordsIntoArray(String chords) {
 
 String transformChords(List<String> chords) {
   return chords.join('-').replaceAllMapped(
-    RegExp(r'-\s-|- |\(-|-\)'),
+    RegExp(r'-\s-|- |\(-|-\)|-\(-add9-\)|-\(-add11-\)|-\(-add13-\)'),
     (match) {
       switch (match[0]) {
         case '- -':
@@ -30,6 +30,12 @@ String transformChords(List<String> chords) {
           return '('; // Remove dash after '('
         case '-)':
           return ')'; // Remove dash before ')'
+        case '-(-add9-)':
+          return '(add9)'; // Keep add9 intact
+        case '-(-add11-)':
+          return '(add11)'; // Keep add11 intact
+        case '-(-add13-)':
+          return '(add13)'; // Keep add13 intact
         default:
           return ''; // Default fallback
       }
