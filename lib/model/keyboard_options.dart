@@ -262,3 +262,17 @@ const keyChangeTypes = {
     'K+M7',
   ],
 };
+
+final List<ChordType> allChordTypes = [
+  ...triadTypes,
+  ...seventhTypes.values.expand((types) => types),
+  ...ninthTypes.values.expand((types) => types),
+  ...eleventhTypes.values.expand((types) => types),
+  ...thirteenthTypes.values.expand((types) => types),
+];
+
+final List<String> chordTypeRegexPatterns = allChordTypes
+    .map((type) => type.value)
+    .toList()
+    ..removeWhere((pattern) => pattern.isEmpty) // Remove empty strings
+    ..sort((a, b) => b.length.compareTo(a.length)); // Sort patterns by length for better matching
