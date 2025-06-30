@@ -35,9 +35,11 @@ final ExtendedChordTypes seventhTypes = {
   ],
   'sus4': [
     ChordType(label: '7', alt: '7sus4', value: '7sus4'),
+    ChordType(label: 'M7', alt: 'M7sus4', value: 'M7sus4'),
   ],
   'sus2': [
     ChordType(label: '7', alt: '7sus2', value: '7sus2'),
+    ChordType(label: 'M7', alt: 'M7sus2', value: 'M7sus2'),
   ],
 };
 
