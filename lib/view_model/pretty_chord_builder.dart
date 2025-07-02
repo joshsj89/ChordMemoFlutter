@@ -31,9 +31,22 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
         style: TextStyle(color: textColor),
       );
     } else if (node is ProgressionNode) {
-      return TextSpan(
-        children: node.children.map(buildSpan).toList(),
-      );
+      final children = <InlineSpan>[];
+
+      for (int i = 0; i < node.children.length; i++) {
+        final child = node.children[i];
+        children.add(buildSpan(child));
+
+        if ( // Add space between sequences
+          i < node.children.length - 1 && 
+          child is SequenceNode &&
+          node.children[i + 1] is SequenceNode
+        ) {
+          children.add(const TextSpan(text: '  '));
+        }
+      }
+      
+      return TextSpan(children: children);
     } else if (node is SequenceNode) {
       return TextSpan(
         children: node.children.map(buildSpan).toList(),
