@@ -64,108 +64,63 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
       final roman = node.romanNumeral.numeral;
       final chordType = node.chordType?.chordType ?? '';
 
-      if (node.inversion != null) {
-        return WidgetSpan(
-          alignment: PlaceholderAlignment.middle,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '$accidental$roman',
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-          
-              if (chordType.isNotEmpty)
-                Transform.translate(
-                  offset: Offset(0, -6),
-                  child: Text(
-                    chordType,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-
-              Text(
-                '/${node.inversion!.degree}',
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          )
-        );
-      } else if (node.slashChord != null) {
-        return WidgetSpan(
-          alignment: PlaceholderAlignment.middle,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '$accidental$roman',
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              if (chordType.isNotEmpty)
-                Transform.translate(
-                  offset: Offset(0, -6),
-                  child: Text(
-                    chordType,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              
-              Text(
-                '/${node.slashChord!.chord}',
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+      // Compose the chord as a Row so it never splits
+      List<Widget> chordWidgets = [
+        Text(
+          '$accidental$roman',
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.bold,
           ),
-        );
-      } else {
-        return TextSpan(
-          children: [
-            TextSpan(
-              text: '$accidental$roman',
+        ),
+      ];
+
+      if (chordType.isNotEmpty) {
+        chordWidgets.add(
+          Transform.translate(
+            offset: Offset(0, -6),
+            child: Text(
+              chordType,
               style: TextStyle(
                 color: textColor,
-                fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
             ),
-
-            if (chordType.isNotEmpty)
-              WidgetSpan(
-                alignment: PlaceholderAlignment.top,
-                child: Transform.translate(
-                  offset: Offset(0, -6),
-                  child: Text(
-                    chordType,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-          ],
+          ),
         );
       }
+
+      if (node.inversion != null) {
+        chordWidgets.add(
+          Text(
+            '/${node.inversion!.degree}',
+            style: TextStyle(
+              color: textColor,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      } else if (node.slashChord != null) {
+        chordWidgets.add(
+          Text(
+            '/${node.slashChord!.chord}',
+            style: TextStyle(
+              color: textColor,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      }
+
+      return WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: chordWidgets,
+        ),
+      );
     }
 
     // Fallback for other or unknown nodes
