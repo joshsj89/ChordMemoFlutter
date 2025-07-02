@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chordmemoflutter/model/keyboard_options.dart';
-import 'package:chordmemoflutter/model/token.dart';
 import 'package:chordmemoflutter/model/types.dart';
 import 'package:chordmemoflutter/view/chord_type_button.dart';
 import 'package:chordmemoflutter/view/roman_numeral_button.dart';
