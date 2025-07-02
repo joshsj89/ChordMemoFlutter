@@ -71,6 +71,7 @@ InlineSpan buildPrettyChordProgression({required String progression, required Co
           style: TextStyle(
             color: textColor,
             fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
         ),
       ];
