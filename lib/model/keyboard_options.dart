@@ -290,7 +290,18 @@ final List<ChordType> allChordTypes = [
   ...thirteenthTypes.values.expand((types) => types),
 ];
 
+final List<ChordType> basicChordTypes = [ // only triads and sevenths
+  ...triadTypes,
+  ...seventhTypes.values.expand((types) => types),
+];
+
 final List<String> chordTypeRegexPatterns = allChordTypes
+    .map((type) => type.value)
+    .toList()
+    ..removeWhere((pattern) => pattern.isEmpty) // Remove empty strings
+    ..sort((a, b) => b.length.compareTo(a.length)); // Sort patterns by length for better matching
+
+final List<String> basicChordTypeRegexPatterns = basicChordTypes
     .map((type) => type.value)
     .toList()
     ..removeWhere((pattern) => pattern.isEmpty) // Remove empty strings

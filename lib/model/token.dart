@@ -277,7 +277,10 @@ final testCases = [
 ];
 */
 
+final String romanNumeralRegexString = r'(iii|III|ii|II|iv|IV|vii|VII|vi|VI|[iIvV])';
 final String chordTypeRegexString = chordTypeRegexPatterns.map((alt) => '(${RegExp.escape(alt)})').join('|');
+final String basicChordTypeRegexString = basicChordTypeRegexPatterns.map((alt) => '(${RegExp.escape(alt)})').join('|');
+final String slashChordRegexString = r'(\/[♯#♭]?''$romanNumeralRegexString($basicChordTypeRegexString)?)';
 
 class Token {
   final TokenType type;
@@ -298,11 +301,11 @@ List<Token> tokenize(String input) {
   final tokens = <Token>[];
   int index = 0;
   final pattern = RegExp(
-    r'(iii|III|ii|II|iv|IV|vii|VII|vi|VI|[iIvV])|'         // Roman numerals
+    '$romanNumeralRegexString|'         // Roman numerals
     r'(\/([2-79]|11|13))|' // inversion slash (e.g., /2, /3, /4, /5, /6, /7, /9, /11, /13)
     r'([\-])|'             // dash
     r'([♯#♭])|'             // accidentals
-    r'(\/[^\d\s\-\(\)]+)|'     // slash chord
+    '$slashChordRegexString|'     // slash chord
     r'(:(\d+))|'               // repeat (e.g., x2)
     r'(K[+–]([mM][2367]|P[45]|TT))|'     // key change
     '$chordTypeRegexString|' // Chord types
@@ -316,7 +319,8 @@ List<Token> tokenize(String input) {
     final match = pattern.matchAsPrefix(input, index);
     if (match != null) {
       final value = match.group(0)!;
-      if (RegExp(r'^(iii|III|ii|II|iv|IV|vii|VII|vi|VI|[iIvV])$', caseSensitive: true).hasMatch(value)) {
+
+      if (RegExp(r'^''$romanNumeralRegexString'r'$', caseSensitive: true).hasMatch(value)) {
         tokens.add(Token(TokenType.romanNumeral, value));
       } else if (RegExp(r'^(\/[2-79]|11|13)$').hasMatch(value)) {
         tokens.add(Token(TokenType.inversion, value));
@@ -324,7 +328,7 @@ List<Token> tokenize(String input) {
         tokens.add(Token(TokenType.dash, value));
       } else if (RegExp(r'^[♯#♭]$').hasMatch(value)) {
         tokens.add(Token(TokenType.accidental, value));
-      } else if (RegExp(r'^(\/[^\d\s\-\(\)]+)$', caseSensitive: true).hasMatch(value)) {
+      } else if (RegExp(r'^''$slashChordRegexString'r'$', caseSensitive: true).hasMatch(value)) {
         tokens.add(Token(TokenType.slashChord, value));
       } else if (RegExp(r'^(:(\d+))$').hasMatch(value)) {
         tokens.add(Token(TokenType.repeat, value));
@@ -332,7 +336,7 @@ List<Token> tokenize(String input) {
         tokens.add(Token(TokenType.keyChange, value));
       } else if (RegExp(r'^\s$').hasMatch(value)) {
         tokens.add(Token(TokenType.space, value));
-      } else if (RegExp(chordTypeRegexString, caseSensitive: true).hasMatch(value)) {
+      } else if (RegExp(r'^''$chordTypeRegexString'r'$', caseSensitive: true).hasMatch(value)) {
         tokens.add(Token(TokenType.chordType, value));
       } else if (value == '(') {
         tokens.add(Token(TokenType.leftParenthesis, value));
