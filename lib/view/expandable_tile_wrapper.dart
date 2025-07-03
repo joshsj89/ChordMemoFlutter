@@ -12,12 +12,12 @@ class ExpandableTileWrapper extends StatefulWidget {
   final Key? tileKey;
 
   const ExpandableTileWrapper({
-    Key? key,
+    super.key,
     required this.builder,
     this.onExpansionChanged,
     required this.onExpansionComplete,
     this.tileKey,
-  }) : super(key: key);
+  });
 
   @override
   State<ExpandableTileWrapper> createState() => _ExpandableTileWrapperState();
