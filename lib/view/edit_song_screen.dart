@@ -10,7 +10,9 @@ import 'package:chordmemoflutter/model/options.dart';
 import 'package:chordmemoflutter/model/types.dart' as custom_types;
 import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
 import 'package:chordmemoflutter/view/chord_keyboard.dart';
+import 'package:chordmemoflutter/view/expandable_tile_wrapper.dart';
 import 'package:chordmemoflutter/view/flexible_width_button.dart';
+import 'package:chordmemoflutter/view/size_reporting_widget.dart';
 import 'package:chordmemoflutter/view_model/chords.dart';
 import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
 import 'package:chordmemoflutter/view_model/progression_validator.dart';
@@ -37,6 +39,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
   List<custom_types.Section> sections = [];
   List<ListTileOption> sectionTitles = [];
   List<ListTileOption> availableSectionTitles = List.from(sectionTypeOptions);
+  List<double> sectionHeights = []; // used to store the heights of each section for the accordion
   List<String> songArtists = [];
   List<String> chordsInputs = []; // hold the chords text temporarily
   List<custom_types.Key> keysInputs = []; // hold the key object temporarily
@@ -144,6 +147,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
       keysInputs.removeAt(index);
       chordsInputs.removeAt(index);
       chordsErrors.removeAt(index);
+      sectionHeights.removeAt(index);
 
       availableSectionTitles.add(sectionTitles[index]);
       availableSectionTitles.sort((a, b) => a.id.compareTo(b.id));
@@ -296,6 +300,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                         chordsInputs.add(newSection.chords);
                         chordsControllers.add(TextEditingController());
                         chordsErrors.add(null); // initialize with no error
+                        sectionHeights.add(0.0); // initialize with height 0
                       });
 
                       Navigator.pop(context);
@@ -456,7 +461,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
           
                   // Section Chooser List (Accordion)
                   SizedBox(
-                    height: 400, // Set a fixed height for the list
+                    height: sectionHeights.isEmpty ? 0 : sectionHeights.reduce((a, b) => a + b) /*+ (sections.length * 60)*/, // Adjust height based on section heights
                     child: ReorderableListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: sections.length,
@@ -475,152 +480,177 @@ class _EditSongScreenState extends State<EditSongScreen> {
                         final custom_types.Key currentKey = keysInputs[index];
                         final TextEditingController chordsController = chordsControllers[index];
                               
-                        return ExpansionTile(
-                          key: ValueKey(sectionTitles[index].id),
-                          title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
-                          initiallyExpanded: true,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        return SizeReportingWidget(
+                          key: ValueKey(section.sectionTitle),
+                          onSizeChanged: (height) {
+                            setState(() {
+                              if (sectionHeights.length > index) {
+                                sectionHeights[index] = height;
+                              } else {
+                                sectionHeights.add(height);
+                              }
+                            });
+                          },
+                          child: ExpandableTileWrapper(
+                            tileKey: ValueKey(section.sectionTitle),
+                            onExpansionComplete: () {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                // Rebuild the widget to ensure the heights are updated
+                                setState(() {});
+                              });
+                            },
+                            builder: (context, isExpanded, onExpansionChanged) {
+                              return ExpansionTile(
+                                title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
+                                initiallyExpanded: isExpanded,
+                                onExpansionChanged: (expanded) {
+                                  onExpansionChanged(expanded);
+                                },
                                 children: [
-                                  DropdownButton<String>(
-                                    value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
-                                    dropdownColor: backgroundColor,
-                                    disabledHint: Text(
-                                      keysInputs[0].tonic, // Show the first key when all keys are the same
-                                      style: TextStyle(color: Colors.grey[500]),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        DropdownButton<String>(
+                                          value: isSameKeyForAllSections && index > 0 ? null : currentKey.tonic,
+                                          dropdownColor: backgroundColor,
+                                          disabledHint: Text(
+                                            keysInputs[0].tonic, // Show the first key when all keys are the same
+                                            style: TextStyle(color: Colors.grey[500]),
+                                          ),
+                                          items: keyTonicOptions.map((tonic) {
+                                            return DropdownMenuItem<String>(
+                                              value: tonic,
+                                              child: Text(tonic, style: TextStyle(color: textColor)),
+                                            );
+                                          }).toList(),
+                                          onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                                            setState(() {
+                                              keysInputs[index] = custom_types.Key(
+                                                tonic: value!,
+                                                symbol: currentKey.symbol,
+                                                mode: currentKey.mode,
+                                              );
+                                                  
+                                              lastSelectedKey = keysInputs[index]; // Save the last selected key
+                                              
+                                              if (isSameKeyForAllSections) {
+                                                for (int i = 1; i < sections.length; i++) {
+                                                  keysInputs[i] = keysInputs[0];
+                                                }
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        DropdownButton<String>(
+                                          value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
+                                          dropdownColor: backgroundColor,
+                                          disabledHint: Text(
+                                            keysInputs[0].symbol, // Show the first key when all keys are the same
+                                            style: TextStyle(color: Colors.grey[500]),
+                                          ),
+                                          items: keySymbolOptions.map((symbol) {
+                                            return DropdownMenuItem<String>(
+                                              value: symbol,
+                                              child: Text(symbol, style: TextStyle(color: textColor)),
+                                            );
+                                          }).toList(),
+                                          onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                                            setState(() {
+                                              keysInputs[index] = custom_types.Key(
+                                                tonic: currentKey.tonic,
+                                                symbol: value!,
+                                                mode: currentKey.mode,
+                                              );
+                                                  
+                                              lastSelectedKey = keysInputs[index]; // Save the last selected key
+                                              
+                                              if (isSameKeyForAllSections) {
+                                                for (int i = 1; i < sections.length; i++) {
+                                                  keysInputs[i] = keysInputs[0];
+                                                }
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        DropdownButton<String>(
+                                          value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
+                                          dropdownColor: backgroundColor,
+                                          disabledHint: Text(
+                                            keysInputs[0].mode, // Show the first key when all keys are the same
+                                            style: TextStyle(color: Colors.grey[500]),
+                                          ),
+                                          items: keyModeOptions.map((mode) {
+                                            return DropdownMenuItem<String>(
+                                              value: mode,
+                                              child: Text(mode, style: TextStyle(color: textColor)),
+                                            );
+                                          }).toList(),
+                                          onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
+                                            setState(() {
+                                              keysInputs[index] = custom_types.Key(
+                                                tonic: currentKey.tonic,
+                                                symbol: currentKey.symbol,
+                                                mode: value!,
+                                              );
+                                                  
+                                              lastSelectedKey = keysInputs[index]; // Save the last selected key
+                                              
+                                              if (isSameKeyForAllSections) {
+                                                for (int i = 1; i < sections.length; i++) {
+                                                  keysInputs[i] = keysInputs[0];
+                                                }
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.delete, color: Colors.red),
+                                          onPressed: () {
+                                            _removeSection(index);
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                    items: keyTonicOptions.map((tonic) {
-                                      return DropdownMenuItem<String>(
-                                        value: tonic,
-                                        child: Text(tonic, style: TextStyle(color: textColor)),
-                                      );
-                                    }).toList(),
-                                    onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
-                                      setState(() {
-                                        keysInputs[index] = custom_types.Key(
-                                          tonic: value!,
-                                          symbol: currentKey.symbol,
-                                          mode: currentKey.mode,
-                                        );
-                    
-                                        lastSelectedKey = keysInputs[index]; // Save the last selected key
-                                        
-                                        if (isSameKeyForAllSections) {
-                                          for (int i = 1; i < sections.length; i++) {
-                                            keysInputs[i] = keysInputs[0];
-                                          }
-                                        }
-                                      });
-                                    },
                                   ),
-                                  DropdownButton<String>(
-                                    value: isSameKeyForAllSections && index > 0 ? null : currentKey.symbol,
-                                    dropdownColor: backgroundColor,
-                                    disabledHint: Text(
-                                      keysInputs[0].symbol, // Show the first key when all keys are the same
-                                      style: TextStyle(color: Colors.grey[500]),
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    child: TextField(
+                                      controller: chordsController,
+                                      style: TextStyle(color: textColor),
+                                      decoration: InputDecoration(
+                                        hintText: 'Chords',
+                                        hintStyle: TextStyle(color: Colors.grey[500]),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: chordsErrors[index] != null ? Colors.red : (isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: chordsErrors[index] != null ? Colors.red : (isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
+                                          ),
+                                        ),
+                                        errorText: chordsErrors[index],
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Color(0xFFB71C1C)),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.red),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        _handleKeyboardToggle(context2, index);
+                                      },
+                                      readOnly: true,
+                                      showCursor: true,
                                     ),
-                                    items: keySymbolOptions.map((symbol) {
-                                      return DropdownMenuItem<String>(
-                                        value: symbol,
-                                        child: Text(symbol, style: TextStyle(color: textColor)),
-                                      );
-                                    }).toList(),
-                                    onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
-                                      setState(() {
-                                        keysInputs[index] = custom_types.Key(
-                                          tonic: currentKey.tonic,
-                                          symbol: value!,
-                                          mode: currentKey.mode,
-                                        );
-                    
-                                        lastSelectedKey = keysInputs[index]; // Save the last selected key
-                                        
-                                        if (isSameKeyForAllSections) {
-                                          for (int i = 1; i < sections.length; i++) {
-                                            keysInputs[i] = keysInputs[0];
-                                          }
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  DropdownButton<String>(
-                                    value: isSameKeyForAllSections && index > 0 ? null : currentKey.mode,
-                                    dropdownColor: backgroundColor,
-                                    disabledHint: Text(
-                                      keysInputs[0].mode, // Show the first key when all keys are the same
-                                      style: TextStyle(color: Colors.grey[500]),
-                                    ),
-                                    items: keyModeOptions.map((mode) {
-                                      return DropdownMenuItem<String>(
-                                        value: mode,
-                                        child: Text(mode, style: TextStyle(color: textColor)),
-                                      );
-                                    }).toList(),
-                                    onChanged: isSameKeyForAllSections && index > 0 ? null : (value) {
-                                      setState(() {
-                                        keysInputs[index] = custom_types.Key(
-                                          tonic: currentKey.tonic,
-                                          symbol: currentKey.symbol,
-                                          mode: value!,
-                                        );
-                    
-                                        lastSelectedKey = keysInputs[index]; // Save the last selected key
-                                        
-                                        if (isSameKeyForAllSections) {
-                                          for (int i = 1; i < sections.length; i++) {
-                                            keysInputs[i] = keysInputs[0];
-                                          }
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () {
-                                      _removeSection(index);
-                                    },
                                   ),
                                 ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              child: TextField(
-                                controller: chordsController,
-                                style: TextStyle(color: textColor),
-                                decoration: InputDecoration(
-                                  hintText: 'Chords',
-                                  hintStyle: TextStyle(color: Colors.grey[500]),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: chordsErrors[index] != null ? Colors.red : (isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: chordsErrors[index] != null ? Colors.red : (isChordKeyboardVisible && currentKeyboardSectionIndex == index ? Color(0xff009788) : isDarkMode ? Colors.white : Color(0xcccccccc)),
-                                    ),
-                                  ),
-                                  errorText: chordsErrors[index],
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Color(0xFFB71C1C)),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.red),
-                                  ),
-                                ),
-                                onTap: () {
-                                  _handleKeyboardToggle(context2, index);
-                                },
-                                readOnly: true,
-                                showCursor: true,
-                              ),
-                            ),
-                          ],
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
