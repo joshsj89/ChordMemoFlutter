@@ -315,8 +315,6 @@ class _EditSongScreenState extends State<EditSongScreen> {
     }
 
     void onReorder(int oldIndex, int newIndex) {
-      log('Reorder called: oldIndex=$oldIndex, newIndex=$newIndex');
-
       setState(() {
         if (newIndex > oldIndex) newIndex -= 1;
 
@@ -499,7 +497,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
           
                   // Section Chooser List (Accordion)
                   SizedBox(
-                    height: sectionHeights.isEmpty ? 0 : sectionHeights.reduce((a, b) => a + b) /*+ (sections.length * 60)*/, // Adjust height based on section heights
+                    height: sectionHeights.isEmpty ? 0 : sectionHeights.reduce((a, b) => a + b), // Adjust height based on section heights
                     child: ReorderableListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: sections.length,
@@ -533,9 +531,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                               return ExpansionTile(
                                 title: Text(section.sectionTitle, style: TextStyle(color: textColor)),
                                 initiallyExpanded: isExpanded,
-                                onExpansionChanged: (expanded) {
-                                  onExpansionChanged(expanded);
-                                },
+                                onExpansionChanged: onExpansionChanged,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 10),
