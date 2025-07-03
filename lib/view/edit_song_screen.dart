@@ -314,6 +314,44 @@ class _EditSongScreenState extends State<EditSongScreen> {
       );
     }
 
+    void onReorder(int oldIndex, int newIndex) {
+      log('Reorder called: oldIndex=$oldIndex, newIndex=$newIndex');
+
+      setState(() {
+        if (newIndex > oldIndex) newIndex -= 1;
+
+        final section = sections.removeAt(oldIndex);
+        sections.insert(newIndex, section);
+
+        final key = keysInputs.removeAt(oldIndex);
+        keysInputs.insert(newIndex, key);
+
+        final chordsInput = chordsInputs.removeAt(oldIndex);
+        chordsInputs.insert(newIndex, chordsInput);
+
+        final chordsController = chordsControllers.removeAt(oldIndex);
+        chordsControllers.insert(newIndex, chordsController);
+
+        final chordsError = chordsErrors.removeAt(oldIndex);
+        chordsErrors.insert(newIndex, chordsError);
+
+        final sectionHeight = sectionHeights.removeAt(oldIndex);
+        sectionHeights.insert(newIndex, sectionHeight);
+
+        final sectionTitle = sectionTitles.removeAt(oldIndex);
+        sectionTitles.insert(newIndex, sectionTitle);
+
+        // Update keyboard section index if it was affected
+        if (currentKeyboardSectionIndex != null) {
+          if (oldIndex == currentKeyboardSectionIndex) {
+            currentKeyboardSectionIndex = newIndex;
+          } else if (newIndex <= currentKeyboardSectionIndex!) {
+            currentKeyboardSectionIndex = currentKeyboardSectionIndex! + 1;
+          }
+        }
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff009788),
@@ -465,15 +503,7 @@ class _EditSongScreenState extends State<EditSongScreen> {
                     child: ReorderableListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: sections.length,
-                      onReorder: (oldIndex, newIndex) {
-                        // setState(() {
-                        //   if (newIndex > oldIndex) newIndex -= 1;
-                        //   final section = sections.removeAt(oldIndex);
-                        //   sections.insert(newIndex, section);
-                        // });
-                    
-                        log('Reorder called: oldIndex=$oldIndex, newIndex=$newIndex');
-                      },
+                      onReorder: onReorder,
                       itemBuilder: (context, index) {
                         final custom_types.Section section = sections[index];
                     
