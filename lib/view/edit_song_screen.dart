@@ -504,6 +504,13 @@ class _EditSongScreenState extends State<EditSongScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: sections.length,
                       onReorder: onReorder,
+                      proxyDecorator: (child, index, animation) {
+                        return Material(
+                          color: isDarkMode ? const Color(0xff262626) : null,
+                          borderRadius: BorderRadius.circular(8),
+                          child: child,
+                        );
+                      },
                       itemBuilder: (context, index) {
                         final custom_types.Section section = sections[index];
                     
