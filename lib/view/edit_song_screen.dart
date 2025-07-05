@@ -61,7 +61,11 @@ class _EditSongScreenState extends State<EditSongScreen> {
     }).toList();
     availableGenres.removeWhere((genre) => genres.contains(genre));
 
-    sections = widget.song.sections;
+    sections = widget.song.sections.map((section) => custom_types.Section(
+      sectionTitle: section.sectionTitle,
+      key: section.key,
+      chords: section.chords,
+    )).toList();
     sectionTitles = sections.map((section) {
       return sectionTypeOptions.firstWhere((option) => option.label == section.sectionTitle);
     }).toList();
