@@ -657,7 +657,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
                       // Eleventh types
                       if (selectedNinth != null && eleventhTypes[selectedNinth!.alt] != null)
                         SizedBox(
-                          width: 60,
+                          width: 70,
                           child: ListView.builder(
                             itemCount: eleventhTypes[selectedNinth!.alt]!.length,
                             itemBuilder: (context, index) {
