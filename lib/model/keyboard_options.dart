@@ -27,13 +27,13 @@ final ExtendedChordTypes seventhTypes = {
     ChordType(label: '6', alt: 'm6', value: '6'),
   ],
   '°': [
-    ChordType(label: '7♭5', alt: '7♭5', value: 'ø7'),
+    ChordType(label: '7', alt: '7♭5', value: 'ø7'),
     ChordType(label: 'dim7', alt: 'dim7', value: '°7'),
     ChordType(label: 'M7', alt: 'M7♭5', value: 'M7♭5'),
   ],
   '+': [
-    ChordType(label: '7♯5', alt: '7♯5', value: '7♯5'),
-    ChordType(label: 'M7♯5', alt: 'M7♯5', value: 'M7♯5'),
+    ChordType(label: '7', alt: '7♯5', value: '7♯5'),
+    ChordType(label: 'M7', alt: 'M7♯5', value: 'M7♯5'),
   ],
   'sus4': [
     ChordType(label: '7', alt: '7sus4', value: '7sus4'),
