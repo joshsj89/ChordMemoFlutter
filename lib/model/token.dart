@@ -322,7 +322,7 @@ List<Token> tokenize(String input) {
 
       if (RegExp(r'^''$romanNumeralRegexString'r'$', caseSensitive: true).hasMatch(value)) {
         tokens.add(Token(TokenType.romanNumeral, value));
-      } else if (RegExp(r'^(\/[2-79]|11|13)$').hasMatch(value)) {
+      } else if (RegExp(r'^\/([2-79]|11|13)$').hasMatch(value)) {
         tokens.add(Token(TokenType.inversion, value));
       } else if (RegExp(r'^[\-]$').hasMatch(value)) {
         tokens.add(Token(TokenType.dash, value));
