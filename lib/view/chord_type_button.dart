@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chordmemoflutter/model/types.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 
 class ChordTypeButton extends StatefulWidget {
   final ChordType chordType;
@@ -59,7 +59,7 @@ class ChordTypeButtonState extends State<ChordTypeButton> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
     final backgroundColor = isDarkMode ? Color(0xff2d2d2d) : Color(0xfffdfdfd);
     final textColor = isDarkMode ? Color(0xfffafafa) : Color(0xff2d2d2d);
 

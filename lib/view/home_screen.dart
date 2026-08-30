@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chordmemoflutter/model/types.dart' as custom_types;
@@ -13,9 +11,11 @@ import 'package:chordmemoflutter/view/add_song_screen.dart';
 import 'package:chordmemoflutter/view/export_import_screen.dart';
 import 'package:chordmemoflutter/view/search_dialog.dart';
 import 'package:chordmemoflutter/view/search_results_screen.dart';
+import 'package:chordmemoflutter/view/settings_screen.dart';
 import 'package:chordmemoflutter/view/song_details_screen.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 import 'package:chordmemoflutter/view_model/song_persistence.dart';
+import 'package:chordmemoflutter/view_model/song_repository.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,13 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _deleteSong(String songId) async {
-    final prefs = await SharedPreferences.getInstance();
+    final updatedSongs = await SongRepository.instance.deleteSong(songId);
 
     setState(() {
-      songs.removeWhere((song) => song.id == songId);
+      songs = updatedSongs;
     });
-
-    await prefs.setString('songs', jsonEncode(songs));
   }
 
   void _confirmDelete(custom_types.Song song) {
@@ -112,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final darkModeProvider = Provider.of<DarkModeProvider>(context);
+    final darkModeProvider = Provider.of<SettingsProvider>(context);
     final backgroundColor = darkModeProvider.isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = darkModeProvider.isDarkMode ? Colors.white : Colors.black;
     final altTextColor = darkModeProvider.isDarkMode ? Colors.black : Colors.white;
@@ -194,6 +192,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(color: textColor),
               ),
               onTap: darkModeProvider.toggleDarkMode,
+            ),
+            ListTile(
+              title: Text('Settings', style: TextStyle(color: textColor)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SettingsScreen(),
+                  ),
+                );
+              },
             ),
             ListTile(
               title: Text('About', style: TextStyle(color: textColor)),
@@ -320,7 +329,7 @@ class LinkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
     final textColor = isDarkMode ? Colors.white : Colors.black;
 
     void openLink() async {

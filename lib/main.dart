@@ -4,8 +4,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
+import 'package:chordmemoflutter/theme/app_theme.dart';
 import 'package:chordmemoflutter/view/home_screen.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 
 Future main() async {
   await dotenv.load(fileName: '.env');
@@ -18,7 +19,7 @@ Future main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (_) => DarkModeProvider(),
+      create: (_) => SettingsProvider(),
       child: const MyApp(),
     ),
   );
@@ -30,13 +31,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeMode = context.watch<SettingsProvider>().themeMode;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChordMemo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff009788)),
-        useMaterial3: true,
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
       home: const MyHomePage(),
     );
   }

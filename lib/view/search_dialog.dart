@@ -7,7 +7,7 @@ import 'package:chordmemoflutter/model/types.dart' as custom_types;
 import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
 import 'package:chordmemoflutter/view/flexible_width_button.dart';
 import 'package:chordmemoflutter/view/symbol_picker_modal.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 
 class SearchDialog extends StatefulWidget {
   final List<custom_types.Song> songs;
@@ -129,7 +129,7 @@ class _SearchDialogState extends State<SearchDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
 
     final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;

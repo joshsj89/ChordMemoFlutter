@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chordmemoflutter/view/flexible_width_button.dart';
-import'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import'package:chordmemoflutter/view_model/settings_provider.dart';
 
 const List<String> symbols = ['♭', '♯'];
 
@@ -16,7 +16,7 @@ class SymbolPickerModal extends StatefulWidget {
 class _SymbolPickerModalState extends State<SymbolPickerModal> {
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
     final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
 

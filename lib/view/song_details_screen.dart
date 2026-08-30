@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chordmemoflutter/model/types.dart' as custom_types;
 import 'package:chordmemoflutter/view/edit_song_screen.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 import 'package:chordmemoflutter/view_model/pretty_chord_builder.dart';
+import 'package:chordmemoflutter/view_model/song_repository.dart';
 
 class SongDetailsScreen extends StatefulWidget {
   final custom_types.Song song;
@@ -74,20 +73,10 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
 
   Future<void> _deleteSong() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedSongsString = prefs.getString('songs');
+      await SongRepository.instance.deleteSong(_song.id);
 
-      if (savedSongsString != null) {
-        final List<custom_types.Song> savedSongs = savedSongsString.isNotEmpty
-            ? (jsonDecode(savedSongsString) as List)
-                .map((song) => custom_types.Song.fromJson(song))
-                .toList()
-            : [];
-        savedSongs.removeWhere((song) => song.id == _song.id);
-        await prefs.setString('songs', jsonEncode(savedSongs));
-
-        Navigator.pop(context, [true, _song]); // Refresh the list of songs
-      }
+      if (!mounted) return;
+      Navigator.pop(context, [true, _song]); // Refresh the list of songs
     } catch (error) {
       log('Error deleting song: $error');
     }
@@ -119,7 +108,7 @@ class _SongDetailsScreenState extends State<SongDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
     final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final altTextColor = isDarkMode ? Colors.black : Colors.white;

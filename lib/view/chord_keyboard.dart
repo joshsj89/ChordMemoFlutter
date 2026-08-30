@@ -6,7 +6,7 @@ import 'package:chordmemoflutter/model/types.dart';
 import 'package:chordmemoflutter/view/chord_type_button.dart';
 import 'package:chordmemoflutter/view/roman_numeral_button.dart';
 import 'package:chordmemoflutter/view_model/chords.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 
 class ChordKeyboard extends StatefulWidget {
   final List<String> originalChords;
@@ -449,7 +449,7 @@ class _ChordKeyboardState extends State<ChordKeyboard> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
 
     final backgroundColor = isDarkMode ? Color(0xff0a0a0a) : Color(0xffe6e6e6);
     final textColor = isDarkMode ? Colors.white : Colors.black;

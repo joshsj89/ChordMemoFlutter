@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:chordmemoflutter/view/flexible_width_button.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
+import 'package:chordmemoflutter/view_model/song_repository.dart';
 
 class ExportImportScreen extends StatefulWidget {
   const ExportImportScreen({super.key});
@@ -29,18 +28,17 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
 
   Future<void> exportSongs() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedSongs = prefs.getString('songs');
+      final exportJson = await SongRepository.instance.exportJson();
 
-      if (savedSongs != null && savedSongs != '[]') {
+      if (exportJson != null) {
         final directory = await getApplicationDocumentsDirectory();
         final filePath = '${directory.path}/songs.json';
 
         final file = File(filePath);
-        await file.writeAsString(savedSongs, flush: true);
+        await file.writeAsString(exportJson, flush: true);
 
         // Share the file
-        await Share.shareXFiles([XFile(filePath)]);
+        await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
         _showAlert('Export Successful', 'Songs exported successfully.');
       } else {
         _showAlert('No Songs to Export', 'There are no songs to export.');
@@ -62,23 +60,18 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
         final filePath = result.files.single.path!;
         final file = File(filePath);
 
-        String importedData = await file.readAsString();
-        List<dynamic> importedSongs = jsonDecode(importedData);
+        final String importedData = await file.readAsString();
+        final int added =
+            await SongRepository.instance.importSongs(importedData);
 
-        final prefs = await SharedPreferences.getInstance();
-        String? savedSongs = prefs.getString('songs');
-        List<dynamic> updatedSongs = savedSongs != null ? jsonDecode(savedSongs) : [];
-
-        // Check for duplicate songs
-        for (var song in importedSongs) {
-          if (!updatedSongs.any((s) => s['id'] == song['id'])) {
-            updatedSongs.add(song);
-          }
-        }
-
-        await prefs.setString('songs', JsonEncoder.withIndent('    ').convert(updatedSongs));
-
-        _showAlert('Import Successful', '${result.files.single.name} imported successfully.', true);
+        _showAlert(
+          'Import Successful',
+          added > 0
+              ? '${result.files.single.name} imported successfully '
+                  '($added ${added == 1 ? 'song' : 'songs'} added).'
+              : '${result.files.single.name} contained no new songs.',
+          added > 0,
+        );
       } else {
         _showAlert('Import Cancelled', 'No file was selected.');
       }
@@ -120,7 +113,7 @@ class _ExportImportScreenState extends State<ExportImportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
 
     final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -221,7 +214,7 @@ class FeatureDescription extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: 'Import Songs from JSON File: ',
+            text: heading,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
           ),
           TextSpan(

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:chordmemoflutter/model/types.dart' as custom_types;
 import 'package:chordmemoflutter/view_model/song_persistence.dart';
-import 'package:chordmemoflutter/view_model/dark_mode_provider.dart';
+import 'package:chordmemoflutter/view_model/settings_provider.dart';
 import 'package:chordmemoflutter/view/song_details_screen.dart';
 
 class SearchResultsScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<SettingsProvider>(context).isDarkMode;
     final backgroundColor = isDarkMode ? Color(0xff171717) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final altTextColor = isDarkMode ? Colors.black : Colors.white;
