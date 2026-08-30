@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:chordmemoflutter/model/options.dart';
 import 'package:chordmemoflutter/model/types.dart' as custom_types;
+import 'package:chordmemoflutter/view/add_genre_dialog.dart';
 import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
 import 'package:chordmemoflutter/view/chord_keyboard.dart';
 import 'package:chordmemoflutter/view/expandable_tile_wrapper.dart';
@@ -29,8 +30,8 @@ class _AddSongScreenState extends State<AddSongScreen> {
   String artist = '';
   final TextEditingController artistController = TextEditingController();
   List<TextEditingController> chordsControllers = []; // hold the controllers for each section (cursor blink state won't be lost)
-  List<ListTileOption> genres = [];
-  List<ListTileOption> availableGenres = List.from(genreOptions);
+  List<String> genres = [];
+  List<String> usedGenres = []; // previously-used genres pulled from saved songs
   List<custom_types.Section> sections = [];
   List<ListTileOption> sectionTitles = [];
   List<ListTileOption> availableSectionTitles = List.from(sectionTypeOptions);
@@ -44,14 +45,20 @@ class _AddSongScreenState extends State<AddSongScreen> {
   bool isChordKeyboardVisible = false;
   int? currentKeyboardSectionIndex;
 
+  // Genres that can still be picked: built-in genres plus previously-used ones,
+  // minus the genres already chosen for this song (case-insensitive).
+  List<String> get availableGenres => buildGenreOptions(usedGenres)
+    .where((genre) => !genres.any((selected) => selected.toLowerCase() == genre.toLowerCase()))
+    .toList();
+
   @override
   void initState() {
     super.initState();
 
-    _loadArtists();
+    _loadArtistsAndGenres();
   }
 
-  Future<void> _loadArtists() async {
+  Future<void> _loadArtistsAndGenres() async {
     final prefs = await SharedPreferences.getInstance();
     final savedSongs = prefs.getString('songs');
 
@@ -62,6 +69,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
           .toList();
 
         songArtists = songs.map((song) => song.artist).toSet().toList(); // Remove duplicates
+        usedGenres = songs.expand((song) => song.genres).toSet().toList();
       });
     }
   }
@@ -150,7 +158,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title.trim(), // Change later to use the input value
       artist: artist.trim(), // Change later to use the input value
-      genres: genres.map((genre) => genre.label.trim()).toList(),
+      genres: genres.map((genre) => genre.trim()).toList(),
       sections: sections,
     );
 
@@ -195,36 +203,18 @@ class _AddSongScreenState extends State<AddSongScreen> {
     final altTextColor = isDarkMode ? Colors.black : Colors.white;
 
     void onAddGenrePress() {
-      // Show a dialog to add a genre from a list of predefined genres
-      showDialog(
+      // Show a dialog to pick an existing genre or create a new one
+      showAddGenreDialog(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Add Genre', 
-              style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: backgroundColor,
-            content: SingleChildScrollView(
-              child: Column(
-                children: availableGenres.map((genre) {
-                  return ListTile(
-                    title: Text(
-                      genre.label,
-                      style: TextStyle(color: textColor),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        genres.add(genre);
-                        availableGenres.remove(genre);
-                      });
-                      Navigator.pop(context);
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-          );
+        availableGenres: availableGenres,
+        backgroundColor: backgroundColor,
+        textColor: textColor,
+        onGenreSelected: (genre) {
+          setState(() {
+            if (!genres.any((g) => g.toLowerCase() == genre.toLowerCase())) {
+              genres.add(genre);
+            }
+          });
         },
       );
     }
@@ -409,19 +399,13 @@ class _AddSongScreenState extends State<AddSongScreen> {
                         return Container(
                           margin: const EdgeInsets.only(right: 10),
                           child: Chip(
-                            label: Text(genre.label),
+                            label: Text(genre),
                             backgroundColor: isDarkMode ? Colors.grey[900]: const Color(0xfff4faf8),
                             labelStyle: TextStyle(color: textColor),
                             deleteIcon: Icon(Icons.cancel, color: Colors.red),
                             onDeleted: () {
                               setState(() {
                                 genres.remove(genre);
-          
-                                // Sort the genres by id
-                                availableGenres.add(genre);
-                                availableGenres.sort((a, b) {
-                                  return a.id.compareTo(b.id);
-                                });
                               });
                             },
                           ),

@@ -58,25 +58,45 @@ const List<ListTileOption> sectionTypeOptions = [
   ListTileOption(label: 'Section D', id: 14),
 ];
 
-const List<ListTileOption> genreOptions = [
-  ListTileOption(label: 'Pop', id: 0),
-  ListTileOption(label: 'Rock', id: 1),
-  ListTileOption(label: 'Metal', id: 2),
-  ListTileOption(label: 'Jazz', id: 3),
-  ListTileOption(label: 'Jazz Standards', id: 4),
-  ListTileOption(label: 'Alternative/Indie', id: 5),
-  ListTileOption(label: 'Classical', id: 6),
-  ListTileOption(label: 'Country', id: 7),
-  ListTileOption(label: 'R&B', id: 8),
-  ListTileOption(label: 'Hip Hop', id: 9),
-  ListTileOption(label: 'Blues', id: 10),
-  ListTileOption(label: 'Funk', id: 11),
-  ListTileOption(label: 'Soul', id: 12),
-  ListTileOption(label: 'Folk', id: 13),
-  ListTileOption(label: 'Electronic', id: 14),
-  ListTileOption(label: 'Disco', id: 15),
-  ListTileOption(label: 'Reggae', id: 16),
-  ListTileOption(label: 'Punk', id: 17),
-  ListTileOption(label: 'Game Music', id: 18),
-  ListTileOption(label: 'Show Tunes', id: 19),
+// Genres the app ships with. Custom genres created by the user are merged in
+// alongside these via [buildGenreOptions].
+const List<String> defaultGenres = [
+  'Pop',
+  'Rock',
+  'Metal',
+  'Jazz',
+  'Alternative/Indie',
+  'Classical',
+  'Country',
+  'R&B',
+  'Hip Hop',
+  'Blues',
+  'Funk',
+  'Soul',
+  'Folk',
+  'Electronic',
+  'Disco',
+  'Reggae',
+  'Punk',
+  'Game Music',
+  'Show Tunes',
 ];
+
+/// Builds the full list of genre options: the built-in [defaultGenres] first (in
+/// their canonical order), followed by any previously-used genres from saved
+/// songs that aren't already covered, sorted alphabetically. Comparison is
+/// case-insensitive so a custom genre never duplicates a built-in one.
+List<String> buildGenreOptions(Iterable<String> usedGenres) {
+  final options = <String>[...defaultGenres];
+  final seen = options.map((genre) => genre.toLowerCase()).toSet();
+
+  final extras = <String>[];
+  for (final genre in usedGenres) {
+    final trimmed = genre.trim();
+    if (trimmed.isEmpty) continue;
+    if (seen.add(trimmed.toLowerCase())) extras.add(trimmed);
+  }
+  extras.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+  return options..addAll(extras);
+}
