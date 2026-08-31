@@ -64,10 +64,24 @@ void main() {
       expect(_chords('I-♯iv°-IV', _key('C')), ['C', 'F♯°', 'F']);
     });
 
-    test('inversions and slash chords resolve a bass note', () {
+    test('inversions (digit after the slash) resolve a bass note', () {
       expect(_chords('I/3-IV-V', _key('C')), ['C/E', 'F', 'G']);
       expect(_chords('V7/3', _key('C')), ['G7/B']);
-      expect(_chords('ii/VI-V', _key('C')), ['Dm/A', 'G']);
+      expect(_chords('i7/5-iv', _key('C', '', 'Minor')), ['Cm7/G', 'Fm']);
+    });
+
+    test('applied / secondary chords (Roman numeral after the slash)', () {
+      // V9/ii in F = V9 of ii (G minor) = D9, not a slash-bass chord.
+      expect(_chords('V9/ii', _key('F')), ['D9']);
+      expect(_chords('V7/V-V7-I', _key('C')), ['D7', 'G7', 'C']);
+      expect(_chords('V/vi', _key('C')), ['E']);
+      // Non-V applied chords: the target's case picks major vs minor.
+      expect(_chords('ii/V-V', _key('C')), ['Am', 'G']); // ii of G major
+      expect(_chords('ii/VI', _key('C')), ['Bm']); // ii of A major
+    });
+
+    test('applied chords track the transpose', () {
+      expect(_chords('V9/ii', _key('F'), transpose: 2), ['E9']);
     });
   });
 

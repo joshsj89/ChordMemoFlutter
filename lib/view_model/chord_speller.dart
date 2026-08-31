@@ -3,7 +3,9 @@ import 'package:chordmemoflutter/model/token.dart';
 
 /// A Roman-numeral chord resolved to concrete notes for a particular key:
 /// a spelled [root], a display [quality] suffix (`m7`, `maj7`, `°7`, `sus4`…)
-/// and an optional [bass] for slash chords / inversions.
+/// and an optional [bass] set only for inversions (`X/3`, `X/5`, `X/7`).
+/// A `X/Y` slash chord where `Y` is a Roman numeral is an applied chord and is
+/// resolved into [root]/[quality], with no [bass].
 class ChordSymbol {
   const ChordSymbol({required this.root, required this.quality, this.bass});
 
@@ -44,18 +46,28 @@ ChordSymbol spellChord(
   final degree = _degreeByNumeral[numeral.toLowerCase()] ?? 1;
   final isLower = numeral == numeral.toLowerCase();
 
-  final scale = scaleNotes(keyTonic, mode);
-  var root = scale[degree - 1];
+  // A slash chord `X/Y` (Y a Roman numeral) is an applied / "secondary" chord:
+  // X is spelled in the key that Y tonicizes, not against a bass note.
+  var effTonic = keyTonic;
+  var effMode = mode;
+  final applied = node.slashChord != null
+      ? _appliedKey(node.slashChord!.chord, keyTonic, mode)
+      : null;
+  if (applied != null) {
+    effTonic = applied.$1;
+    effMode = applied.$2;
+  }
+
+  var root = scaleNotes(effTonic, effMode)[degree - 1];
   root = _applyAccidental(root, node.accidental?.accidental);
 
   final quality = chordQuality(isLower, node.chordType?.chordType ?? '');
 
-  Note? bass;
-  if (node.inversion != null) {
-    bass = _inversionBass(root, quality, node.inversion!.degree);
-  } else if (node.slashChord != null) {
-    bass = _slashBass(node.slashChord!.chord, keyTonic, mode);
-  }
+  // Only inversions produce a bass note; the grammar makes inversion and
+  // slash-chord mutually exclusive, so an applied chord never has one.
+  final bass = node.inversion != null
+      ? _inversionBass(root, quality, node.inversion!.degree)
+      : null;
 
   return ChordSymbol(root: root, quality: quality, bass: bass);
 }
@@ -143,11 +155,19 @@ Note _inversionBass(Note root, String quality, String degree) {
   );
 }
 
-Note? _slashBass(String chord, Note keyTonic, String mode) {
+/// The key that a slash chord's `/Y` target tonicizes: the note at Y's scale
+/// degree in the current key (with Y's `♯`/`♭` prefix applied), paired with a
+/// mode matched to Y's case — uppercase Y → a major key, lowercase → minor.
+(Note, String)? _appliedKey(String chord, Note keyTonic, String mode) {
   final match = _slashChordPattern.firstMatch(chord);
   if (match == null) return null;
 
-  final degree = _degreeByNumeral[match.group(2)!.toLowerCase()] ?? 1;
-  final bass = scaleNotes(keyTonic, mode)[degree - 1];
-  return _applyAccidental(bass, match.group(1)!.isEmpty ? null : match.group(1));
+  final numeral = match.group(2)!;
+  final degree = _degreeByNumeral[numeral.toLowerCase()] ?? 1;
+  var tonic = scaleNotes(keyTonic, mode)[degree - 1];
+
+  final accidental = match.group(1)!;
+  if (accidental.isNotEmpty) tonic = _applyAccidental(tonic, accidental);
+
+  return (tonic, numeral == numeral.toLowerCase() ? 'Minor' : 'Major');
 }
