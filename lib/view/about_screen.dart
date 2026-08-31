@@ -13,6 +13,8 @@ class AboutScreen extends StatelessWidget {
     'Genre Categorization: Tag your chord progressions with genres, making it simple to find related progressions for your mood or style.',
     'Section Management: Add, remove, and reorder sections within a chord progression to customize the structure of your song.',
     'Easy Editing: Edit and refine your chord progressions as you go. Rearrange sections, change keys, and update chords seamlessly.',
+    'Transposition: Transpose your chord progressions to different keys.',
+    'Clipboard Integration: Paste chord progressions from your clipboard with a single tap.',
     'Songwriting Companion: Use ChordMemo to jot down chord progressions for your original songs on the fly. Never lose a brilliant idea again!'
   ];
 

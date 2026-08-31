@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard;
 import 'package:provider/provider.dart';
 
 import 'package:chordmemoflutter/model/options.dart';
@@ -224,6 +225,29 @@ class _SongFormState extends State<SongForm> {
     setState(() {
       isChordKeyboardVisible = !isChordKeyboardVisible;
       currentKeyboardSectionIndex = index;
+    });
+  }
+
+  /// Paste the clipboard into section [index]'s chords field, but only if it
+  /// parses as a valid progression. Invalid or empty clipboard text is rejected
+  /// with a message and the field is left untouched.
+  Future<void> _pasteChords(int index) async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    if (!mounted) return;
+
+    final result = resolvePastedProgression(data?.text);
+    if (result.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.error!)),
+      );
+      return;
+    }
+
+    setState(() {
+      sections[index] = sections[index].copyWith(chords: result.chords);
+      chordsInputs[index] = result.chords!;
+      chordsErrors[index] = null;
+      chordsControllers[index].text = result.chords!;
     });
   }
 
@@ -662,6 +686,27 @@ class _SongFormState extends State<SongForm> {
                                       },
                                       readOnly: true,
                                       showCursor: true,
+                                      contextMenuBuilder: (menuContext, editableTextState) {
+                                        final items = List<ContextMenuButtonItem>.of(
+                                          editableTextState.contextMenuButtonItems,
+                                        );
+                                        // Offer Paste only while the chord keyboard is
+                                        // closed, matching how Title/Artist disable
+                                        // themselves during keyboard entry.
+                                        if (!isChordKeyboardVisible) {
+                                          items.add(ContextMenuButtonItem(
+                                            label: 'Paste',
+                                            onPressed: () {
+                                              editableTextState.hideToolbar();
+                                              _pasteChords(index);
+                                            },
+                                          ));
+                                        }
+                                        return AdaptiveTextSelectionToolbar.buttonItems(
+                                          anchors: editableTextState.contextMenuAnchors,
+                                          buttonItems: items,
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,8 +18,44 @@ Widget _host(Widget child) => ChangeNotifierProvider(
       ),
     );
 
+/// Adds a section to a freshly-pumped [SongForm] and returns a finder for its
+/// (still empty) Chords field.
+Future<Finder> _addSection(WidgetTester tester) async {
+  await tester.tap(find.widgetWithText(TextButton, 'ADD SECTION'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Verse'));
+  await tester.pumpAndSettle();
+  return find.widgetWithText(TextField, 'Chords');
+}
+
+String _chordsText(WidgetTester tester, Finder chordsField) =>
+    tester.widget<TextField>(chordsField).controller!.text;
+
 void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  final clipboard = <String, Object?>{};
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    clipboard.clear();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+      switch (call.method) {
+        case 'Clipboard.setData':
+          clipboard['text'] = (call.arguments as Map)['text'];
+          return null;
+        case 'Clipboard.getData':
+          return {'text': clipboard['text']};
+        case 'Clipboard.hasStrings':
+          return {'value': (clipboard['text'] as String?)?.isNotEmpty ?? false};
+      }
+      return null;
+    });
+  });
+
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null);
+  });
 
   testWidgets('create mode: submit is gated until a title and a section exist',
       (tester) async {
@@ -96,5 +133,49 @@ void main() {
     expect(songs.single.title, 'Autumn Leaves (Jazz)');
     expect(songs.single.createdAt, DateTime.parse('2020-01-01T00:00:00.000'));
     expect(songs.single.updatedAt, isNotNull);
+  });
+
+  testWidgets('long-press Paste fills a Chords field from a valid clipboard',
+      (tester) async {
+    tester.view.physicalSize = const Size(1200, 2600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(_host(const SongForm()));
+    await tester.pumpAndSettle();
+    final chordsField = await _addSection(tester);
+
+    await Clipboard.setData(const ClipboardData(text: 'I-vi-IV-V'));
+
+    await tester.longPress(chordsField);
+    await tester.pumpAndSettle();
+    expect(find.text('Paste'), findsOneWidget);
+
+    await tester.tap(find.text('Paste'));
+    await tester.pumpAndSettle();
+
+    expect(_chordsText(tester, chordsField), 'I-vi-IV-V');
+  });
+
+  testWidgets('long-press Paste rejects clipboard text that is not a progression',
+      (tester) async {
+    tester.view.physicalSize = const Size(1200, 2600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(_host(const SongForm()));
+    await tester.pumpAndSettle();
+    final chordsField = await _addSection(tester);
+
+    await Clipboard.setData(const ClipboardData(text: 'just some prose'));
+
+    await tester.longPress(chordsField);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Paste'));
+    await tester.pump(); // let the SnackBar appear
+
+    expect(_chordsText(tester, chordsField), isEmpty);
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.textContaining('Not a valid chord progression'), findsOneWidget);
   });
 }

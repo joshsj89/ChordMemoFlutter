@@ -31,3 +31,23 @@ String? validateProgression(String input) {
 
   return null; // No errors found
 }
+
+/// Decide what to do with [clipboardText] pasted into a chords field.
+///
+/// On success `chords` is the trimmed text and `error` is null. Otherwise
+/// `chords` is null and `error` explains why — an empty clipboard, or the
+/// message from [validateProgression] when the text isn't a syntactically
+/// valid progression (e.g. pasted from outside the app).
+({String? chords, String? error}) resolvePastedProgression(String? clipboardText) {
+  final text = (clipboardText ?? '').trim();
+  if (text.isEmpty) {
+    return (chords: null, error: 'Clipboard has no text to paste.');
+  }
+
+  final error = validateProgression(text);
+  if (error != null) {
+    return (chords: null, error: 'Not a valid chord progression: $error');
+  }
+
+  return (chords: text, error: null);
+}
