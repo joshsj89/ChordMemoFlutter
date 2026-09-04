@@ -22,6 +22,13 @@ void main() {
         ['i', 'III', 'iv', ' ', ':2', ' ', 'i'],
       );
     });
+
+    test('re-attaches a trailing slash split off by an (addN) extension', () {
+      expect(
+        splitChordsIntoArray('i6-v(add9)/3-VI7-VI7'),
+        ['i6', 'v', '(', 'add9', ')/3', 'VI7', 'VI7'],
+      );
+    });
   });
 
   group('transformChords / splitChordsIntoArray round-trip', () {
@@ -31,6 +38,7 @@ void main() {
       'I-(V/5-I)-IV-V',
       'i K+M2 i',
       'i-VI-VII(add9)-♯vi-III-♭I',
+      'i6-v(add9)/3-VI7-VI7',
       'ii-V-ii-V I-IV7-iii-♯ii° ii-V-ii-V-I',
     ];
 

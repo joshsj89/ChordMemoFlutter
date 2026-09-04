@@ -9,7 +9,18 @@ List<String> splitChordsIntoArray(String chords) {
 
   for(var part in chordArray) {
     if (part.trim().isNotEmpty && part != '-') {
-      updatedChordArray.add(part);
+      // Inversion (`/3`) and slash-chord (`/VI`) tokens bind to the chord
+      // before them. When that chord carries a parenthesised extension such
+      // as `(add9)`, the `(`/`)` delimiter split severs the trailing slash
+      // into its own part; re-attach it so `v(add9)/3` survives the
+      // round-trip instead of becoming `v(add9)-/3`.
+      if (part.startsWith('/') &&
+          updatedChordArray.isNotEmpty &&
+          updatedChordArray.last != ' ') {
+        updatedChordArray[updatedChordArray.length - 1] += part;
+      } else {
+        updatedChordArray.add(part);
+      }
     } else if (part == ' ') {
       updatedChordArray.add(part);
     }
