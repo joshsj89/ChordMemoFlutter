@@ -7,6 +7,7 @@ import 'package:chordmemoflutter/model/types.dart' as custom_types;
 import 'package:chordmemoflutter/view/autocomplete_dropdown.dart';
 import 'package:chordmemoflutter/view/flexible_width_button.dart';
 import 'package:chordmemoflutter/view/symbol_picker_modal.dart';
+import 'package:chordmemoflutter/view_model/progression_skeleton.dart';
 import 'package:chordmemoflutter/view_model/settings_provider.dart';
 
 class SearchDialog extends StatefulWidget {
@@ -23,6 +24,7 @@ class SearchDialog extends StatefulWidget {
 
 class _SearchDialogState extends State<SearchDialog> {
   String _selectedOption = 'Title';
+  bool _ignoreExtensions = false; // Chords mode: match ignoring chord extensions
   final TextEditingController _searchController = TextEditingController();
   List<String> suggestions = [];
   List<String> songTitles = [];
@@ -95,8 +97,20 @@ class _SearchDialogState extends State<SearchDialog> {
             return key.toLowerCase().contains(_searchController.text.toLowerCase());
           });
         case 'Chords': // case-sensitive
+          if (_ignoreExtensions) {
+            final querySkeleton = skeletonizeProgression(_searchController.text);
+            if (querySkeleton != null && querySkeleton.isNotEmpty) {
+              return song.sections.any((section) {
+                final sectionSkeleton = skeletonizeProgression(section.chords);
+                return sectionSkeleton != null &&
+                  skeletonContainsRun(sectionSkeleton, querySkeleton);
+              });
+            }
+            // Query didn't parse — fall through to the literal matcher below.
+          }
+
           final List<String> words = _searchController.text.split(RegExp(r'-+')); // split by hyphens
-          final String regexPattern = r'(?<!\w)' + 
+          final String regexPattern = r'(?<!\w)' +
             words.map((word) => '(${escapeRegExp(word.trim())})').join(r'-') +
             r'(?!\w)'; // match whole words only
           final RegExp regex = RegExp(regexPattern);
@@ -208,6 +222,24 @@ class _SearchDialogState extends State<SearchDialog> {
               ),
             ],
           ),
+
+          // "Ignore chord extensions" toggle (Chords search only)
+          if (_selectedOption == 'Chords')
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Checkbox(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                  activeColor: const Color(0xff009788),
+                  value: _ignoreExtensions,
+                  onChanged: (value) => setState(() => _ignoreExtensions = value ?? false),
+                ),
+                Flexible(
+                  child: Text('Ignore chord extensions', style: TextStyle(color: textColor)),
+                ),
+              ],
+            ),
 
           // Buttons
           Row(
